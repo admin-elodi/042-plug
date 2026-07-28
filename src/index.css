@@ -1,0 +1,56 @@
+@import "tailwindcss";
+
+/* =========================
+   BASE RESET + GLOBAL STYLE
+   ========================= */
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background-color: #050505;
+  color: white;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto,
+    Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Root container behavior */
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* =========================
+   TYPOGRAPHY OVERRIDES
+   (optional global consistency)
+   ========================= */
+
+h1,
+h2,
+h3,
+h4 {
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+/* =========================
+   REMOVE DEFAULT ELEMENT STYLES
+   ========================= */
+
+button {
+  font: inherit;
+}
+
+/* =========================
+   SMOOTH SCROLL
+   ========================= */
+
+html {
+  scroll-behavior: smooth;
+}
