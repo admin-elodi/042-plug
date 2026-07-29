@@ -12,21 +12,23 @@ export const Hero: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState({ id: '', title: '' });
 
   return (
-    <div className="bg-slate-950 text-white relative overflow-hidden flex flex-col justify-between min-h-screen">
+    <div className="bg-stone-950 text-white relative overflow-hidden flex flex-col justify-between min-h-screen">
       <div>
         {/* Banner Section */}
-        <HeroBanner />
+        <HeroBanner onOpenCreateShop={() => document.getElementById('storefronts')?.scrollIntoView({ behavior: 'smooth' })} />
 
         {/* Categories Section */}
-        <CategoryGrid
-          onOpenCreate={(id, title) => {
-            setSelectedCategory({ id, title });
-            setActiveModal('create');
-          }}
-          onOpenView={(id) => {
-            navigate(`/browse/${id}`);
-          }}
-        />
+        <div id="storefronts">
+          <CategoryGrid
+            onOpenCreate={(id, title) => {
+              setSelectedCategory({ id, title });
+              setActiveModal('create');
+            }}
+            onOpenView={(id) => {
+              navigate(`/browse/${id}`);
+            }}
+          />
+        </div>
       </div>
 
       {/* Modals */}

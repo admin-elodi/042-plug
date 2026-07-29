@@ -154,7 +154,9 @@ export const MyShopsPage: React.FC = () => {
     }
   };
 
-  document.title = 'My Shops | 042 Plug';
+  useEffect(() => {
+    document.title = 'My Shops | 042 Plug';
+  }, []);
 
   return (
     <div className="min-h-screen bg-slate-950 text-white px-4 py-8">
