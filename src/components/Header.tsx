@@ -1,14 +1,13 @@
 'use client';
 
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import AuthModal from '@/components/modals/AuthModal';
-import ManageShopsModal from '@/components/modals/ManageShopsModal';
 
 export const Header: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
-  const [showManageShops, setShowManageShops] = useState(false);
   const { user, signOut } = useAuth();
 
   return (
@@ -17,7 +16,7 @@ export const Header: React.FC = () => {
         <div className="flex items-center justify-between h-20">
           
           {/* Brand Logo */}
-          <div className="flex items-center space-x-3 cursor-pointer">
+          <Link to="/" className="flex items-center space-x-3 cursor-pointer">
             <div className="bg-gradient-to-tr from-green-500 to-emerald-400 p-2.5 rounded-2xl shadow-lg shadow-green-500/20">
               {/* Shopping Bag Icon SVG */}
               <svg 
@@ -36,21 +35,21 @@ export const Header: React.FC = () => {
             </div>
             <div>
               <span className="text-2xl font-black tracking-wider text-white">
-                042<span className="text-green-400">PLUG</span>
+                042<span className="text-green-400">PLUGS</span>
                 {/* <span className="text-xs font-bold text-emerald-400 bg-emerald-950 border border-emerald-800 px-1.5 py-0.5 rounded ml-1.5">.ng</span> */}
               </span>
               <p className="text-[10px] text-slate-400 tracking-widest uppercase font-semibold">Enugu's Ultimate Market</p>
             </div>
-          </div>
+          </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8 font-medium text-slate-300 text-sm">
-            <a href="#storefronts" className="hover:text-green-400 transition-colors">Storefronts</a>
-            <a href="#launch-info" className="hover:text-green-400 transition-colors flex items-center gap-1.5">
-              <span>Oct Launch</span>
-              <span className="bg-amber-500/20 text-amber-400 text-[10px] font-bold px-2 py-0.5 rounded-full border border-amber-500/30">VIP</span>
+          <nav className="hidden md:flex items-center space-x-6 font-medium text-slate-300 text-sm">
+            <a href="#storefronts" className="whitespace-nowrap hover:text-green-400 transition-colors">Storefronts</a>
+            <a href="#launch-info" className="whitespace-nowrap hover:text-green-400 transition-colors flex items-center gap-1.5">
+              <span className="whitespace-nowrap">Oct 2026 Launch</span>
+              <span className="whitespace-nowrap bg-amber-500/20 text-amber-400 text-[10px] font-bold px-2 py-0.5 rounded-full border border-amber-500/30">VIP</span>
             </a>
-            <a href="#ushers" className="hover:text-green-400 transition-colors">Usher Call</a>
+            <Link to="/my-shops" className="whitespace-nowrap hover:text-green-400 transition-colors">Sell on 042</Link>
           </nav>
 
           {/* Action Buttons */}
@@ -58,15 +57,15 @@ export const Header: React.FC = () => {
             {user ? (
               <div className="flex items-center gap-3">
                 <span className="text-xs text-slate-400">{user.email}</span>
-                <button
-                  onClick={() => setShowManageShops(true)}
+                <Link
+                  to="/my-shops"
                   className="bg-slate-800 hover:bg-slate-700 text-white px-4 py-2.5 rounded-xl font-semibold text-sm border border-slate-700 transition-all"
                 >
                   My Shops
-                </button>
+                </Link>
                 <button
                   onClick={() => signOut()}
-                  className="bg-slate-800 hover:bg-slate-700 text-white px-4 py-2.5 rounded-xl font-semibold text-sm border border-slate-700 transition-all"
+                  className="bg-slate-800 hover:bg-slate-700 text-white px-4 py-2. rounded-xl font-semibold text-sm border border-slate-700 transition-all"
                 >
                   Sign Out
                 </button>
@@ -132,8 +131,8 @@ export const Header: React.FC = () => {
       {isMobileMenuOpen && (
         <div className="md:hidden bg-slate-900 border-b border-slate-800 px-4 pt-4 pb-6 space-y-4">
           <a href="#storefronts" onClick={() => setIsMobileMenuOpen(false)} className="block text-slate-300 hover:text-green-400 font-medium">Browse Storefronts</a>
-          <a href="#launch-info" onClick={() => setIsMobileMenuOpen(false)} className="block text-slate-300 hover:text-green-400 font-medium">October Launch Details</a>
-          <a href="#ushers" onClick={() => setIsMobileMenuOpen(false)} className="block text-slate-300 hover:text-green-400 font-medium">Apply as Usher</a>
+          <a href="#launch-info" onClick={() => setIsMobileMenuOpen(false)} className="block text-slate-300 hover:text-green-400 font-medium">October 2026 Launch Details</a>
+          <Link to="/my-shops" onClick={() => setIsMobileMenuOpen(false)} className="block text-slate-300 hover:text-green-400 font-medium">Sell on 042</Link>
           <div className="pt-2 flex flex-col gap-3">
             <a 
               href="#storefronts" 
@@ -144,15 +143,13 @@ export const Header: React.FC = () => {
             </a>
             {user ? (
               <>
-                <button
-                  onClick={() => {
-                    setShowManageShops(true);
-                    setIsMobileMenuOpen(false);
-                  }}
+                <Link
+                  to="/my-shops"
+                  onClick={() => setIsMobileMenuOpen(false)}
                   className="w-full text-center bg-slate-800 text-white font-semibold py-3 rounded-xl border border-slate-700"
                 >
                   My Shops
-                </button>
+                </Link>
                 <button
                   onClick={() => {
                     signOut();
@@ -171,7 +168,7 @@ export const Header: React.FC = () => {
                 }}
                 className="w-full text-center bg-slate-800 text-white font-semibold py-3 rounded-xl border border-slate-700"
               >
-                Vendor Sign In
+                Sign In
               </button>
             )}
           </div>
@@ -179,7 +176,6 @@ export const Header: React.FC = () => {
       )}
 
       {showAuthModal && <AuthModal onClose={() => setShowAuthModal(false)} />}
-      {showManageShops && <ManageShopsModal onClose={() => setShowManageShops(false)} />}
     </header>
   );
 };

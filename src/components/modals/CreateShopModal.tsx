@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { X, Store, PackagePlus, CheckCircle, ImagePlus, Film, Loader2, AlertCircle, Trash2, LogIn } from 'lucide-react';
+import { X, Store, PackagePlus, CheckCircle, ImagePlus, Film, Loader2, AlertCircle, Trash2, LogIn, Landmark, MessageCircle, Copy } from 'lucide-react';
 import { supabase } from '@/lib/supabaseClient';
 import { useAuth } from '@/context/AuthContext';
 import AuthModal from '@/components/modals/AuthModal';
@@ -25,6 +25,33 @@ interface ExistingShop {
 const MAX_FILES = 6;
 const MAX_FILE_SIZE_MB = 25;
 
+const REGISTRATION_FEE = 1000;
+const PLATFORM_BANK_NAME = 'Opay';
+const PLATFORM_ACCOUNT_NUMBER = '8136573235';
+const PLATFORM_ACCOUNT_NAME = 'Ikenna Kingsley Nwachukwu';
+const PLATFORM_WHATSAPP = '+2348136573235';
+
+// Converts a Nigerian phone number in any common format into the
+// digits-only international format wa.me requires.
+const formatWhatsAppNumber = (phone: string) => {
+  let digits = phone.replace(/\D/g, '');
+  if (digits.startsWith('0')) {
+    digits = '234' + digits.slice(1);
+  } else if (!digits.startsWith('234')) {
+    digits = '234' + digits;
+  }
+  return digits;
+};
+
+const buildPaymentNotificationLink = (businessName: string, categoryTitle: string, sellerPhone: string) => {
+  const message =
+    `Hi, I just registered "${businessName}" (${categoryTitle}) on 042 Plug and paid the ₦${REGISTRATION_FEE.toLocaleString()} registration fee.` +
+    `\n\nMy contact number: ${sellerPhone}` +
+    `\n\nPlease confirm and approve my shop. Thank you!`;
+
+  return `https://wa.me/${formatWhatsAppNumber(PLATFORM_WHATSAPP)}?text=${encodeURIComponent(message)}`;
+};
+
 const emptyProductFields = {
   productName: '',
   description: '',
@@ -38,14 +65,17 @@ export const CreateShopModal: React.FC<CreateShopModalProps> = ({ category, onCl
   // 'checking' -> looking up whether this user already has a shop in this category
   // 'business' -> business info form (only path for creating a brand-new shop)
   // 'product'  -> product form (only reached right after creating a brand-new shop)
-  // 'success'  -> confirmation screen
+  // 'payment-pending' -> shop + product saved; show registration fee payment details
   // 'already-exists' -> user already has a shop here; direct them to "My Shops" instead
-  const [step, setStep] = useState<'checking' | 'business' | 'product' | 'success' | 'already-exists'>('checking');
+  const [step, setStep] = useState<'checking' | 'business' | 'product' | 'payment-pending' | 'already-exists'>(
+    'checking'
+  );
   const [existingShop, setExistingShop] = useState<ExistingShop | null>(null);
   const [checkError, setCheckError] = useState<string | null>(null);
 
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
 
   const [businessData, setBusinessData] = useState({
     businessName: '',
@@ -67,9 +97,6 @@ export const CreateShopModal: React.FC<CreateShopModalProps> = ({ category, onCl
     let cancelled = false;
 
     const checkExistingShop = async () => {
-      setStep('checking');
-      setCheckError(null);
-
       const { data, error } = await supabase
         .from('shops')
         .select('id, business_name')
@@ -215,7 +242,7 @@ export const CreateShopModal: React.FC<CreateShopModalProps> = ({ category, onCl
 
       await uploadMediaForProduct(product.id);
 
-      setStep('success');
+      setStep('payment-pending');
     } catch (err) {
       console.error(err);
       setErrorMsg(
@@ -226,11 +253,10 @@ export const CreateShopModal: React.FC<CreateShopModalProps> = ({ category, onCl
     }
   };
 
-  const addAnotherProduct = () => {
-    setProductData(emptyProductFields);
-    setMediaFiles([]);
-    setErrorMsg(null);
-    setStep('product');
+  const copyAccountNumber = () => {
+    navigator.clipboard.writeText(PLATFORM_ACCOUNT_NUMBER);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   return (
@@ -481,27 +507,70 @@ export const CreateShopModal: React.FC<CreateShopModalProps> = ({ category, onCl
             </form>
           )}
 
-          {user && step === 'success' && (
-            <div className="text-center py-6">
-              <CheckCircle className="w-12 h-12 text-emerald-400 mx-auto mb-3" />
-              <h3 className="text-lg font-bold text-white mb-1">Product Added!</h3>
-              <p className="text-xs text-slate-400 mb-6">
-                It's now live under {existingShop?.business_name ?? 'your shop'}.
-              </p>
-              <div className="flex items-center justify-center gap-3">
-                <button
-                  onClick={addAnotherProduct}
-                  className="px-5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white text-sm font-semibold"
-                >
-                  Add Another Product
-                </button>
-                <button
-                  onClick={onClose}
-                  className="px-5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-sm font-medium"
-                >
-                  Close Window
-                </button>
+          {user && step === 'payment-pending' && (
+            <div className="py-2">
+              <div className="text-center mb-5">
+                <CheckCircle className="w-10 h-10 text-emerald-400 mx-auto mb-2" />
+                <h3 className="text-base font-bold text-white mb-1">Shop & Product Saved!</h3>
+                <p className="text-xs text-slate-400 max-w-xs mx-auto">
+                  One last step: pay the one-time ₦{REGISTRATION_FEE.toLocaleString()} registration fee to go live.
+                  Your shop won't appear in Browse until this is confirmed.
+                </p>
               </div>
+
+              <div className="rounded-xl border border-slate-800 bg-slate-950/60 p-4 mb-4">
+                <div className="flex items-center gap-2 text-emerald-400 text-xs font-semibold mb-3">
+                  <Landmark className="w-4 h-4" />
+                  <span>Pay to this account</span>
+                </div>
+                <div className="space-y-2 text-xs">
+                  <div className="flex items-center justify-between">
+                    <span className="text-slate-500">Bank</span>
+                    <span className="text-white font-medium">{PLATFORM_BANK_NAME}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-slate-500">Account Number</span>
+                    <button
+                      type="button"
+                      onClick={copyAccountNumber}
+                      className="flex items-center gap-1 text-white font-medium hover:text-emerald-400"
+                    >
+                      <span>{PLATFORM_ACCOUNT_NUMBER}</span>
+                      <Copy className="w-3 h-3" />
+                      {copied && <span className="text-emerald-400 text-[10px]">Copied!</span>}
+                    </button>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-slate-500">Account Name</span>
+                    <span className="text-white font-medium">{PLATFORM_ACCOUNT_NAME}</span>
+                  </div>
+                  <div className="flex items-center justify-between pt-2 border-t border-slate-800">
+                    <span className="text-slate-500">Amount</span>
+                    <span className="text-emerald-400 font-bold">₦{REGISTRATION_FEE.toLocaleString()}</span>
+                  </div>
+                </div>
+              </div>
+
+              <a
+                href={buildPaymentNotificationLink(
+                  existingShop?.business_name ?? businessData.businessName,
+                  category.title,
+                  businessData.phone
+                )}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-semibold text-sm transition-colors mb-3"
+              >
+                <MessageCircle className="w-4 h-4" />
+                <span>I've Paid — Notify via WhatsApp</span>
+              </a>
+
+              <button
+                onClick={onClose}
+                className="w-full py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-sm font-medium"
+              >
+                Close Window
+              </button>
             </div>
           )}
         </div>
