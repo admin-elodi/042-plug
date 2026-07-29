@@ -11,16 +11,16 @@ export const Header: React.FC = () => {
   const { user, signOut } = useAuth();
 
   return (
-    <header className="sticky top-0 z-50 bg-slate-900/95 backdrop-blur-md border-b border-slate-800 text-white">
+    <header className="sticky top-0 z-50 bg-stone-900/95 backdrop-blur-md border-b border-stone-800 text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           
           {/* Brand Logo */}
           <Link to="/" className="flex items-center space-x-3 cursor-pointer">
-            <div className="bg-gradient-to-tr from-green-500 to-emerald-400 p-2.5 rounded-2xl shadow-lg shadow-green-500/20">
+            <div className="bg-gradient-to-tr from-amber-500 to-orange-500 p-2.5 rounded-2xl shadow-lg shadow-amber-500/20">
               {/* Shopping Bag Icon SVG */}
               <svg 
-                className="w-7 h-7 text-slate-950" 
+                className="w-7 h-7 text-stone-950" 
                 fill="none" 
                 stroke="currentColor" 
                 viewBox="0 0 24 24" 
@@ -35,37 +35,36 @@ export const Header: React.FC = () => {
             </div>
             <div>
               <span className="text-2xl font-black tracking-wider text-white">
-                042<span className="text-green-400">PLUGS</span>
-                {/* <span className="text-xs font-bold text-emerald-400 bg-emerald-950 border border-emerald-800 px-1.5 py-0.5 rounded ml-1.5">.ng</span> */}
+                042<span className="text-amber-400">PLUGS</span>
               </span>
-              <p className="text-[10px] text-slate-400 tracking-widest uppercase font-semibold">Enugu's Ultimate Market</p>
+              <p className="text-[10px] text-stone-400 tracking-widest uppercase font-semibold">Enugu's Ultimate Market</p>
             </div>
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-6 font-medium text-slate-300 text-sm">
-            <a href="#storefronts" className="whitespace-nowrap hover:text-green-400 transition-colors">Storefronts</a>
-            <a href="#launch-info" className="whitespace-nowrap hover:text-green-400 transition-colors flex items-center gap-1.5">
+          <nav className="hidden md:flex items-center space-x-6 font-medium text-stone-300 text-sm">
+            <a href="#storefronts" className="whitespace-nowrap hover:text-amber-400 transition-colors">Storefronts</a>
+            <a href="#launch-info" className="whitespace-nowrap hover:text-amber-400 transition-colors flex items-center gap-1.5">
               <span className="whitespace-nowrap">Oct 2026 Launch</span>
               <span className="whitespace-nowrap bg-amber-500/20 text-amber-400 text-[10px] font-bold px-2 py-0.5 rounded-full border border-amber-500/30">VIP</span>
             </a>
-            <Link to="/my-shops" className="whitespace-nowrap hover:text-green-400 transition-colors">Sell on 042</Link>
+            <Link to="/my-shops" className="whitespace-nowrap hover:text-amber-400 transition-colors">Sell on 042</Link>
           </nav>
 
           {/* Action Buttons */}
           <div className="hidden md:flex items-center space-x-4">
             {user ? (
               <div className="flex items-center gap-3">
-                <span className="text-xs text-slate-400">{user.email}</span>
+                <span className="text-xs text-stone-400">{user.email}</span>
                 <Link
                   to="/my-shops"
-                  className="bg-slate-800 hover:bg-slate-700 text-white px-4 py-2.5 rounded-xl font-semibold text-sm border border-slate-700 transition-all"
+                  className="bg-stone-800 hover:bg-stone-700 text-white px-4 py-2.5 rounded-xl font-semibold text-sm border border-stone-700 transition-all"
                 >
                   My Shops
                 </Link>
                 <button
                   onClick={() => signOut()}
-                  className="bg-slate-800 hover:bg-slate-700 text-white px-4 py-2. rounded-xl font-semibold text-sm border border-slate-700 transition-all"
+                  className="bg-stone-800 hover:bg-stone-700 text-white px-4 py-2.5 rounded-xl font-semibold text-sm border border-stone-700 transition-all"
                 >
                   Sign Out
                 </button>
@@ -73,7 +72,7 @@ export const Header: React.FC = () => {
             ) : (
               <button
                 onClick={() => setShowAuthModal(true)}
-                className="bg-slate-800 hover:bg-slate-700 text-white px-4 py-2.5 rounded-xl font-semibold text-sm border border-slate-700 transition-all"
+                className="bg-stone-800 hover:bg-stone-700 text-white px-4 py-2.5 rounded-xl font-semibold text-sm border border-stone-700 transition-all"
               >
                 Vendor Sign In
               </button>
@@ -82,17 +81,17 @@ export const Header: React.FC = () => {
               href="https://wa.me/YOUR_NUMBER" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="bg-slate-800 hover:bg-slate-700 text-white px-4 py-2.5 rounded-xl font-semibold text-sm border border-slate-700 transition-all"
+              className="bg-stone-800 hover:bg-stone-700 text-white px-4 py-2.5 rounded-xl font-semibold text-sm border border-stone-700 transition-all"
             >
               Join WhatsApp
             </a>
             <a 
               href="#storefronts" 
-              className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-400 hover:to-emerald-400 text-slate-950 font-bold px-5 py-2.5 rounded-xl text-sm shadow-lg shadow-green-500/25 transition-all flex items-center gap-2"
+              className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-stone-950 font-bold px-5 py-2.5 rounded-xl text-sm shadow-lg shadow-amber-500/25 transition-all flex items-center gap-2"
             >
               {/* Sparkles Icon SVG */}
               <svg 
-                className="w-4 h-4 fill-slate-950" 
+                className="w-4 h-4 fill-stone-950" 
                 viewBox="0 0 24 24" 
                 fill="currentColor"
               >
@@ -106,7 +105,7 @@ export const Header: React.FC = () => {
           <button 
             type="button"
             aria-label="Toggle navigation menu"
-            className="md:hidden text-slate-300 hover:text-white focus:outline-none"
+            className="md:hidden text-stone-300 hover:text-white focus:outline-none"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
             {isMobileMenuOpen ? (
@@ -129,15 +128,15 @@ export const Header: React.FC = () => {
 
       {/* Mobile Dropdown Menu */}
       {isMobileMenuOpen && (
-        <div className="md:hidden bg-slate-900 border-b border-slate-800 px-4 pt-4 pb-6 space-y-4">
-          <a href="#storefronts" onClick={() => setIsMobileMenuOpen(false)} className="block text-slate-300 hover:text-green-400 font-medium">Browse Storefronts</a>
-          <a href="#launch-info" onClick={() => setIsMobileMenuOpen(false)} className="block text-slate-300 hover:text-green-400 font-medium">October 2026 Launch Details</a>
-          <Link to="/my-shops" onClick={() => setIsMobileMenuOpen(false)} className="block text-slate-300 hover:text-green-400 font-medium">Sell on 042</Link>
+        <div className="md:hidden bg-stone-900 border-b border-stone-800 px-4 pt-4 pb-6 space-y-4">
+          <a href="#storefronts" onClick={() => setIsMobileMenuOpen(false)} className="block text-stone-300 hover:text-amber-400 font-medium">Browse Storefronts</a>
+          <a href="#launch-info" onClick={() => setIsMobileMenuOpen(false)} className="block text-stone-300 hover:text-amber-400 font-medium">October 2026 Launch Details</a>
+          <Link to="/my-shops" onClick={() => setIsMobileMenuOpen(false)} className="block text-stone-300 hover:text-amber-400 font-medium">Sell on 042</Link>
           <div className="pt-2 flex flex-col gap-3">
             <a 
               href="#storefronts" 
               onClick={() => setIsMobileMenuOpen(false)}
-              className="w-full text-center bg-green-500 text-slate-950 font-bold py-3 rounded-xl shadow-md"
+              className="w-full text-center bg-amber-500 text-stone-950 font-bold py-3 rounded-xl shadow-md"
             >
               Upload Your Business (₦1,000)
             </a>
@@ -146,7 +145,7 @@ export const Header: React.FC = () => {
                 <Link
                   to="/my-shops"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="w-full text-center bg-slate-800 text-white font-semibold py-3 rounded-xl border border-slate-700"
+                  className="w-full text-center bg-stone-800 text-white font-semibold py-3 rounded-xl border border-stone-700"
                 >
                   My Shops
                 </Link>
@@ -155,7 +154,7 @@ export const Header: React.FC = () => {
                     signOut();
                     setIsMobileMenuOpen(false);
                   }}
-                  className="w-full text-center bg-slate-800 text-white font-semibold py-3 rounded-xl border border-slate-700"
+                  className="w-full text-center bg-stone-800 text-white font-semibold py-3 rounded-xl border border-stone-700"
                 >
                   Sign Out ({user.email})
                 </button>
@@ -166,7 +165,7 @@ export const Header: React.FC = () => {
                   setShowAuthModal(true);
                   setIsMobileMenuOpen(false);
                 }}
-                className="w-full text-center bg-slate-800 text-white font-semibold py-3 rounded-xl border border-slate-700"
+                className="w-full text-center bg-stone-800 text-white font-semibold py-3 rounded-xl border border-stone-700"
               >
                 Sign In
               </button>
