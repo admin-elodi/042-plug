@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { Briefcase, X, Send, Eye, Building2 } from 'lucide-react';
 
 // CHANGE THIS: Replace with your actual WhatsApp phone number in international format (e.g., '2348012345678')
-const VERIFICATION_WHATSAPP_NUMBER = '2348000000000';
+const VERIFICATION_WHATSAPP_NUMBER = '2348136573235';
 
 interface SalariedJobsModalProps {
   isOpen: boolean;
@@ -72,24 +72,24 @@ export const SalariedJobsModal: React.FC<SalariedJobsModalProps> = ({ isOpen, on
             onClick={() => setActiveTab('seek')}
             className={`flex items-center justify-center gap-2 py-2 text-xs font-semibold rounded-md transition-all ${
               activeTab === 'seek'
-                ? 'bg-amber-500 text-stone-950 shadow-md'
+                ? 'bg-amber-200 text-stone-950 shadow-md'
                 : 'text-stone-400 hover:text-stone-200'
             }`}
           >
             <Eye className="w-4 h-4" />
-            <span>Browse Vacancies</span>
+            <span>Browse jobs</span>
           </button>
           <button
             type="button"
             onClick={() => setActiveTab('post')}
             className={`flex items-center justify-center gap-2 py-2 text-xs font-semibold rounded-md transition-all ${
               activeTab === 'post'
-                ? 'bg-amber-500 text-stone-950 shadow-md'
+                ? 'bg-amber-200 text-stone-950 shadow-md'
                 : 'text-stone-400 hover:text-stone-200'
             }`}
           >
             <Building2 className="w-4 h-4" />
-            <span>Post a Vacancy</span>
+            <span>Post jobs</span>
           </button>
         </div>
 
@@ -106,9 +106,9 @@ export const SalariedJobsModal: React.FC<SalariedJobsModalProps> = ({ isOpen, on
             <button
               type="button"
               onClick={onClose}
-              className="w-full py-3 px-4 rounded-xl bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold text-xs transition-colors shadow-lg"
+              className="w-full py-3 px-4 rounded-xl bg-amber-200 hover:bg-amber-400 text-stone-950 font-bold text-xs transition-colors shadow-lg"
             >
-              View Active Verified Vacancies
+              View Verified Vacancies
             </button>
           </div>
         )}
@@ -186,7 +186,7 @@ export const SalariedJobsModal: React.FC<SalariedJobsModalProps> = ({ isOpen, on
               className="w-full mt-2 py-3 px-4 rounded-xl bg-green-600 hover:bg-green-500 text-white font-bold text-xs transition-colors flex items-center justify-center gap-2 shadow-lg"
             >
               <Send className="w-4 h-4" />
-              <span>Send Job to WhatsApp for Verification</span>
+              <span>Verify & Publish</span>
             </button>
           </form>
         )}
