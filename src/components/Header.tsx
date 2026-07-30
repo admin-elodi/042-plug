@@ -74,11 +74,11 @@ export const Header: React.FC = () => {
                 onClick={() => setShowAuthModal(true)}
                 className="bg-stone-800 hover:bg-stone-700 text-white px-4 py-2.5 rounded-xl font-semibold text-sm border border-stone-700 transition-all"
               >
-                Vendor Sign In
+                Seller Sign In
               </button>
             )}
             <a 
-              href="https://wa.me/YOUR_NUMBER" 
+              href="https://wa.me/2348136573235" 
               target="_blank" 
               rel="noopener noreferrer"
               className="bg-stone-800 hover:bg-stone-700 text-white px-4 py-2.5 rounded-xl font-semibold text-sm border border-stone-700 transition-all"
@@ -97,7 +97,7 @@ export const Header: React.FC = () => {
               >
                 <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" />
               </svg>
-              <span>Get Listed @ ₦1k</span>
+              <span>Get Listed</span>
             </a>
           </div>
 
@@ -138,7 +138,7 @@ export const Header: React.FC = () => {
               onClick={() => setIsMobileMenuOpen(false)}
               className="w-full text-center bg-amber-500 text-stone-950 font-bold py-3 rounded-xl shadow-md"
             >
-              Upload Your Business (₦1,000)
+              Create Your Shop
             </a>
             {user ? (
               <>

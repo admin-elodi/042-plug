@@ -1,6 +1,7 @@
 import { Suspense, lazy } from "react";
 import { Routes, Route } from "react-router-dom";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 // Each page's code now loads only when a visitor actually navigates to
 // it, instead of all pages being bundled into one large file upfront.
@@ -10,23 +11,26 @@ const MyShopsPage = lazy(() => import("@/pages/MyShopsPage"));
 const ShopPage = lazy(() => import("@/pages/ShopPage"));
 
 const PageLoader = () => (
-  <div className="min-h-screen flex items-center justify-center bg-slate-950">
-    <div className="w-6 h-6 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin" />
+  <div className="min-h-screen flex items-center justify-center bg-stone-950">
+    <div className="w-6 h-6 border-2 border-amber-500 border-t-transparent rounded-full animate-spin" />
   </div>
 );
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-black text-white flex flex-col">
       <Header />
-      <Suspense fallback={<PageLoader />}>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/browse/:categoryId" element={<CategoryPage />} />
-          <Route path="/my-shops" element={<MyShopsPage />} />
-          <Route path="/shops/:slug" element={<ShopPage />} />
-        </Routes>
-      </Suspense>
+      <div className="flex-1">
+        <Suspense fallback={<PageLoader />}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/browse/:categoryId" element={<CategoryPage />} />
+            <Route path="/my-shops" element={<MyShopsPage />} />
+            <Route path="/shops/:slug" element={<ShopPage />} />
+          </Routes>
+        </Suspense>
+      </div>
+      <Footer />
     </div>
   );
 }

@@ -159,25 +159,25 @@ export const MyShopsPage: React.FC = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white px-4 py-8">
+    <div className="min-h-screen bg-stone-700 text-white px-4 py-8">
       <div className="max-w-2xl mx-auto">
-        <Link to="/" className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-emerald-400 mb-5">
+        <Link to="/" className="inline-flex items-center gap-1.5 text-xs text-stone-400 hover:text-amber-400 mb-5">
           <ArrowLeft className="w-3.5 h-3.5" />
           <span>Back to 042 Plug</span>
         </Link>
 
         <div className="flex items-center gap-2 text-white font-bold text-lg mb-6">
-          <Store className="w-5 h-5 text-emerald-400" />
+          <Store className="w-5 h-5 text-amber-400" />
           <span>My Shops</span>
         </div>
 
         {!user && (
           <div className="text-center py-20">
-            <LogIn className="w-10 h-10 text-slate-600 mx-auto mb-3" />
+            <LogIn className="w-10 h-10 text-stone-600 mx-auto mb-3" />
             <h3 className="text-sm font-bold text-white mb-1">Sign in to view your shops</h3>
             <button
               onClick={() => setShowAuthModal(true)}
-              className="mt-4 px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white text-sm font-semibold"
+              className="mt-4 px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-stone-950 text-sm font-semibold"
             >
               Sign In / Sign Up
             </button>
@@ -196,31 +196,31 @@ export const MyShopsPage: React.FC = () => {
 
             {loading && (
               <div className="text-center py-20">
-                <Loader2 className="w-8 h-8 text-emerald-400 mx-auto mb-3 animate-spin" />
-                <p className="text-xs text-slate-400">Loading your shops...</p>
+                <Loader2 className="w-8 h-8 text-amber-400 mx-auto mb-3 animate-spin" />
+                <p className="text-xs text-stone-400">Loading your shops...</p>
               </div>
             )}
 
             {!loading && shops.length === 0 && (
               <div className="text-center py-20">
-                <Store className="w-10 h-10 text-slate-600 mx-auto mb-3" />
+                <Store className="w-10 h-10 text-stone-600 mx-auto mb-3" />
                 <h3 className="text-base font-bold text-white mb-1">No shops yet</h3>
-                <p className="text-xs text-slate-400">Create a shop from any category to see it here.</p>
+                <p className="text-xs text-stone-400">Create a shop from any category to see it here.</p>
               </div>
             )}
 
             {!loading && shops.length > 0 && (
               <div className="space-y-5">
                 {shops.map((shop) => (
-                  <div key={shop.id} className="rounded-xl border border-slate-800 bg-slate-900/50 p-4">
+                  <div key={shop.id} className="rounded-xl border border-stone-800 bg-stone-900/50 p-4">
                     <div className="flex items-start justify-between gap-3 mb-2">
                       <div>
                         <div className="flex flex-wrap items-center gap-1.5 mb-1">
-                          <span className="inline-block px-2 py-0.5 rounded-full text-[10px] font-semibold border border-emerald-500/30 bg-emerald-500/10 text-emerald-300">
+                          <span className="inline-block px-2 py-0.5 rounded-full text-[10px] font-semibold border border-amber-500/30 bg-amber-500/10 text-amber-300">
                             {shop.category_title}
                           </span>
                           {shop.payment_status === 'approved' ? (
-                            <span className="inline-block px-2 py-0.5 rounded-full text-[10px] font-semibold border border-emerald-500/30 bg-emerald-500/10 text-emerald-300">
+                            <span className="inline-block px-2 py-0.5 rounded-full text-[10px] font-semibold border border-amber-500/30 bg-amber-500/10 text-amber-300">
                               Live
                             </span>
                           ) : (
@@ -230,7 +230,7 @@ export const MyShopsPage: React.FC = () => {
                           )}
                         </div>
                         <h3 className="font-bold text-white text-sm">{shop.business_name}</h3>
-                        <div className="flex flex-wrap items-center gap-3 mt-1 text-[11px] text-slate-400">
+                        <div className="flex flex-wrap items-center gap-3 mt-1 text-[11px] text-stone-400">
                           <span className="flex items-center gap-1">
                             <Phone className="w-3 h-3" />
                             <span>{shop.phone}</span>
@@ -246,14 +246,14 @@ export const MyShopsPage: React.FC = () => {
                       <div className="flex flex-col items-end gap-2">
                         <Link
                           to={`/shops/${shop.slug}`}
-                          className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-medium whitespace-nowrap"
+                          className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-stone-800 hover:bg-stone-700 text-stone-300 text-[11px] font-medium whitespace-nowrap"
                         >
                           <ExternalLink className="w-3.5 h-3.5" />
                           <span>View / Share Page</span>
                         </Link>
                         <button
                           onClick={() => setAddProductTarget({ shopId: shop.id, businessName: shop.business_name })}
-                          className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 text-[11px] font-medium whitespace-nowrap"
+                          className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 text-[11px] font-medium whitespace-nowrap"
                         >
                           <PackagePlus className="w-3.5 h-3.5" />
                           <span>Add Product</span>
@@ -270,33 +270,33 @@ export const MyShopsPage: React.FC = () => {
                     </div>
 
                     {shop.products.length === 0 ? (
-                      <div className="flex items-center gap-2 text-[11px] text-slate-500 mt-3">
+                      <div className="flex items-center gap-2 text-[11px] text-stone-500 mt-3">
                         <PackageOpen className="w-3.5 h-3.5" />
                         <span>No products listed yet</span>
                       </div>
                     ) : (
                       <div className="space-y-2 mt-3">
                         {shop.products.map((product) => (
-                          <div key={product.id} className="flex items-center justify-between gap-2 border-t border-slate-800/70 pt-2">
+                          <div key={product.id} className="flex items-center justify-between gap-2 border-t border-stone-800/70 pt-2">
                             <div className="flex items-center gap-2 min-w-0">
                               {product.product_media[0] && (
                                 <img
                                   src={product.product_media[0].file_url}
                                   alt=""
-                                  className="w-8 h-8 rounded-md object-cover flex-shrink-0 bg-slate-900"
+                                  className="w-8 h-8 rounded-md object-cover flex-shrink-0 bg-stone-900"
                                 />
                               )}
                               <div className="min-w-0">
                                 <p className="text-xs text-white truncate">{product.title}</p>
                                 {product.price !== null && (
-                                  <p className="text-[11px] text-emerald-400">₦{Number(product.price).toLocaleString()}</p>
+                                  <p className="text-[11px] text-amber-400">₦{Number(product.price).toLocaleString()}</p>
                                 )}
                               </div>
                             </div>
                             <button
                               onClick={() => handleDeleteProduct(product, shop.id)}
                               disabled={busyId === product.id}
-                              className="flex items-center gap-1 px-2 py-1 rounded-md bg-slate-800 hover:bg-red-500/20 hover:text-red-300 text-slate-300 text-[10px] font-medium disabled:opacity-50 whitespace-nowrap"
+                              className="flex items-center gap-1 px-2 py-1 rounded-md bg-stone-800 hover:bg-red-500/20 hover:text-red-300 text-stone-300 text-[10px] font-medium disabled:opacity-50 whitespace-nowrap"
                             >
                               {busyId === product.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <Trash2 className="w-3 h-3" />}
                               <span>Remove</span>

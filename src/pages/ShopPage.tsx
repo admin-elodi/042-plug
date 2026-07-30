@@ -113,41 +113,41 @@ export const ShopPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white px-4 py-8">
+    <div className="min-h-screen bg-stone-500 px-4 py-8">
       <div className="max-w-2xl mx-auto">
-        <Link to="/" className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-emerald-400 mb-5">
+        <Link to="/" className="inline-flex items-center gap-1.5 text-xs text-stone-500 hover:text-amber-600 mb-5">
           <ArrowLeft className="w-3.5 h-3.5" />
           <span>Back to 042 Plug</span>
         </Link>
 
         {loading && (
           <div className="text-center py-20">
-            <Loader2 className="w-8 h-8 text-emerald-400 mx-auto mb-3 animate-spin" />
-            <p className="text-xs text-slate-400">Loading shop...</p>
+            <Loader2 className="w-8 h-8 text-amber-500 mx-auto mb-3 animate-spin" />
+            <p className="text-xs text-stone-500">Loading shop...</p>
           </div>
         )}
 
         {!loading && errorMsg && (
           <div className="text-center py-20">
-            <AlertCircle className="w-8 h-8 text-red-400 mx-auto mb-3" />
-            <p className="text-sm text-red-300">{errorMsg}</p>
+            <AlertCircle className="w-8 h-8 text-red-500 mx-auto mb-3" />
+            <p className="text-sm text-red-600">{errorMsg}</p>
           </div>
         )}
 
         {!loading && shop && (
           <div>
-            <div className="rounded-2xl border border-slate-800 bg-slate-900/50 p-5 mb-5">
+            <div className="rounded-2xl border border-stone-800 bg-stone-900/50 p-5 mb-5">
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <span className="inline-block mb-2 px-2.5 py-1 rounded-full text-[10px] font-semibold border border-emerald-500/30 bg-emerald-500/10 text-emerald-300">
+                  <span className="inline-block mb-2 px-2.5 py-1 rounded-full text-[10px] font-semibold border border-amber-500/30 bg-amber-500/10 text-amber-300">
                     {shop.category_title}
                   </span>
                   <h1 className="text-xl font-bold text-white flex items-center gap-2">
-                    <Store className="w-5 h-5 text-emerald-400" />
+                    <Store className="w-5 h-5 text-amber-400" />
                     {shop.business_name}
                   </h1>
-                  <div className="flex flex-wrap items-center gap-3 mt-2 text-xs text-slate-400">
-                    <a href={`tel:${shop.phone}`} className="flex items-center gap-1 hover:text-emerald-400">
+                  <div className="flex flex-wrap items-center gap-3 mt-2 text-xs text-stone-400">
+                    <a href={`tel:${shop.phone}`} className="flex items-center gap-1 hover:text-amber-400">
                       <Phone className="w-3.5 h-3.5" />
                       <span>{shop.phone}</span>
                     </a>
@@ -161,38 +161,38 @@ export const ShopPage: React.FC = () => {
                 </div>
                 <button
                   onClick={handleShare}
-                  className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-medium whitespace-nowrap"
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-stone-800 hover:bg-stone-700 text-white text-xs font-medium whitespace-nowrap"
                 >
-                  {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Share2 className="w-3.5 h-3.5" />}
+                  {copied ? <Check className="w-3.5 h-3.5 text-amber-400" /> : <Share2 className="w-3.5 h-3.5" />}
                   <span>{copied ? 'Link Copied' : 'Share Shop'}</span>
                 </button>
               </div>
             </div>
 
             {shop.products.length === 0 ? (
-              <div className="text-center py-14 text-slate-500">
+              <div className="text-center py-14 text-stone-500">
                 <PackageOpen className="w-8 h-8 mx-auto mb-2" />
                 <p className="text-xs">No products listed yet</p>
               </div>
             ) : (
               <div className="space-y-4">
                 {shop.products.map((product) => (
-                  <div key={product.id} className="rounded-xl border border-slate-800 bg-slate-900/40 p-4">
+                  <div key={product.id} className="rounded-xl border border-stone-800 bg-stone-900/40 p-4">
                     <div className="flex items-baseline justify-between gap-2">
                       <h3 className="font-semibold text-white text-sm">{product.title}</h3>
                       {product.price !== null && (
-                        <span className="text-sm font-bold text-emerald-400 whitespace-nowrap">
+                        <span className="text-sm font-bold text-amber-400 whitespace-nowrap">
                           ₦{Number(product.price).toLocaleString()}
                         </span>
                       )}
                     </div>
-                    {product.description && <p className="text-xs text-slate-400 mt-1">{product.description}</p>}
+                    {product.description && <p className="text-xs text-stone-400 mt-1">{product.description}</p>}
 
                     <a
                       href={buildOrderLink(shop, product)}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-1.5 mt-3 w-fit px-3 py-1.5 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 text-xs font-semibold transition-colors"
+                      className="flex items-center gap-1.5 mt-3 w-fit px-3 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 text-xs font-semibold transition-colors"
                     >
                       <MessageCircle className="w-4 h-4" />
                       <span>Order via WhatsApp</span>
@@ -203,7 +203,7 @@ export const ShopPage: React.FC = () => {
                         {[...product.product_media]
                           .sort((a, b) => a.sort_order - b.sort_order)
                           .map((media) => (
-                            <div key={media.id} className="aspect-square rounded-lg overflow-hidden bg-slate-950 border border-slate-800">
+                            <div key={media.id} className="aspect-square rounded-lg overflow-hidden bg-stone-950 border border-stone-800">
                               {media.media_type === 'image' ? (
                                 <img src={media.file_url} alt={product.title} className="w-full h-full object-cover" />
                               ) : (
