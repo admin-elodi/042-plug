@@ -63,11 +63,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onOpenCreateShop, onOpen
 
         {/* Content sits above the photo + overlay */}
         <div className="relative z-10 w-full pt-6 sm:pt-8 pb-6 px-4 max-w-7xl mx-auto text-center">
-          {/* Launch Badge */}
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/70 backdrop-blur-md border border-amber-500/40 text-amber-400 text-xs font-medium mb-5 sm:mb-6 shadow-lg shadow-black/60">
-            <span className="w-2 h-2 rounded-full bg-amber-500" />
-            <span>042Plug Platform Launching Soon</span>
-          </div>
+        
 
           {/* Main Headline */}
           <h1 className="text-xl xs:text-2xl sm:text-5xl lg:text-6xl font-bold mb-3 sm:mb-4 text-stone-100 leading-tight whitespace-nowrap drop-shadow-[0_4px_12px_rgba(0,0,0,0.95)]">
