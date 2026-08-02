@@ -20,6 +20,32 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onOpenCreateShop, onOpen
 
   return (
     <>
+      {/* Dynamic Keyframe Animation for Deep Fiery Ember Glow */}
+      <style>{`
+        @keyframes emberPulse {
+          0%, 100% {
+            text-shadow: 
+              0 0 3px #ff2200,
+              0 0 8px #d01000,
+              0 0 15px #990000,
+              0 0 25px #550000;
+            filter: brightness(0.95);
+          }
+          50% {
+            text-shadow: 
+              0 0 5px #ff4400,
+              0 0 12px #e61900,
+              0 0 22px #b30000,
+              0 0 35px #770000;
+            filter: brightness(1.15);
+          }
+        }
+        .glowing-coal {
+          color: #e62200;
+          animation: emberPulse 2.8s infinite ease-in-out;
+        }
+      `}</style>
+
       <div className="relative overflow-hidden min-h-[440px] sm:min-h-[560px] flex items-center">
         {/* Background photo */}
         <img
@@ -28,7 +54,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onOpenCreateShop, onOpen
           className="absolute inset-0 w-full h-full object-cover"
         />
 
-        {/* Dark wash so the amber/white text and pills stay readable over the photo */}
+        {/* Dark wash so text stays crisp */}
         <div className="absolute inset-0 bg-black/65" />
         <div className="absolute inset-0 bg-gradient-to-b from-black/5 via-black/70 to-black/50" />
 
@@ -61,14 +87,22 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onOpenCreateShop, onOpen
           <span className="text-xs font-semibold text-stone-100">POS Agent</span>
         </div>
 
-        {/* Content sits above the photo + overlay */}
+        {/* Content */}
         <div className="relative z-10 w-full pt-6 sm:pt-8 pb-6 px-4 max-w-7xl mx-auto text-center">
         
+          {/* Top Household Tagline */}
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 mb-3 text-xs font-semibold text-stone-200 tracking-wider shadow-lg">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full bg-amber-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-yellow-300"></span>
+            </span>
+            <span>Job Search & Business Hub for <span className="text-yellow-300 uppercase">Ndi Enugu</span></span>
+          </div>
 
           {/* Main Headline */}
           <h1 className="text-xl xs:text-2xl sm:text-5xl lg:text-6xl font-bold mb-3 sm:mb-4 text-stone-100 leading-tight whitespace-nowrap drop-shadow-[0_4px_12px_rgba(0,0,0,0.95)]">
             <span className="inline-block tracking-[0.15em]">Best Plugs in </span>{' '}
-            <span className="inline-block tracking-[0.15em] text-amber-500 drop-shadow-[0_4px_12px_rgba(0,0,0,0.95)]">
+            <span className="inline-block tracking-[0.15em] glowing-coal font-black">
               Coal City
             </span>
           </h1>
@@ -138,7 +172,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onOpenCreateShop, onOpen
         </div>
       </div>
 
-      {/* Imported Salaried Jobs Modal */}
+      {/* Salaried Jobs Modal */}
       <SalariedJobsModal
         isOpen={isJobModalOpen}
         onClose={() => setIsJobModalOpen(false)}

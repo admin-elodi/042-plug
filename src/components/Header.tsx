@@ -1,14 +1,30 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { ChevronDown, Store, ShieldCheck, LogOut } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import AuthModal from '@/components/modals/AuthModal';
+
+const ADMIN_EMAIL = 'ikezion@gmail.com';
 
 export const Header: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [showAccountMenu, setShowAccountMenu] = useState(false);
+  const accountMenuRef = useRef<HTMLDivElement>(null);
   const { user, signOut } = useAuth();
+  const isAdmin = user?.email === ADMIN_EMAIL;
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (accountMenuRef.current && !accountMenuRef.current.contains(e.target as Node)) {
+        setShowAccountMenu(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   return (
     <header className="sticky top-0 z-50 bg-stone-900/95 backdrop-blur-md border-b border-stone-800 text-white">
@@ -34,15 +50,15 @@ export const Header: React.FC = () => {
               </svg>
             </div>
             <div>
-              <span className="text-2xl font-black tracking-wider text-white">
+              <span className="text-2xl font-black tracking-wider text-white whitespace-nowrap">
                 042<span className="text-amber-400">PLUGS</span>
               </span>
-              <p className="text-[10px] text-stone-400 tracking-widest uppercase font-semibold">Enugu's Ultimate Market</p>
+              <p className="text-[10px] text-stone-400 tracking-widest uppercase font-semibold whitespace-nowrap">For Ndi Enugu</p>
             </div>
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-6 font-medium text-stone-300 text-sm">
+          <nav className="hidden md:flex items-center space-x-5 font-medium text-stone-300 text-sm">
             <a href="#storefronts" className="whitespace-nowrap hover:text-amber-400 transition-colors">Storefronts</a>
             <a href="#launch-info" className="whitespace-nowrap hover:text-amber-400 transition-colors flex items-center gap-1.5">
               <span className="whitespace-nowrap">Oct 2026 Launch</span>
@@ -52,27 +68,55 @@ export const Header: React.FC = () => {
           </nav>
 
           {/* Action Buttons */}
-          <div className="hidden md:flex items-center space-x-4">
+          <div className="hidden md:flex items-center space-x-3">
             {user ? (
-              <div className="flex items-center gap-3">
-                <span className="text-xs text-stone-400">{user.email}</span>
-                <Link
-                  to="/my-shops"
-                  className="bg-stone-800 hover:bg-stone-700 text-white px-4 py-2.5 rounded-xl font-semibold text-sm border border-stone-700 transition-all"
-                >
-                  My Shops
-                </Link>
+              <div className="relative" ref={accountMenuRef}>
                 <button
-                  onClick={() => signOut()}
-                  className="bg-stone-800 hover:bg-stone-700 text-white px-4 py-2.5 rounded-xl font-semibold text-sm border border-stone-700 transition-all"
+                  onClick={() => setShowAccountMenu((v) => !v)}
+                  className="h-10 flex items-center gap-1.5 bg-stone-800 hover:bg-stone-700 text-white px-4 rounded-xl font-semibold text-sm border border-stone-700 transition-all whitespace-nowrap"
                 >
-                  Sign Out
+                  <span>Account</span>
+                  <ChevronDown className="w-3.5 h-3.5" />
                 </button>
+
+                {showAccountMenu && (
+                  <div className="absolute right-0 mt-2 w-56 rounded-xl bg-stone-900 border border-stone-800 shadow-2xl py-2 z-50">
+                    <p className="px-4 py-1.5 text-xs text-stone-500 truncate border-b border-stone-800 mb-1">{user.email}</p>
+                    <Link
+                      to="/my-shops"
+                      onClick={() => setShowAccountMenu(false)}
+                      className="flex items-center gap-2 px-4 py-2 text-sm text-stone-200 hover:bg-stone-800 hover:text-amber-400 transition-colors"
+                    >
+                      <Store className="w-4 h-4" />
+                      <span>My Shops</span>
+                    </Link>
+                    {isAdmin && (
+                      <Link
+                        to="/admin/jobs"
+                        onClick={() => setShowAccountMenu(false)}
+                        className="flex items-center gap-2 px-4 py-2 text-sm text-amber-400 hover:bg-stone-800 transition-colors"
+                      >
+                        <ShieldCheck className="w-4 h-4" />
+                        <span>Job Approvals</span>
+                      </Link>
+                    )}
+                    <button
+                      onClick={() => {
+                        signOut();
+                        setShowAccountMenu(false);
+                      }}
+                      className="w-full flex items-center gap-2 px-4 py-2 text-sm text-stone-200 hover:bg-stone-800 hover:text-red-300 transition-colors"
+                    >
+                      <LogOut className="w-4 h-4" />
+                      <span>Sign Out</span>
+                    </button>
+                  </div>
+                )}
               </div>
             ) : (
               <button
                 onClick={() => setShowAuthModal(true)}
-                className="bg-stone-800 hover:bg-stone-700 text-white px-4 py-2.5 rounded-xl font-semibold text-sm border border-stone-700 transition-all"
+                className="h-10 bg-stone-800 hover:bg-stone-700 text-white px-4 rounded-xl font-semibold text-sm border border-stone-700 transition-all whitespace-nowrap"
               >
                 Seller Sign In
               </button>
@@ -81,13 +125,13 @@ export const Header: React.FC = () => {
               href="https://wa.me/2348136573235" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="bg-stone-800 hover:bg-stone-700 text-white px-4 py-2.5 rounded-xl font-semibold text-sm border border-stone-700 transition-all"
+              className="h-10 flex items-center bg-stone-800 hover:bg-stone-700 text-white px-4 rounded-xl font-semibold text-sm border border-stone-700 transition-all whitespace-nowrap"
             >
               Join WhatsApp
             </a>
             <a 
               href="#storefronts" 
-              className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-stone-950 font-bold px-5 py-2.5 rounded-xl text-sm shadow-lg shadow-amber-500/25 transition-all flex items-center gap-2"
+              className="h-10 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-stone-950 font-bold px-5 rounded-xl text-sm shadow-lg shadow-amber-500/25 transition-all flex items-center gap-2 whitespace-nowrap"
             >
               {/* Sparkles Icon SVG */}
               <svg 
@@ -140,8 +184,26 @@ export const Header: React.FC = () => {
             >
               Create Your Shop
             </a>
+            <a
+              href="https://wa.me/2348136573235"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="w-full text-center bg-stone-800 text-white font-semibold py-3 rounded-xl border border-stone-700"
+            >
+              Join WhatsApp
+            </a>
             {user ? (
               <>
+                {isAdmin && (
+                  <Link
+                    to="/admin/jobs"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="w-full text-center bg-amber-500/10 text-amber-400 font-semibold py-3 rounded-xl border border-amber-500/30"
+                  >
+                    Job Approvals
+                  </Link>
+                )}
                 <Link
                   to="/my-shops"
                   onClick={() => setIsMobileMenuOpen(false)}

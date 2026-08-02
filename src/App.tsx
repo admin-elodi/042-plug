@@ -9,6 +9,7 @@ const Home = lazy(() => import("@/pages/Home"));
 const CategoryPage = lazy(() => import("@/pages/CategoryPage"));
 const MyShopsPage = lazy(() => import("@/pages/MyShopsPage"));
 const ShopPage = lazy(() => import("@/pages/ShopPage"));
+const AdminJobsPage = lazy(() => import("@/pages/AdminJobsPage"));
 
 const PageLoader = () => (
   <div className="min-h-screen flex items-center justify-center bg-stone-950">
@@ -27,6 +28,7 @@ export default function App() {
             <Route path="/browse/:categoryId" element={<CategoryPage />} />
             <Route path="/my-shops" element={<MyShopsPage />} />
             <Route path="/shops/:slug" element={<ShopPage />} />
+            <Route path="/admin/jobs" element={<AdminJobsPage />} />
           </Routes>
         </Suspense>
       </div>
