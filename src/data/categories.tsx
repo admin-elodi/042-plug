@@ -109,7 +109,7 @@ const CATEGORIES: CategoryItem[] = [
     popularItems: ['042 Dispatch', 'Auto Repairs', 'Spare Parts', 'Car Wash']
   },
   {
-    id: 'events-nightlife',
+    id: 'couple',
     title: 'Events & Nightlife',
     subtitle: 'DJs, Event Planners, Ushers, Sound & Party Rentals',
     icon: 'PartyPopper',
