@@ -10,7 +10,7 @@ export interface CategoryItem {
 
 const CATEGORIES: CategoryItem[] = [
   {
-    id: 'fashion',
+    id: 'material',
     title: 'Fashion & Apparel',
     subtitle: 'Boutiques, Native Wear & Tailors',
     icon: 'Shirt',
