@@ -55,7 +55,7 @@ const CATEGORIES: CategoryItem[] = [
     popularItems: ['Press-On Nails', 'Skincare Sets', 'Hip & Nyash Padding', 'Hair Oil']
   },
   {
-    id: 'tech',
+    id: 'gadgets',
     title: 'Tech & Gadgets',
     subtitle: 'Phones, Laptops, Accessories & Repairs',
     icon: 'Smartphone',
@@ -64,7 +64,7 @@ const CATEGORIES: CategoryItem[] = [
     popularItems: ['iPhone UK Used', 'MacBooks', 'Powerbanks', 'Screen Repair']
   },
   {
-    id: 'food',
+    id: 'tomato',
     title: 'Food & Groceries',
     subtitle: 'Restaurants, Raw Foodstuff, Bakeries & Drinks',
     icon: 'UtensilsCrossed',
