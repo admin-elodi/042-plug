@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Shirt, Smartphone, Sparkles, UtensilsCrossed, Home, Car, PartyPopper, Palette, Plus, Eye } from 'lucide-react';
+import { Shirt, Smartphone, Sparkles, UtensilsCrossed, Home, Car, PartyPopper, Footprints, Gem, Scissors, Gift, BedDouble, Plus, Eye } from 'lucide-react';
 import CATEGORIES, { type CategoryItem } from '@/data/categories';
 
 interface CategoryGridProps {
@@ -18,7 +18,11 @@ const iconMap: Record<string, React.ReactNode> = {
   Home: <Home className="w-5 h-5 text-amber-300" />,
   Car: <Car className="w-5 h-5 text-amber-300" />,
   PartyPopper: <PartyPopper className="w-5 h-5 text-amber-300" />,
-  Palette: <Palette className="w-5 h-5 text-amber-300" />
+  Footprints: <Footprints className="w-5 h-5 text-amber-300" />,
+  Gem: <Gem className="w-5 h-5 text-amber-300" />,
+  Scissors: <Scissors className="w-5 h-5 text-amber-300" />,
+  Gift: <Gift className="w-5 h-5 text-amber-300" />,
+  BedDouble: <BedDouble className="w-5 h-5 text-amber-300" />
 };
 
 export const CategoryGrid: React.FC<CategoryGridProps> = ({ onOpenCreate, onOpenView }) => {

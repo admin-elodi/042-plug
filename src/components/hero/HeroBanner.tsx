@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { ShoppingBag, Briefcase, UtensilsCrossed, Smartphone, Umbrella, Search, PlusCircle } from 'lucide-react';
-import heroImage from '@/assets/images/herobanner.jpg';
+import heroImage from '@/assets/images/herobanner.webp';
 import { SalariedJobsModal } from '@/components/modals/SalariedJobsModal';
 
 interface HeroBannerProps {

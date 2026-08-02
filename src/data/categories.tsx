@@ -12,11 +12,47 @@ const CATEGORIES: CategoryItem[] = [
   {
     id: 'fashion',
     title: 'Fashion & Apparel',
-    subtitle: 'Boutiques, Native Wear, Shoes & Tailors',
+    subtitle: 'Boutiques, Native Wear & Tailors',
     icon: 'Shirt',
     badge: 'Popular',
     count: '42+ Vendors',
-    popularItems: ['Senegalese Native', 'Sneakers', 'Designer Bags', 'Custom Tailoring']
+    popularItems: ['Senegalese Native', 'Unisex Wears', 'Jackets', 'Custom Tailoring']
+  },
+  {
+    id: 'shoes',
+    title: 'Shoes & Footwear',
+    subtitle: 'Sneakers, Slippers, Corporate Shoes & Shoemakers',
+    icon: 'Footprints',
+    badge: 'High Demand',
+    count: '20+ Vendors',
+    popularItems: ['Sneakers', 'Slippers', 'Made-to-Order', 'Shoe Repair']
+  },
+  {
+    id: 'bags-accessories',
+    title: 'Bags & Accessories',
+    subtitle: 'Handbags, Jewelry, Belts, Sunglasses & Wristwatches',
+    icon: 'Gem',
+    badge: 'Trending',
+    count: '18+ Vendors',
+    popularItems: ['Handbags', 'Jewelry Sets', 'Sunglasses', 'Wristwatches']
+  },
+  {
+    id: 'hair-wigs',
+    title: 'Hair, Wigs & Extensions',
+    subtitle: 'Wig Installation, Braiding, Bridal Hair & Ventilation',
+    icon: 'Scissors',
+    badge: 'Weekend Hot',
+    count: '25+ Stylists',
+    popularItems: ['Wig Installation', 'Braiding', 'Bridal Hair', 'Luxury Hair']
+  },
+  {
+    id: 'beauty',
+    title: 'Beauty & Skincare',
+    subtitle: 'Makeup, Nails, Skincare & Body Enhancers',
+    icon: 'Sparkles',
+    badge: 'Trending',
+    count: '35+ Vendors',
+    popularItems: ['Press-On Nails', 'Skincare Sets', 'Hip & Nyash Padding', 'Hair Oil']
   },
   {
     id: 'tech',
@@ -28,15 +64,6 @@ const CATEGORIES: CategoryItem[] = [
     popularItems: ['iPhone UK Used', 'MacBooks', 'Powerbanks', 'Screen Repair']
   },
   {
-    id: 'beauty',
-    title: 'Beauty & Skincare',
-    subtitle: 'Makeup, Wigs, Cosmetics & Spa Services',
-    icon: 'Sparkles',
-    badge: 'Trending',
-    count: '35+ Vendors',
-    popularItems: ['Human Hair Wigs', 'Skincare Sets', 'Lash Techs', 'Nail Art']
-  },
-  {
     id: 'food',
     title: 'Food & Groceries',
     subtitle: 'Restaurants, Raw Foodstuff, Bakeries & Drinks',
@@ -46,6 +73,15 @@ const CATEGORIES: CategoryItem[] = [
     popularItems: ['Abakpa Market Supplies', 'Pastries', 'Catering', 'Fast Food']
   },
   {
+    id: 'gifts',
+    title: 'Gifts & Occasion Items',
+    subtitle: 'Hampers, Surprise Packages, Gift Boxes & Wrapping',
+    icon: 'Gift',
+    badge: 'Essential',
+    count: '15+ Vendors',
+    popularItems: ['Surprise Packages', 'Gift Hampers', 'Balloon Décor', 'Custom Wrapping']
+  },
+  {
     id: 'real-estate',
     title: 'Real Estate & Rentals',
     subtitle: 'Self-contains, Land, Shortlets, Shops & Office Space',
@@ -53,6 +89,15 @@ const CATEGORIES: CategoryItem[] = [
     badge: 'High Value',
     count: '20+ Listings',
     popularItems: ['Land in Nike', 'Shortlets GRA', 'Shops Ogui Rd', 'Self-Contain']
+  },
+  {
+    id: 'hotels',
+    title: 'Hotels & Shortlets',
+    subtitle: 'Hotel Bookings, Shortlet Apartments & Event Halls',
+    icon: 'BedDouble',
+    badge: 'New',
+    count: '10+ Listings',
+    popularItems: ['Hotel Rooms', 'Shortlet Apartments', 'Event Halls', 'Weekend Getaways']
   },
   {
     id: 'auto-logistics',
@@ -71,15 +116,6 @@ const CATEGORIES: CategoryItem[] = [
     badge: 'Weekend Hot',
     count: '12+ Planners',
     popularItems: ['Hotel Launch', 'VIP Ushers', 'Party Rentals', 'Event DJs']
-  },
-  {
-    id: 'media-branding',
-    title: 'Media, Design & Tech',
-    subtitle: 'Graphics, Printing, Social Media, Web Setup & Branding',
-    icon: 'Palette',
-    badge: 'Essential',
-    count: '25+ Services',
-    popularItems: ['Flyer Design', 'Ogui Rd Printing', 'Logo Branding', 'Social Media']
   }
 ];
 

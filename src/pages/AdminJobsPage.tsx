@@ -31,22 +31,6 @@ export const AdminJobsPage: React.FC = () => {
 
   const isAdmin = user?.email === ADMIN_EMAIL;
 
-  const fetchJobs = async () => {
-    const { data, error } = await supabase
-      .from('jobs')
-      .select('id, job_title, company_name, location, job_type, salary, description, contact_phone, status')
-      .order('created_at', { ascending: false });
-
-    if (error) {
-      console.error(error);
-      setErrorMsg('Could not load job postings. Please try again.');
-    } else {
-      setJobs((data as JobPosting[]) ?? []);
-      setErrorMsg(null);
-    }
-    setLoading(false);
-  };
-
   useEffect(() => {
     if (!isAdmin) {
       setLoading(false);
