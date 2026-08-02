@@ -37,7 +37,7 @@ const CATEGORIES: CategoryItem[] = [
     popularItems: ['Handbags', 'Jewelry Sets', 'Sunglasses', 'Wristwatches']
   },
   {
-    id: 'hair-wigs',
+    id: 'braid',
     title: 'Hair, Wigs & Extensions',
     subtitle: 'Wig Installation, Braiding, Bridal Hair & Ventilation',
     icon: 'Scissors',
