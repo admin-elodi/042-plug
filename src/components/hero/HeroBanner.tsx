@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { ShoppingBag, Briefcase, UtensilsCrossed, Smartphone, Umbrella, Search, PlusCircle } from 'lucide-react';
-import heroImage from '@/assets/images/herobanner.webp';
+import heroImage from '@/assets/images/herobg.png';
 import { SalariedJobsModal } from '@/components/modals/SalariedJobsModal';
 
 interface HeroBannerProps {
@@ -55,8 +55,8 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onOpenCreateShop, onOpen
         />
 
         {/* Dark wash so text stays crisp */}
-        <div className="absolute inset-0 bg-black/65" />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/5 via-black/70 to-black/50" />
+        <div className="absolute inset-0 bg-black/30" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/5 via-black/20 to-black/20" />
 
         {/* Floating signage badges */}
         <div

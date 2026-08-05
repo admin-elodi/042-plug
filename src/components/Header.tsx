@@ -53,7 +53,7 @@ export const Header: React.FC = () => {
               <span className="text-2xl font-black tracking-wider text-white whitespace-nowrap">
                 042<span className="text-amber-400">PLUGS</span>
               </span>
-              <p className="text-[10px] text-stone-400 tracking-widest uppercase font-semibold whitespace-nowrap">For Ndi Enugu</p>
+              <p className="text-[10px] text-stone-400 tracking-widest uppercase font-semibold whitespace-nowrap uppercase">Legit Deals Only</p>
             </div>
           </Link>
 
@@ -118,7 +118,7 @@ export const Header: React.FC = () => {
                 onClick={() => setShowAuthModal(true)}
                 className="h-10 bg-stone-800 hover:bg-stone-700 text-white px-4 rounded-xl font-semibold text-sm border border-stone-700 transition-all whitespace-nowrap"
               >
-                Seller Sign In
+                042 Plugs Sign In
               </button>
             )}
             <a 
@@ -229,7 +229,7 @@ export const Header: React.FC = () => {
                 }}
                 className="w-full text-center bg-stone-800 text-white font-semibold py-3 rounded-xl border border-stone-700"
               >
-                Sign In
+                042 Plugs Sign In
               </button>
             )}
           </div>

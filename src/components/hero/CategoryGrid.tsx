@@ -70,7 +70,7 @@ export const CategoryGrid: React.FC<CategoryGridProps> = ({ onOpenCreate, onOpen
                       className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                     />
                     {/* Dark wash so text stays legible over any photo */}
-                    <div className="absolute inset-0 bg-stone-950/80 group-hover:bg-stone-950/75 transition-colors" />
+                    <div className="absolute inset-0 bg-stone-950/50 group-hover:bg-stone-950/75 transition-colors" />
                   </>
                 )}
                 {/* Flat fallback background when no photo has been added yet */}

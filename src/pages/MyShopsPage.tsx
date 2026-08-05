@@ -2,10 +2,11 @@
 
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Store, Trash2, Loader2, AlertCircle, PackageOpen, Phone, MapPin, PackagePlus, ExternalLink, LogIn } from 'lucide-react';
+import { ArrowLeft, Store, Trash2, Loader2, AlertCircle, PackageOpen, Phone, MapPin, PackagePlus, ExternalLink, LogIn, Sparkles } from 'lucide-react';
 import { supabase } from '@/lib/supabaseClient';
 import { useAuth } from '@/context/AuthContext';
 import AddProductModal from '@/components/modals/AddProductModal';
+import PayRegistrationFeeButton from '@/components/PayRegistrationFeeButton';
 import AuthModal from '@/components/modals/AuthModal';
 
 interface ProductMedia {
@@ -28,6 +29,7 @@ interface Shop {
   address: string | null;
   category_title: string;
   payment_status: 'pending' | 'approved';
+  ai_tip: string | null;
   products: Product[];
 }
 
@@ -39,6 +41,8 @@ export const MyShopsPage: React.FC = () => {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [busyId, setBusyId] = useState<string | null>(null);
   const [addProductTarget, setAddProductTarget] = useState<{ shopId: string; businessName: string } | null>(null);
+  const [generatingTipId, setGeneratingTipId] = useState<string | null>(null);
+  const [tipError, setTipError] = useState<string | null>(null);
 
   const fetchMyShops = async () => {
     if (!user) return;
@@ -47,7 +51,7 @@ export const MyShopsPage: React.FC = () => {
       .from('shops')
       .select(
         `
-        id, slug, business_name, phone, address, category_title, payment_status,
+        id, slug, business_name, phone, address, category_title, payment_status, ai_tip,
         products (
           id, title, price,
           product_media ( id, file_url )
@@ -80,7 +84,7 @@ export const MyShopsPage: React.FC = () => {
         .from('shops')
         .select(
           `
-          id, slug, business_name, phone, address, category_title, payment_status,
+          id, slug, business_name, phone, address, category_title, payment_status, ai_tip,
           products (
             id, title, price,
             product_media ( id, file_url )
@@ -154,6 +158,25 @@ export const MyShopsPage: React.FC = () => {
     }
   };
 
+  const handleGenerateTip = async (shopId: string) => {
+    setGeneratingTipId(shopId);
+    setTipError(null);
+    try {
+      const { data, error } = await supabase.functions.invoke('generate-shop-tip', {
+        body: { shopId }
+      });
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
+
+      setShops((prev) => prev.map((s) => (s.id === shopId ? { ...s, ai_tip: data.tip } : s)));
+    } catch (err) {
+      console.error(err);
+      setTipError(err instanceof Error ? err.message : 'Could not generate a tip right now.');
+    } finally {
+      setGeneratingTipId(null);
+    }
+  };
+
   useEffect(() => {
     document.title = 'My Shops | 042 Plug';
   }, []);
@@ -194,6 +217,13 @@ export const MyShopsPage: React.FC = () => {
               </div>
             )}
 
+            {tipError && (
+              <div className="mb-4 flex items-start gap-2 p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-300 text-xs">
+                <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
+                <span>{tipError}</span>
+              </div>
+            )}
+
             {loading && (
               <div className="text-center py-20">
                 <Loader2 className="w-8 h-8 text-amber-400 mx-auto mb-3 animate-spin" />
@@ -224,8 +254,8 @@ export const MyShopsPage: React.FC = () => {
                               Live
                             </span>
                           ) : (
-                            <span className="inline-block px-2 py-0.5 rounded-full text-[10px] font-semibold border border-amber-500/30 bg-amber-500/10 text-amber-300">
-                              Pending Payment Approval
+                            <span className="inline-block px-2 py-0.5 rounded-full text-[10px] font-semibold border border-stone-600 bg-stone-800 text-stone-300">
+                              Pending Payment
                             </span>
                           )}
                         </div>
@@ -242,6 +272,20 @@ export const MyShopsPage: React.FC = () => {
                             </span>
                           )}
                         </div>
+                        {shop.payment_status === 'pending' && (
+                          <div className="mt-3 max-w-xs">
+                            <PayRegistrationFeeButton
+                              shopId={shop.id}
+                              businessName={shop.business_name}
+                              userEmail={user?.email ?? ''}
+                              onSuccess={() =>
+                                setShops((prev) =>
+                                  prev.map((s) => (s.id === shop.id ? { ...s, payment_status: 'approved' } : s))
+                                )
+                              }
+                            />
+                          </div>
+                        )}
                       </div>
                       <div className="flex flex-col items-end gap-2">
                         <Link
@@ -305,6 +349,38 @@ export const MyShopsPage: React.FC = () => {
                         ))}
                       </div>
                     )}
+
+                    {/* AI Sales Tip */}
+                    <div className="mt-3 pt-3 border-t border-stone-800/70">
+                      {shop.ai_tip ? (
+                        <div className="flex items-start gap-2 p-2.5 rounded-lg bg-amber-500/5 border border-amber-500/20">
+                          <Sparkles className="w-3.5 h-3.5 text-amber-400 flex-shrink-0 mt-0.5" />
+                          <div className="flex-1 min-w-0">
+                            <p className="text-[11px] text-stone-300 leading-relaxed">{shop.ai_tip}</p>
+                            <button
+                              onClick={() => handleGenerateTip(shop.id)}
+                              disabled={generatingTipId === shop.id}
+                              className="mt-1.5 text-[10px] font-semibold text-amber-400 hover:text-amber-300 disabled:opacity-50"
+                            >
+                              {generatingTipId === shop.id ? 'Refreshing...' : 'Refresh Tip'}
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        <button
+                          onClick={() => handleGenerateTip(shop.id)}
+                          disabled={generatingTipId === shop.id}
+                          className="flex items-center gap-1.5 text-[11px] font-medium text-amber-400 hover:text-amber-300 disabled:opacity-50"
+                        >
+                          {generatingTipId === shop.id ? (
+                            <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                          ) : (
+                            <Sparkles className="w-3.5 h-3.5" />
+                          )}
+                          <span>{generatingTipId === shop.id ? 'Generating tip...' : 'Get AI Sales Tip'}</span>
+                        </button>
+                      )}
+                    </div>
                   </div>
                 ))}
               </div>

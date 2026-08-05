@@ -30,6 +30,7 @@
     "globals": "^17.6.0",
     "postcss": "^8.5.15",
     "sharp": "^0.35.3",
+    "supabase": "^2.111.0",
     "tailwindcss": "^4.3.0",
     "typescript": "~6.0.2",
     "typescript-eslint": "^8.59.2",
