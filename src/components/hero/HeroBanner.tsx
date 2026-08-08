@@ -102,7 +102,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onOpenCreateShop, onOpen
           {/* Main Headline */}
           <h1 className="text-xl xs:text-2xl sm:text-5xl lg:text-6xl font-bold mb-2 text-stone-100 leading-tight drop-shadow-[0_4px_12px_rgba(0,0,0,0.95)]">
             <span className="inline-block tracking-[0.1em] glowing-coal font-black">
-              042-Plugs Online Plaza
+              042-Plugs Plaza
             </span>
           </h1>
 
