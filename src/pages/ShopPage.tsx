@@ -117,7 +117,7 @@ export const ShopPage: React.FC = () => {
       <div className="max-w-2xl mx-auto">
         <Link to="/" className="inline-flex items-center gap-1.5 text-xs text-stone-500 hover:text-amber-600 mb-5">
           <ArrowLeft className="w-3.5 h-3.5" />
-          <span>Back to 042 Plug</span>
+          <span>Back to 042 Plugs</span>
         </Link>
 
         {loading && (

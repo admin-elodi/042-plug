@@ -142,7 +142,7 @@ export const StorefrontsPage: React.FC = () => {
       <div className="max-w-2xl mx-auto">
         <Link to="/" className="inline-flex items-center gap-1.5 text-xs text-stone-400 hover:text-amber-400 mb-5">
           <ArrowLeft className="w-3.5 h-3.5" />
-          <span>Back to 042 Plug</span>
+          <span>Back to 042 Plugs</span>
         </Link>
 
         <div className="flex items-center gap-2 text-white font-bold text-lg mb-4">

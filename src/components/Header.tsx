@@ -2,9 +2,10 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronDown, Store, ShieldCheck, LogOut } from 'lucide-react';
+import { ChevronDown, Store, ShieldCheck, LogOut, Briefcase } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import AuthModal from '@/components/modals/AuthModal';
+import SalariedJobsModal from '@/components/modals/SalariedJobsModal';
 
 const ADMIN_EMAIL = 'ikezion@gmail.com';
 
@@ -12,6 +13,7 @@ export const Header: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showAccountMenu, setShowAccountMenu] = useState(false);
+  const [showJobsModal, setShowJobsModal] = useState(false);
   const accountMenuRef = useRef<HTMLDivElement>(null);
   const { user, signOut } = useAuth();
   const isAdmin = user?.email === ADMIN_EMAIL;
@@ -129,20 +131,13 @@ export const Header: React.FC = () => {
             >
               Join WhatsApp
             </a>
-            <a 
-              href="#storefronts" 
+            <button
+              onClick={() => setShowJobsModal(true)}
               className="h-10 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-stone-950 font-bold px-5 rounded-xl text-sm shadow-lg shadow-amber-500/25 transition-all flex items-center gap-2 whitespace-nowrap"
             >
-              {/* Sparkles Icon SVG */}
-              <svg 
-                className="w-4 h-4 fill-stone-950" 
-                viewBox="0 0 24 24" 
-                fill="currentColor"
-              >
-                <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" />
-              </svg>
-              <span>Get Listed</span>
-            </a>
+              <Briefcase className="w-4 h-4" />
+              <span>Find/Post Jobs</span>
+            </button>
           </div>
 
           {/* Mobile Menu Toggle Button */}
@@ -184,6 +179,16 @@ export const Header: React.FC = () => {
             >
               Create Your Shop
             </a>
+            <button
+              onClick={() => {
+                setShowJobsModal(true);
+                setIsMobileMenuOpen(false);
+              }}
+              className="w-full flex items-center justify-center gap-1.5 text-center bg-gradient-to-r from-amber-500 to-orange-500 text-stone-950 font-bold py-3 rounded-xl shadow-md"
+            >
+              <Briefcase className="w-4 h-4" />
+              <span>Find/Post Jobs</span>
+            </button>
             <Link
               to="/storefronts"
               onClick={() => setIsMobileMenuOpen(false)}
@@ -244,6 +249,7 @@ export const Header: React.FC = () => {
       )}
 
       {showAuthModal && <AuthModal onClose={() => setShowAuthModal(false)} />}
+      <SalariedJobsModal isOpen={showJobsModal} onClose={() => setShowJobsModal(false)} />
     </header>
   );
 };

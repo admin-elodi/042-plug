@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Briefcase, X, Send, Eye, Building2, Loader2, AlertCircle, CheckCircle, MapPin, Wallet, MessageCircle, PackageOpen } from 'lucide-react';
 import { supabase } from '@/lib/supabaseClient';
 import { buildWhatsAppLink } from '@/lib/whatsapp';
@@ -125,7 +126,7 @@ export const SalariedJobsModal: React.FC<SalariedJobsModalProps> = ({ isOpen, on
     }
   };
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
       <div className="relative w-full max-w-lg rounded-2xl bg-stone-900 border border-stone-800 text-stone-100 shadow-2xl p-6 overflow-hidden max-h-[90vh] overflow-y-auto">
         {/* Header */}
@@ -371,7 +372,8 @@ export const SalariedJobsModal: React.FC<SalariedJobsModalProps> = ({ isOpen, on
           </>
         )}
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 
