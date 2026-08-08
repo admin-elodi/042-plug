@@ -12,6 +12,7 @@ declare global {
         email: string;
         amount: number;
         currency?: string;
+        channels?: string[];
         ref?: string;
         metadata?: Record<string, unknown>;
         callback: (response: { reference: string }) => void;
@@ -26,7 +27,7 @@ declare global {
 const REGISTRATION_FEE = 1000;
 const REGISTRATION_FEE_KOBO = REGISTRATION_FEE * 100;
 
-const PAYSTACK_PUBLIC_KEY = 'pk_test_474f23c077ddb74253934e4179d86e4b14cc3fd2';
+const PAYSTACK_PUBLIC_KEY = 'pk_live_23025680948d678259aa2eb30b9055232052afd6';
 
 interface PayRegistrationFeeButtonProps {
   shopId: string;
@@ -98,6 +99,9 @@ export const PayRegistrationFeeButton: React.FC<PayRegistrationFeeButtonProps> =
       email: userEmail,
       amount: REGISTRATION_FEE_KOBO,
       currency: 'NGN',
+      // Show every real payment method Nigerians actually use — bank transfer
+      // and USSD first, card as an available option rather than the default.
+      channels: ['bank_transfer', 'bank', 'ussd', 'mobile_money', 'card'],
       ref: `042plug-${shopId}-${Date.now()}`,
       metadata: { shop_id: shopId, business_name: businessName },
       callback: (response) => {

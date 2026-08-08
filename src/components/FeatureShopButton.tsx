@@ -12,6 +12,7 @@ declare global {
         email: string;
         amount: number;
         currency?: string;
+        channels?: string[];
         ref?: string;
         metadata?: Record<string, unknown>;
         callback: (response: { reference: string }) => void;
@@ -27,7 +28,7 @@ const FEATURE_FEE = 500;
 const FEATURE_FEE_KOBO = FEATURE_FEE * 100;
 const FEATURE_DURATION_DAYS = 7;
 
-const PAYSTACK_PUBLIC_KEY = 'pk_test_474f23c077ddb74253934e4179d86e4b14cc3fd2';
+const PAYSTACK_PUBLIC_KEY = 'pk_live_23025680948d678259aa2eb30b9055232052afd6';
 
 interface FeatureShopButtonProps {
   shopId: string;
@@ -96,6 +97,9 @@ export const FeatureShopButton: React.FC<FeatureShopButtonProps> = ({
       email: userEmail,
       amount: FEATURE_FEE_KOBO,
       currency: 'NGN',
+      // Show every real payment method Nigerians actually use — bank transfer
+      // and USSD first, card as an available option rather than the default.
+      channels: ['bank_transfer', 'bank', 'ussd', 'mobile_money', 'card'],
       ref: `042plug-feature-${shopId}-${Date.now()}`,
       metadata: { shop_id: shopId, business_name: businessName, purpose: 'featured_listing' },
       callback: (response) => {
