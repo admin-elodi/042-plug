@@ -30,6 +30,7 @@ interface Shop {
   bank_name: string | null;
   account_number: string | null;
   account_name: string | null;
+  featured_until: string | null;
   created_at: string;
   products: Product[];
 }
@@ -73,7 +74,7 @@ export const CategoryPage: React.FC = () => {
         .from('shops')
         .select(
           `
-          id, slug, business_name, phone, address, bank_name, account_number, account_name, created_at,
+          id, slug, business_name, phone, address, bank_name, account_number, account_name, featured_until, created_at,
           products (
             id, title, description, price,
             product_media ( id, media_type, file_url, sort_order )
@@ -89,7 +90,15 @@ export const CategoryPage: React.FC = () => {
         console.error(error);
         setErrorMsg('Could not load shops right now. Please try again.');
       } else {
-        setShops((data as unknown as Shop[]) ?? []);
+        const now = Date.now();
+        const sorted = ((data as unknown as Shop[]) ?? []).sort((a, b) => {
+          const aFeatured = a.featured_until && new Date(a.featured_until).getTime() > now;
+          const bFeatured = b.featured_until && new Date(b.featured_until).getTime() > now;
+          if (aFeatured && !bFeatured) return -1;
+          if (!aFeatured && bFeatured) return 1;
+          return 0; // keep existing created_at order within each group
+        });
+        setShops(sorted);
       }
       setLoading(false);
     };
@@ -143,10 +152,22 @@ export const CategoryPage: React.FC = () => {
 
         {!loading && !errorMsg && shops.length > 0 && (
           <div className="space-y-5">
-            {shops.map((shop) => (
-              <div key={shop.id} className="rounded-xl border border-stone-800 bg-stone-900/60 p-4">
+            {shops.map((shop) => {
+              const isFeatured = !!(shop.featured_until && new Date(shop.featured_until).getTime() > Date.now());
+              return (
+              <div
+                key={shop.id}
+                className={`rounded-xl border p-4 ${
+                  isFeatured ? 'border-amber-500/40 bg-amber-500/[0.03]' : 'border-stone-800 bg-stone-900/60'
+                }`}
+              >
                 <div className="flex items-start justify-between mb-2">
                   <div>
+                    {isFeatured && (
+                      <span className="inline-flex items-center gap-1 mb-1.5 px-2 py-0.5 rounded-full text-[10px] font-semibold border border-amber-400/40 bg-amber-400/15 text-amber-300">
+                        ⭐ Featured
+                      </span>
+                    )}
                     <h3 className="font-bold text-white text-sm">{shop.business_name}</h3>
                     <div className="flex flex-wrap items-center gap-3 mt-1 text-[11px] text-stone-400">
                       <a href={`tel:${shop.phone}`} className="flex items-center gap-1 hover:text-amber-400">
@@ -219,7 +240,8 @@ export const CategoryPage: React.FC = () => {
                   </div>
                 )}
               </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>

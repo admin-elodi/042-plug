@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { ShoppingBag, Briefcase, UtensilsCrossed, Smartphone, Umbrella, Search, PlusCircle } from 'lucide-react';
-import heroImage from '@/assets/images/herobg.png';
+import heroImage from '@/assets/images/herobg.webp';
 import { SalariedJobsModal } from '@/components/modals/SalariedJobsModal';
 
 interface HeroBannerProps {
@@ -100,12 +100,15 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onOpenCreateShop, onOpen
           </div>
 
           {/* Main Headline */}
-          <h1 className="text-xl xs:text-2xl sm:text-5xl lg:text-6xl font-bold mb-3 sm:mb-4 text-stone-100 leading-tight whitespace-nowrap drop-shadow-[0_4px_12px_rgba(0,0,0,0.95)]">
-            <span className="inline-block tracking-[0.15em]">Best Plugs in </span>{' '}
-            <span className="inline-block tracking-[0.15em] glowing-coal font-black">
-              Coal City
+          <h1 className="text-xl xs:text-2xl sm:text-5xl lg:text-6xl font-bold mb-2 text-stone-100 leading-tight drop-shadow-[0_4px_12px_rgba(0,0,0,0.95)]">
+            <span className="inline-block tracking-[0.1em] glowing-coal font-black">
+              042-Plugs Online Plaza
             </span>
           </h1>
+
+          <p className="text-sm sm:text-lg mb-3 tracking-[0.15em] text-amber-300 font-semibold drop-shadow-[0_4px_12px_rgba(0,0,0,0.95)]">
+            Legit Deals Only
+          </p>
 
           <p className="text-sm md:text-3xl mb-6 tracking-widest text-stone-200 drop-shadow-[0_4px_12px_rgba(0,0,0,0.95)]">
             Buy & Sell or Search for Jobs

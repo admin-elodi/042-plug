@@ -2,6 +2,7 @@ import { Suspense, lazy } from "react";
 import { Routes, Route } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import ScrollToTop from "@/components/ScrollToTop";
 
 // Each page's code now loads only when a visitor actually navigates to
 // it, instead of all pages being bundled into one large file upfront.
@@ -10,6 +11,7 @@ const CategoryPage = lazy(() => import("@/pages/CategoryPage"));
 const MyShopsPage = lazy(() => import("@/pages/MyShopsPage"));
 const ShopPage = lazy(() => import("@/pages/ShopPage"));
 const AdminJobsPage = lazy(() => import("@/pages/AdminJobsPage"));
+const StorefrontsPage = lazy(() => import("@/pages/StorefrontsPage"));
 
 const PageLoader = () => (
   <div className="min-h-screen flex items-center justify-center bg-stone-950">
@@ -20,6 +22,7 @@ const PageLoader = () => (
 export default function App() {
   return (
     <div className="min-h-screen bg-black text-white flex flex-col">
+      <ScrollToTop />
       <Header />
       <div className="flex-1">
         <Suspense fallback={<PageLoader />}>
@@ -29,6 +32,7 @@ export default function App() {
             <Route path="/my-shops" element={<MyShopsPage />} />
             <Route path="/shops/:slug" element={<ShopPage />} />
             <Route path="/admin/jobs" element={<AdminJobsPage />} />
+            <Route path="/storefronts" element={<StorefrontsPage />} />
           </Routes>
         </Suspense>
       </div>

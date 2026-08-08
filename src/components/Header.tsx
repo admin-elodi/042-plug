@@ -53,13 +53,13 @@ export const Header: React.FC = () => {
               <span className="text-2xl font-black tracking-wider text-white whitespace-nowrap">
                 042<span className="text-amber-400">PLUGS</span>
               </span>
-              <p className="text-[10px] text-stone-400 tracking-widest uppercase font-semibold whitespace-nowrap uppercase">Legit Deals Only</p>
+              <p className="text-[10px] text-stone-400 tracking-widest uppercase font-semibold whitespace-nowrap">Legit Deals Only</p>
             </div>
           </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-5 font-medium text-stone-300 text-sm">
-            <a href="#storefronts" className="whitespace-nowrap hover:text-amber-400 transition-colors">Storefronts</a>
+            <Link to="/storefronts" className="whitespace-nowrap hover:text-amber-400 transition-colors">Storefronts</Link>
             <a href="#launch-info" className="whitespace-nowrap hover:text-amber-400 transition-colors flex items-center gap-1.5">
               <span className="whitespace-nowrap">Oct 2026 Launch</span>
               <span className="whitespace-nowrap bg-amber-500/20 text-amber-400 text-[10px] font-bold px-2 py-0.5 rounded-full border border-amber-500/30">VIP</span>
@@ -118,11 +118,11 @@ export const Header: React.FC = () => {
                 onClick={() => setShowAuthModal(true)}
                 className="h-10 bg-stone-800 hover:bg-stone-700 text-white px-4 rounded-xl font-semibold text-sm border border-stone-700 transition-all whitespace-nowrap"
               >
-                042 Plugs Sign In
+                Seller Sign In
               </button>
             )}
             <a 
-              href="https://wa.me/2348136573235" 
+              href="https://chat.whatsapp.com/KbLAiBmxl1uGs32u24IXCu" 
               target="_blank" 
               rel="noopener noreferrer"
               className="h-10 flex items-center bg-stone-800 hover:bg-stone-700 text-white px-4 rounded-xl font-semibold text-sm border border-stone-700 transition-all whitespace-nowrap"
@@ -173,7 +173,7 @@ export const Header: React.FC = () => {
       {/* Mobile Dropdown Menu */}
       {isMobileMenuOpen && (
         <div className="md:hidden bg-stone-900 border-b border-stone-800 px-4 pt-4 pb-6 space-y-4">
-          <a href="#storefronts" onClick={() => setIsMobileMenuOpen(false)} className="block text-stone-300 hover:text-amber-400 font-medium">Browse Storefronts</a>
+          <Link to="/storefronts" onClick={() => setIsMobileMenuOpen(false)} className="block text-stone-300 hover:text-amber-400 font-medium">Browse Storefronts</Link>
           <a href="#launch-info" onClick={() => setIsMobileMenuOpen(false)} className="block text-stone-300 hover:text-amber-400 font-medium">October 2026 Launch Details</a>
           <Link to="/my-shops" onClick={() => setIsMobileMenuOpen(false)} className="block text-stone-300 hover:text-amber-400 font-medium">Sell on 042</Link>
           <div className="pt-2 flex flex-col gap-3">
@@ -184,8 +184,15 @@ export const Header: React.FC = () => {
             >
               Create Your Shop
             </a>
+            <Link
+              to="/storefronts"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="w-full text-center bg-stone-800 text-white font-semibold py-3 rounded-xl border border-stone-700"
+            >
+              Browse All Storefronts
+            </Link>
             <a
-              href="https://wa.me/2348136573235"
+              href="https://chat.whatsapp.com/KbLAiBmxl1uGs32u24IXCu"
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => setIsMobileMenuOpen(false)}
@@ -229,7 +236,7 @@ export const Header: React.FC = () => {
                 }}
                 className="w-full text-center bg-stone-800 text-white font-semibold py-3 rounded-xl border border-stone-700"
               >
-                042 Plugs Sign In
+                Sign In
               </button>
             )}
           </div>

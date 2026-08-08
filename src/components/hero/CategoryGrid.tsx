@@ -48,8 +48,8 @@ export const CategoryGrid: React.FC<CategoryGridProps> = ({ onOpenCreate, onOpen
       <div className="px-4 max-w-7xl mx-auto py-10">
         <div className="mb-8 pb-4 border-b border-stone-200 flex flex-col sm:flex-row sm:items-end justify-between">
           <div>
-            <h2 className="text-2xl font-extrabold text-stone-900 tracking-tight">Explore Business Categories</h2>
-            <p className="text-xs text-stone-500 mt-1">Select a category to view plugs or register your business</p>
+            <h2 className="text-2xl font-extrabold text-stone-900 tracking-tight">042-Plugs Online Plaza</h2>
+            <p className="text-xs text-stone-500 mt-1">Explore business categories, find trusted plugs, or register your own shop</p>
           </div>
         </div>
 

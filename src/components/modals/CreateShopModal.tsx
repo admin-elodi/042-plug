@@ -76,12 +76,30 @@ export const CreateShopModal: React.FC<CreateShopModalProps> = ({ category, onCl
     let cancelled = false;
 
     const checkExistingShop = async () => {
-      const { data, error } = await supabase
+      // A hard ceiling on how long we'll wait — if the request stalls for
+      // any reason (a stuck session-refresh lock, a dropped connection,
+      // anything) the person sees a real error and a way forward, instead
+      // of a spinner that never resolves.
+      const queryPromise = supabase
         .from('shops')
         .select('id, business_name')
         .eq('owner_id', user.id)
         .eq('category_id', category.id)
         .maybeSingle();
+
+      const timeoutPromise = new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error('timeout')), 10000)
+      );
+
+      let data, error;
+      try {
+        ({ data, error } = await Promise.race([queryPromise, timeoutPromise]));
+      } catch {
+        if (cancelled) return;
+        setCheckError('This is taking longer than expected. Please close this and try again.');
+        setStep('business');
+        return;
+      }
 
       if (cancelled) return;
 
@@ -104,7 +122,7 @@ export const CreateShopModal: React.FC<CreateShopModalProps> = ({ category, onCl
     return () => {
       cancelled = true;
     };
-  }, [user, category.id]);
+  }, [user?.id, category.id]);
 
   const handleFilesSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files ?? []);

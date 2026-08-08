@@ -5,10 +5,10 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-// This must match the amount actually charged on the frontend. Update this
-// (and the matching constant in CreateShopModal.tsx) together whenever the
-// registration fee changes, e.g. from the ₦1,000 launch price to ₦2,000.
-const EXPECTED_AMOUNT_KOBO = 100000; // ₦1,000
+// Starting price — ₦500 for 7 days. Update this (and the matching constant
+// in FeatureShopButton.tsx) together whenever the price/duration changes.
+const EXPECTED_AMOUNT_KOBO = 50000; // ₦500
+const FEATURE_DURATION_DAYS = 7;
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -46,10 +46,9 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Confirm this shop actually belongs to the person requesting verification.
     const { data: shop, error: shopError } = await supabase
       .from('shops')
-      .select('id, owner_id, payment_status')
+      .select('id, owner_id, payment_status, featured_until')
       .eq('id', shopId)
       .single();
 
@@ -67,8 +66,9 @@ Deno.serve(async (req) => {
       });
     }
 
-    if (shop.payment_status === 'approved') {
-      return new Response(JSON.stringify({ success: true, alreadyApproved: true }), {
+    if (shop.payment_status !== 'approved') {
+      return new Response(JSON.stringify({ error: 'Only live shops can be featured.' }), {
+        status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
@@ -81,12 +81,8 @@ Deno.serve(async (req) => {
       });
     }
 
-    // The ONLY source of truth for whether payment actually succeeded is
-    // Paystack's own server — never trust the client's callback alone.
     const verifyResponse = await fetch(`https://api.paystack.co/transaction/verify/${encodeURIComponent(reference)}`, {
-      headers: {
-        Authorization: `Bearer ${paystackSecretKey}`,
-      },
+      headers: { Authorization: `Bearer ${paystackSecretKey}` },
     });
 
     const verifyData = await verifyResponse.json();
@@ -108,31 +104,33 @@ Deno.serve(async (req) => {
     }
 
     if (transaction.amount !== EXPECTED_AMOUNT_KOBO) {
-      return new Response(
-        JSON.stringify({ error: 'The amount paid does not match the required registration fee.' }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
+      return new Response(JSON.stringify({ error: 'The amount paid does not match the featured listing fee.' }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
     }
 
-    // Genuinely verified — approve the shop.
+    // Extend from the current featured_until if it's still active (so
+    // buying another 7 days while already featured adds on top, rather
+    // than wasting the remaining time), otherwise start fresh from now.
+    const currentExpiry = shop.featured_until ? new Date(shop.featured_until) : null;
+    const baseTime = currentExpiry && currentExpiry.getTime() > Date.now() ? currentExpiry : new Date();
+    const newExpiry = new Date(baseTime.getTime() + FEATURE_DURATION_DAYS * 24 * 60 * 60 * 1000);
+
     const { error: updateError } = await supabase
       .from('shops')
-      .update({
-        payment_status: 'approved',
-        paystack_reference: reference,
-        payment_amount_kobo: transaction.amount,
-      })
+      .update({ featured_until: newExpiry.toISOString() })
       .eq('id', shopId);
 
     if (updateError) {
       console.error(updateError);
-      return new Response(JSON.stringify({ error: 'Payment verified but could not activate the shop. Please contact support.' }), {
+      return new Response(JSON.stringify({ error: 'Payment verified but could not activate featuring. Please contact support.' }), {
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
 
-    return new Response(JSON.stringify({ success: true }), {
+    return new Response(JSON.stringify({ success: true, featuredUntil: newExpiry.toISOString() }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   } catch (err) {

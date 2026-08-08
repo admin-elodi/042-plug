@@ -7,6 +7,7 @@ import { supabase } from '@/lib/supabaseClient';
 import { useAuth } from '@/context/AuthContext';
 import AddProductModal from '@/components/modals/AddProductModal';
 import PayRegistrationFeeButton from '@/components/PayRegistrationFeeButton';
+import FeatureShopButton from '@/components/FeatureShopButton';
 import AuthModal from '@/components/modals/AuthModal';
 
 interface ProductMedia {
@@ -29,6 +30,7 @@ interface Shop {
   address: string | null;
   category_title: string;
   payment_status: 'pending' | 'approved';
+  featured_until: string | null;
   ai_tip: string | null;
   products: Product[];
 }
@@ -51,7 +53,7 @@ export const MyShopsPage: React.FC = () => {
       .from('shops')
       .select(
         `
-        id, slug, business_name, phone, address, category_title, payment_status, ai_tip,
+        id, slug, business_name, phone, address, category_title, payment_status, ai_tip, featured_until,
         products (
           id, title, price,
           product_media ( id, file_url )
@@ -84,7 +86,7 @@ export const MyShopsPage: React.FC = () => {
         .from('shops')
         .select(
           `
-          id, slug, business_name, phone, address, category_title, payment_status, ai_tip,
+          id, slug, business_name, phone, address, category_title, payment_status, ai_tip, featured_until,
           products (
             id, title, price,
             product_media ( id, file_url )
@@ -110,7 +112,7 @@ export const MyShopsPage: React.FC = () => {
     return () => {
       cancelled = true;
     };
-  }, [user]);
+  }, [user?.id]);
 
   const removeStorageFolder = async (productId: string) => {
     const { data: files, error: listError } = await supabase.storage.from('product-media').list(productId);
@@ -258,6 +260,11 @@ export const MyShopsPage: React.FC = () => {
                               Pending Payment
                             </span>
                           )}
+                          {shop.featured_until && new Date(shop.featured_until) > new Date() && (
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold border border-amber-400/40 bg-amber-400/15 text-amber-300">
+                              ⭐ Featured
+                            </span>
+                          )}
                         </div>
                         <h3 className="font-bold text-white text-sm">{shop.business_name}</h3>
                         <div className="flex flex-wrap items-center gap-3 mt-1 text-[11px] text-stone-400">
@@ -281,6 +288,21 @@ export const MyShopsPage: React.FC = () => {
                               onSuccess={() =>
                                 setShops((prev) =>
                                   prev.map((s) => (s.id === shop.id ? { ...s, payment_status: 'approved' } : s))
+                                )
+                              }
+                            />
+                          </div>
+                        )}
+                        {shop.payment_status === 'approved' && (
+                          <div className="mt-3 max-w-xs">
+                            <FeatureShopButton
+                              shopId={shop.id}
+                              businessName={shop.business_name}
+                              userEmail={user?.email ?? ''}
+                              isCurrentlyFeatured={!!(shop.featured_until && new Date(shop.featured_until) > new Date())}
+                              onSuccess={(featuredUntil) =>
+                                setShops((prev) =>
+                                  prev.map((s) => (s.id === shop.id ? { ...s, featured_until: featuredUntil } : s))
                                 )
                               }
                             />
