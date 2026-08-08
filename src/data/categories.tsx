@@ -91,13 +91,13 @@ const CATEGORIES: CategoryItem[] = [
     popularItems: ['Land in Nike', 'Shortlets GRA', 'Shops Ogui Rd', 'Self-Contain']
   },
   {
-    id: 'hotels',
-    title: 'Hotels & Shortlets',
-    subtitle: 'Hotel Bookings, Shortlet Apartments & Event Halls',
-    icon: 'BedDouble',
-    badge: 'New',
-    count: '10+ Listings',
-    popularItems: ['Hotel Rooms', 'Shortlet Apartments', 'Event Halls', 'Weekend Getaways']
+    id: 'data-airtime-bills',
+    title: 'Data, Airtime & Bills',
+    subtitle: 'Data Bundles, Airtime Top-Up, Electricity & TV Subscriptions',
+    icon: 'Wifi',
+    badge: 'Daily Need',
+    count: '30+ Sellers',
+    popularItems: ['MTN Data', 'Airtel Airtime', 'DSTV/GOTV', 'Electricity Bills']
   },
   {
     id: 'auto-logistics',

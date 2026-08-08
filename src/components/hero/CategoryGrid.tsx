@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Shirt, Smartphone, Sparkles, UtensilsCrossed, Home, Car, PartyPopper, Footprints, Gem, Scissors, Gift, BedDouble, Plus, Eye } from 'lucide-react';
+import { Shirt, Smartphone, Sparkles, UtensilsCrossed, Home, Car, PartyPopper, Footprints, Gem, Scissors, Gift, Wifi, Plus, Eye } from 'lucide-react';
 import CATEGORIES, { type CategoryItem } from '@/data/categories';
 
 // Auto-discovers any background photo dropped into this folder, matched by
@@ -39,7 +39,7 @@ const iconMap: Record<string, React.ReactNode> = {
   Gem: <Gem className="w-4 h-4 text-amber-300" />,
   Scissors: <Scissors className="w-4 h-4 text-amber-300" />,
   Gift: <Gift className="w-4 h-4 text-amber-300" />,
-  BedDouble: <BedDouble className="w-4 h-4 text-amber-300" />
+  Wifi: <Wifi className="w-4 h-4 text-amber-300" />
 };
 
 const MAX_VISIBLE_TAGS = 3;

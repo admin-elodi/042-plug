@@ -138,7 +138,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onOpenCreateShop, onOpen
           <div className="h-6 sm:h-7 mb-3 flex items-center justify-center">
             <p
               key={taglineIndex}
-              className="tagline-fade text-sm sm:text-lg tracking-[0.15em] text-amber-300 font-semibold drop-shadow-[0_4px_12px_rgba(0,0,0,0.95)]"
+              className="tagline-fade text-sm sm:text-lg tracking-[0.15em] text-amber-100 font-semibold drop-shadow-[0_4px_12px_rgba(0,0,0,0.95)]"
             >
               {HERO_TAGLINES[taglineIndex]}
             </p>

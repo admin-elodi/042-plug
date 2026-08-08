@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { MessageCircle, Phone } from 'lucide-react';
+import { MessageCircle, Phone, Wifi } from 'lucide-react';
 
 const WHATSAPP_NUMBER = '2348136573235';
 const DISPLAY_PHONE = '0813 657 3235, 0810 090 0926';
@@ -63,6 +63,12 @@ export const Footer: React.FC = () => {
                   <Phone className="w-4 h-4" />
                   <span>{DISPLAY_PHONE}</span>
                 </a>
+              </li>
+              <li>
+                <Link to="/partners" className="flex items-center gap-2 hover:text-amber-400 transition-colors">
+                  <Wifi className="w-4 h-4" />
+                  <span>Partner With Us</span>
+                </Link>
               </li>
             </ul>
           </div>
