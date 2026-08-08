@@ -25,23 +25,23 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onOpenCreateShop, onOpen
         @keyframes emberPulse {
           0%, 100% {
             text-shadow: 
-              0 0 3px #ff2200,
-              0 0 8px #d01000,
-              0 0 15px #990000,
-              0 0 25px #550000;
+              0 0 3px #ffaa33,
+              0 0 8px #ff7700,
+              0 0 15px #cc4400,
+              0 0 25px #992200;
             filter: brightness(0.95);
           }
           50% {
             text-shadow: 
-              0 0 5px #ff4400,
-              0 0 12px #e61900,
-              0 0 22px #b30000,
-              0 0 35px #770000;
+              0 0 5px #ffcc55,
+              0 0 12px #ff9922,
+              0 0 22px #dd5500,
+              0 0 35px #aa3300;
             filter: brightness(1.15);
           }
         }
         .glowing-coal {
-          color: #e62200;
+          color: #ffaa33;
           animation: emberPulse 2.8s infinite ease-in-out;
         }
       `}</style>
@@ -107,7 +107,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onOpenCreateShop, onOpen
           </h1>
 
           <p className="text-sm sm:text-lg mb-3 tracking-[0.15em] text-amber-300 font-semibold drop-shadow-[0_4px_12px_rgba(0,0,0,0.95)]">
-            Legit Deals Only
+            Best Plugs in Coal City
           </p>
 
           <p className="text-sm md:text-3xl mb-6 tracking-widest text-stone-200 drop-shadow-[0_4px_12px_rgba(0,0,0,0.95)]">
