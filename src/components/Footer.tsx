@@ -70,7 +70,7 @@ export const Footer: React.FC = () => {
 
         {/* Bottom bar */}
         <div className="mt-10 pt-6 border-t border-stone-900 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-stone-500">
-          <p>© {year} 042 Plugs. All rights reserved.</p>
+          <p>© {year} 042 Plugs Plaza. All rights reserved.</p>
           <p>Built by <span className="text-stone-300 font-medium">JungleX</span></p>
         </div>
       </div>

@@ -103,7 +103,7 @@ export const SalariedJobsModal: React.FC<SalariedJobsModalProps> = ({ isOpen, on
       // Detailed heads-up ping to the admin, mirroring every field from the
       // form so nothing has to be looked up separately in the dashboard.
       const notifyMessage =
-        `Hello 042 Plug! \u{1F44B}\n\n` +
+        `Hello 042 Plugs Plaza! \u{1F44B}\n\n` +
         `I would like to submit a new job vacancy for review and listing:\n\n` +
         `\u{1F4CC} *Job Title:* ${jobData.jobTitle}\n` +
         `\u{1F3E2} *Company / Business:* ${jobData.companyName}\n` +
@@ -221,7 +221,7 @@ export const SalariedJobsModal: React.FC<SalariedJobsModalProps> = ({ isOpen, on
                     <a
                       href={buildWhatsAppLink(
                         job.contact_phone,
-                        `Hi, I'd like to apply for the "${job.job_title}" role at ${job.company_name} that I saw on 042 Plug.`
+                        `Hi, I'd like to apply for the "${job.job_title}" role at ${job.company_name} that I saw on 042 Plugs Plaza.`
                       )}
                       target="_blank"
                       rel="noopener noreferrer"

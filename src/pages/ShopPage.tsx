@@ -4,6 +4,8 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Store, Phone, MapPin, Loader2, AlertCircle, PackageOpen, MessageCircle, Share2, ArrowLeft, Check } from 'lucide-react';
 import { supabase } from '@/lib/supabaseClient';
+import { useSellerIdentity } from '@/hooks/useSellerIdentity';
+import { useAuth } from '@/context/AuthContext';
 
 interface ProductMedia {
   id: string;
@@ -22,6 +24,7 @@ interface Product {
 
 interface Shop {
   id: string;
+  owner_id: string;
   business_name: string;
   phone: string;
   address: string | null;
@@ -42,15 +45,18 @@ const formatWhatsAppNumber = (phone: string) => {
   return digits;
 };
 
-const buildOrderLink = (shop: Shop, product: Product) => {
+const buildOrderLink = (shop: Shop, product: Product, buyerShopName?: string | null) => {
   const priceText = product.price !== null ? `₦${Number(product.price).toLocaleString()}` : 'price on request';
   const paymentLine =
     shop.account_number && shop.account_name && shop.bank_name
       ? `\n\nPayment details:\nAccount Name: ${shop.account_name}\nAccount Number: ${shop.account_number}\nBank: ${shop.bank_name}`
       : '';
+  const fellowPlugLine = buyerShopName
+    ? `\n\nP.S. I'm also a registered 042 Plugs seller (my shop: ${buyerShopName}) — always happy to support fellow plugs 🙏`
+    : '';
   const message =
-    `Hi ${shop.business_name}, I'd like to order "${product.title}" (${priceText}) that I saw on 042 Plug.` +
-    `\n\nPlease confirm it's available.${paymentLine}`;
+    `Hi ${shop.business_name}, I'd like to order "${product.title}" (${priceText}) that I saw on 042 Plugs Plaza.` +
+    `\n\nPlease confirm it's available.${paymentLine}${fellowPlugLine}`;
   return `https://wa.me/${formatWhatsAppNumber(shop.phone)}?text=${encodeURIComponent(message)}`;
 };
 
@@ -60,6 +66,8 @@ export const ShopPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  const myShopName = useSellerIdentity();
+  const { user } = useAuth();
 
   useEffect(() => {
     if (!slug) return;
@@ -70,7 +78,7 @@ export const ShopPage: React.FC = () => {
         .from('shops')
         .select(
           `
-          id, business_name, phone, address, category_title, bank_name, account_number, account_name,
+          id, owner_id, business_name, phone, address, category_title, bank_name, account_number, account_name,
           products (
             id, title, description, price,
             product_media ( id, media_type, file_url, sort_order )
@@ -85,8 +93,15 @@ export const ShopPage: React.FC = () => {
       if (error || !data) {
         setErrorMsg("This shop isn't available. It may be pending approval or no longer exists.");
       } else {
-        setShop(data as unknown as Shop);
-        document.title = `${(data as unknown as Shop).business_name} | 042 Plug`;
+        const loadedShop = data as unknown as Shop;
+        setShop(loadedShop);
+        document.title = `${loadedShop.business_name} | 042 Plugs Plaza`;
+
+        // Count this as a view — but never count the owner previewing
+        // their own shop, so the number stays meaningful.
+        if (loadedShop.owner_id !== user?.id) {
+          void supabase.rpc('increment_shop_view', { shop_id_input: loadedShop.id });
+        }
       }
       setLoading(false);
     };
@@ -117,7 +132,7 @@ export const ShopPage: React.FC = () => {
       <div className="max-w-2xl mx-auto">
         <Link to="/" className="inline-flex items-center gap-1.5 text-xs text-stone-500 hover:text-amber-600 mb-5">
           <ArrowLeft className="w-3.5 h-3.5" />
-          <span>Back to 042 Plugs</span>
+          <span>Back to 042 Plugs Plaza</span>
         </Link>
 
         {loading && (
@@ -189,7 +204,7 @@ export const ShopPage: React.FC = () => {
                     {product.description && <p className="text-xs text-stone-400 mt-1">{product.description}</p>}
 
                     <a
-                      href={buildOrderLink(shop, product)}
+                      href={buildOrderLink(shop, product, myShopName)}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center gap-1.5 mt-3 w-fit px-3 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 text-xs font-semibold transition-colors"

@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, Store, Phone, MapPin, Loader2, AlertCircle, PackageOpen, MessageCircle, ExternalLink } from 'lucide-react';
 import { supabase } from '@/lib/supabaseClient';
+import { useSellerIdentity } from '@/hooks/useSellerIdentity';
 import CATEGORIES from '@/data/categories';
 
 interface ProductMedia {
@@ -45,21 +46,25 @@ const formatWhatsAppNumber = (phone: string) => {
   return digits;
 };
 
-const buildOrderLink = (shop: Shop, product: Product) => {
+const buildOrderLink = (shop: Shop, product: Product, buyerShopName?: string | null) => {
   const priceText = product.price !== null ? `₦${Number(product.price).toLocaleString()}` : 'price on request';
   const paymentLine =
     shop.account_number && shop.account_name && shop.bank_name
       ? `\n\nPayment details:\nAccount Name: ${shop.account_name}\nAccount Number: ${shop.account_number}\nBank: ${shop.bank_name}`
       : '';
+  const fellowPlugLine = buyerShopName
+    ? `\n\nP.S. I'm also a registered 042 Plugs seller (my shop: ${buyerShopName}) — always happy to support fellow plugs 🙏`
+    : '';
   const message =
-    `Hi ${shop.business_name}, I'd like to order "${product.title}" (${priceText}) that I saw on 042 Plug.` +
-    `\n\nPlease confirm it's available.${paymentLine}`;
+    `Hi ${shop.business_name}, I'd like to order "${product.title}" (${priceText}) that I saw on 042 Plugs Plaza.` +
+    `\n\nPlease confirm it's available.${paymentLine}${fellowPlugLine}`;
   return `https://wa.me/${formatWhatsAppNumber(shop.phone)}?text=${encodeURIComponent(message)}`;
 };
 
 export const CategoryPage: React.FC = () => {
   const { categoryId } = useParams<{ categoryId: string }>();
   const category = CATEGORIES.find((c) => c.id === categoryId);
+  const myShopName = useSellerIdentity();
 
   const [shops, setShops] = useState<Shop[]>([]);
   const [loading, setLoading] = useState(true);
@@ -110,7 +115,7 @@ export const CategoryPage: React.FC = () => {
   }, [categoryId]);
 
   useEffect(() => {
-    document.title = category ? `${category.title} | 042 Plug` : '042 Plug';
+    document.title = category ? `${category.title} | 042 Plugs Plaza` : '042 Plugs Plaza';
   }, [category]);
 
   return (
@@ -118,7 +123,7 @@ export const CategoryPage: React.FC = () => {
       <div className="max-w-2xl mx-auto">
         <Link to="/" className="inline-flex items-center gap-1.5 text-xs text-stone-400 hover:text-amber-400 mb-5">
           <ArrowLeft className="w-3.5 h-3.5" />
-          <span>Back to 042 Plugs</span>
+          <span>Back to 042 Plugs Plaza</span>
         </Link>
 
         <div className="flex items-center gap-2 text-white font-bold text-lg mb-6">
@@ -211,7 +216,7 @@ export const CategoryPage: React.FC = () => {
                         {product.description && <p className="text-[11px] text-stone-400 mt-1">{product.description}</p>}
 
                         <a
-                          href={buildOrderLink(shop, product)}
+                          href={buildOrderLink(shop, product, myShopName)}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="flex items-center gap-1.5 mt-2 w-fit px-3 py-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 text-[11px] font-semibold transition-colors"

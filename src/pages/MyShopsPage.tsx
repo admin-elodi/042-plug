@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Store, Trash2, Loader2, AlertCircle, PackageOpen, Phone, MapPin, PackagePlus, ExternalLink, LogIn, Sparkles } from 'lucide-react';
+import { ArrowLeft, Store, Trash2, Loader2, AlertCircle, PackageOpen, Phone, MapPin, PackagePlus, ExternalLink, LogIn, Sparkles, Eye } from 'lucide-react';
 import { supabase } from '@/lib/supabaseClient';
 import { useAuth } from '@/context/AuthContext';
 import AddProductModal from '@/components/modals/AddProductModal';
@@ -31,6 +31,7 @@ interface Shop {
   category_title: string;
   payment_status: 'pending' | 'approved';
   featured_until: string | null;
+  view_count: number;
   ai_tip: string | null;
   products: Product[];
 }
@@ -53,7 +54,7 @@ export const MyShopsPage: React.FC = () => {
       .from('shops')
       .select(
         `
-        id, slug, business_name, phone, address, category_title, payment_status, ai_tip, featured_until,
+        id, slug, business_name, phone, address, category_title, payment_status, ai_tip, featured_until, view_count,
         products (
           id, title, price,
           product_media ( id, file_url )
@@ -86,7 +87,7 @@ export const MyShopsPage: React.FC = () => {
         .from('shops')
         .select(
           `
-          id, slug, business_name, phone, address, category_title, payment_status, ai_tip, featured_until,
+          id, slug, business_name, phone, address, category_title, payment_status, ai_tip, featured_until, view_count,
           products (
             id, title, price,
             product_media ( id, file_url )
@@ -180,7 +181,7 @@ export const MyShopsPage: React.FC = () => {
   };
 
   useEffect(() => {
-    document.title = 'My Shops | 042 Plug';
+    document.title = 'My Shops | 042 Plugs Plaza';
   }, []);
 
   return (
@@ -188,7 +189,7 @@ export const MyShopsPage: React.FC = () => {
       <div className="max-w-2xl mx-auto">
         <Link to="/" className="inline-flex items-center gap-1.5 text-xs text-stone-400 hover:text-amber-400 mb-5">
           <ArrowLeft className="w-3.5 h-3.5" />
-          <span>Back to 042 Plugs</span>
+          <span>Back to 042 Plugs Plaza</span>
         </Link>
 
         <div className="flex items-center gap-2 text-white font-bold text-lg mb-6">
@@ -278,6 +279,10 @@ export const MyShopsPage: React.FC = () => {
                               <span>{shop.address}</span>
                             </span>
                           )}
+                          <span className="flex items-center gap-1 text-amber-400/80">
+                            <Eye className="w-3 h-3" />
+                            <span>{shop.view_count} view{shop.view_count === 1 ? '' : 's'}</span>
+                          </span>
                         </div>
                         {shop.payment_status === 'pending' && (
                           <div className="mt-3 max-w-xs">

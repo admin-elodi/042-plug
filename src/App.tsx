@@ -12,6 +12,7 @@ const MyShopsPage = lazy(() => import("@/pages/MyShopsPage"));
 const ShopPage = lazy(() => import("@/pages/ShopPage"));
 const AdminJobsPage = lazy(() => import("@/pages/AdminJobsPage"));
 const StorefrontsPage = lazy(() => import("@/pages/StorefrontsPage"));
+const RequestsPage = lazy(() => import("@/pages/RequestsPage"));
 
 const PageLoader = () => (
   <div className="min-h-screen flex items-center justify-center bg-stone-950">
@@ -33,6 +34,7 @@ export default function App() {
             <Route path="/shops/:slug" element={<ShopPage />} />
             <Route path="/admin/jobs" element={<AdminJobsPage />} />
             <Route path="/storefronts" element={<StorefrontsPage />} />
+            <Route path="/requests" element={<RequestsPage />} />
           </Routes>
         </Suspense>
       </div>

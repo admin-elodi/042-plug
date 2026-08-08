@@ -31,7 +31,7 @@ export interface WhatsAppJobMessageParams {
 
 const buildJobMessage = (params: WhatsAppJobMessageParams): string => {
   const lines = [
-    `Hello! I saw your job vacancy post on 042 Plugs for the position of *${params.jobTitle}*${params.companyName ? ` at *${params.companyName}*` : ''}.`,
+    `Hello! I saw your job vacancy post on 042 Plugs Plaza for the position of *${params.jobTitle}*${params.companyName ? ` at *${params.companyName}*` : ''}.`,
     '',
     'Here are the details of the post I am applying for:',
     `- Position: ${params.jobTitle}`,

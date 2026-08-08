@@ -64,7 +64,7 @@ export const AdminJobsPage: React.FC = () => {
   }, [isAdmin]);
 
   useEffect(() => {
-    document.title = 'Job Approvals | 042 Plug';
+    document.title = 'Job Approvals | 042 Plugs Plaza';
   }, []);
 
   const handleApprove = async (jobId: string) => {
@@ -106,7 +106,7 @@ export const AdminJobsPage: React.FC = () => {
       <div className="max-w-2xl mx-auto">
         <Link to="/" className="inline-flex items-center gap-1.5 text-xs text-stone-400 hover:text-amber-400 mb-5">
           <ArrowLeft className="w-3.5 h-3.5" />
-          <span>Back to 042 Plugs</span>
+          <span>Back to 042 Plugs Plaza</span>
         </Link>
 
         <div className="flex items-center gap-2 text-white font-bold text-lg mb-6">

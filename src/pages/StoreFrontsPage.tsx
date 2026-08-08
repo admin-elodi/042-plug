@@ -101,7 +101,7 @@ export const StorefrontsPage: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    document.title = 'All Storefronts | 042 Plug';
+    document.title = 'All Storefronts | 042 Plugs Plaza';
   }, []);
 
   // Groups shops by category, in the SAME fixed order categories appear
@@ -142,7 +142,7 @@ export const StorefrontsPage: React.FC = () => {
       <div className="max-w-2xl mx-auto">
         <Link to="/" className="inline-flex items-center gap-1.5 text-xs text-stone-400 hover:text-amber-400 mb-5">
           <ArrowLeft className="w-3.5 h-3.5" />
-          <span>Back to 042 Plugs</span>
+          <span>Back to 042 Plugs Plaza</span>
         </Link>
 
         <div className="flex items-center gap-2 text-white font-bold text-lg mb-4">
@@ -181,7 +181,7 @@ export const StorefrontsPage: React.FC = () => {
           <div className="text-center py-20">
             <Store className="w-10 h-10 text-stone-600 mx-auto mb-3" />
             <h3 className="text-base font-bold text-white mb-1">No storefronts yet</h3>
-            <p className="text-xs text-stone-400">Be the first to register a shop on 042 Plugs.</p>
+            <p className="text-xs text-stone-400">Be the first to register a shop on 042 Plugs Plaza.</p>
           </div>
         )}
 
