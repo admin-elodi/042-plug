@@ -35,7 +35,9 @@ const REGISTRATION_FEE = 1000;
 const emptyProductFields = {
   productName: '',
   description: '',
-  price: ''
+  price: '',
+  priceType: 'fixed' as 'fixed' | 'starting_from' | 'negotiable',
+  isNegotiable: false
 };
 
 // Shared glass treatment for text inputs/textareas/selects — frosted,
@@ -280,7 +282,9 @@ export const CreateShopModal: React.FC<CreateShopModalProps> = ({ category, onCl
           shop_id: shopId,
           title: productData.productName,
           description: productData.description || null,
-          price: productData.price ? Number(productData.price) : null
+          price: productData.price ? Number(productData.price) : null,
+          price_type: productData.priceType,
+          is_negotiable: productData.isNegotiable
         })
         .select()
         .single();
@@ -510,14 +514,51 @@ export const CreateShopModal: React.FC<CreateShopModalProps> = ({ category, onCl
                 />
               </div>
               <div>
-                <label className={glassLabel}>Price (₦) — leave blank for services on request</label>
+                <label className={glassLabel}>Pricing</label>
+                <div className="grid grid-cols-2 gap-1.5 mb-2.5">
+                  {(
+                    [
+                      { value: 'fixed', label: 'Fixed Price' },
+                      { value: 'starting_from', label: 'Starting From' }
+                    ] as const
+                  ).map((opt) => (
+                    <button
+                      key={opt.value}
+                      type="button"
+                      onClick={() => setProductData({ ...productData, priceType: opt.value })}
+                      className={`py-2 px-1 rounded-lg text-[11px] font-semibold transition-all ${
+                        productData.priceType === opt.value
+                          ? 'bg-gradient-to-b from-amber-400 to-amber-500 text-stone-950 shadow-md'
+                          : 'bg-white/[0.07] backdrop-blur-sm border border-white/15 text-stone-300 hover:bg-white/[0.1]'
+                      }`}
+                    >
+                      {opt.label}
+                    </button>
+                  ))}
+                </div>
+
                 <input
                   type="number"
-                  placeholder="e.g., 450000"
+                  required
+                  placeholder={productData.priceType === 'starting_from' ? 'e.g., 20000' : 'e.g., 450000'}
                   value={productData.price}
                   onChange={(e) => setProductData({ ...productData, price: e.target.value })}
                   className={glassInput}
                 />
+                <label className="flex items-center gap-2 mt-2.5 text-xs text-stone-300 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={productData.isNegotiable}
+                    onChange={(e) => setProductData({ ...productData, isNegotiable: e.target.checked })}
+                    className="w-3.5 h-3.5 rounded accent-amber-400"
+                  />
+                  <span>Also open to negotiation</span>
+                </label>
+                {productData.isNegotiable && (
+                  <p className="text-[11px] text-stone-500 mt-1.5">
+                    Buyers will see your price with "(Negotiable)" next to it — a real starting point, not a blank invitation.
+                  </p>
+                )}
               </div>
 
               <div>

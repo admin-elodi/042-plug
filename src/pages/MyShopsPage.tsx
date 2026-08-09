@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Store, Trash2, Loader2, AlertCircle, PackageOpen, Phone, MapPin, PackagePlus, ExternalLink, LogIn, Sparkles, Eye } from 'lucide-react';
 import { supabase } from '@/lib/supabaseClient';
+import { formatProductPrice } from '@/lib/pricing';
 import { useAuth } from '@/context/AuthContext';
 import AddProductModal from '@/components/modals/AddProductModal';
 import PayRegistrationFeeButton from '@/components/PayRegistrationFeeButton';
@@ -19,6 +20,8 @@ interface Product {
   id: string;
   title: string;
   price: number | null;
+  price_type: 'fixed' | 'starting_from' | 'negotiable' | null;
+  is_negotiable: boolean | null;
   product_media: ProductMedia[];
 }
 
@@ -56,7 +59,7 @@ export const MyShopsPage: React.FC = () => {
         `
         id, slug, business_name, phone, address, category_title, payment_status, ai_tip, featured_until, view_count,
         products (
-          id, title, price,
+          id, title, price, price_type, is_negotiable,
           product_media ( id, file_url )
         )
       `
@@ -89,7 +92,7 @@ export const MyShopsPage: React.FC = () => {
           `
           id, slug, business_name, phone, address, category_title, payment_status, ai_tip, featured_until, view_count,
           products (
-            id, title, price,
+            id, title, price, price_type, is_negotiable,
             product_media ( id, file_url )
           )
         `
@@ -359,9 +362,9 @@ export const MyShopsPage: React.FC = () => {
                               )}
                               <div className="min-w-0">
                                 <p className="text-xs text-white truncate">{product.title}</p>
-                                {product.price !== null && (
-                                  <p className="text-[11px] text-amber-400">₦{Number(product.price).toLocaleString()}</p>
-                                )}
+                                <p className="text-[11px] text-amber-400">
+                                  {formatProductPrice(product.price, product.price_type, product.is_negotiable)}
+                                </p>
                               </div>
                             </div>
                             <button

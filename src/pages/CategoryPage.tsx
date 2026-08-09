@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, Store, Phone, MapPin, Loader2, AlertCircle, PackageOpen, MessageCircle, ExternalLink } from 'lucide-react';
 import { supabase } from '@/lib/supabaseClient';
+import { formatProductPrice } from '@/lib/pricing';
 import { useSellerIdentity } from '@/hooks/useSellerIdentity';
 import CATEGORIES from '@/data/categories';
 
@@ -19,6 +20,8 @@ interface Product {
   title: string;
   description: string | null;
   price: number | null;
+  price_type: 'fixed' | 'starting_from' | 'negotiable' | null;
+  is_negotiable: boolean | null;
   product_media: ProductMedia[];
 }
 
@@ -47,7 +50,7 @@ const formatWhatsAppNumber = (phone: string) => {
 };
 
 const buildOrderLink = (shop: Shop, product: Product, buyerShopName?: string | null) => {
-  const priceText = product.price !== null ? `₦${Number(product.price).toLocaleString()}` : 'price on request';
+  const priceText = formatProductPrice(product.price, product.price_type, product.is_negotiable);
   const paymentLine =
     shop.account_number && shop.account_name && shop.bank_name
       ? `\n\nPayment details:\nAccount Name: ${shop.account_name}\nAccount Number: ${shop.account_number}\nBank: ${shop.bank_name}`
@@ -81,7 +84,7 @@ export const CategoryPage: React.FC = () => {
           `
           id, slug, business_name, phone, address, bank_name, account_number, account_name, featured_until, created_at,
           products (
-            id, title, description, price,
+            id, title, description, price, price_type, is_negotiable,
             product_media ( id, media_type, file_url, sort_order )
           )
         `
@@ -207,11 +210,9 @@ export const CategoryPage: React.FC = () => {
                       <div key={product.id} className="border-t border-stone-800/70 pt-3">
                         <div className="flex items-baseline justify-between gap-2">
                           <h4 className="text-xs font-semibold text-white">{product.title}</h4>
-                          {product.price !== null && (
-                            <span className="text-xs font-bold text-amber-400 whitespace-nowrap">
-                              ₦{Number(product.price).toLocaleString()}
-                            </span>
-                          )}
+                          <span className="text-xs font-bold text-amber-400 whitespace-nowrap">
+                            {formatProductPrice(product.price, product.price_type, product.is_negotiable)}
+                          </span>
                         </div>
                         {product.description && <p className="text-[11px] text-stone-400 mt-1">{product.description}</p>}
 
