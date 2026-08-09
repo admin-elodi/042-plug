@@ -2,9 +2,26 @@
 
 import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { Briefcase, X, Send, Eye, Building2, Loader2, AlertCircle, CheckCircle, MapPin, Wallet, MessageCircle, PackageOpen } from 'lucide-react';
+import { Briefcase, X, Send, Eye, Building2, Loader2, AlertCircle, CheckCircle, MapPin, Wallet, MessageCircle, PackageOpen, ShieldCheck } from 'lucide-react';
 import { supabase } from '@/lib/supabaseClient';
 import { buildWhatsAppLink } from '@/lib/whatsapp';
+import {
+  glassOverlay,
+  glassCard,
+  glassGlow,
+  glassHeader,
+  glassIconChip,
+  glassIconChipLarge,
+  glassCloseButton,
+  glassInput,
+  glassLabel,
+  glassButtonPrimary,
+  glassButtonSecondary,
+  glassErrorBox,
+  glassTabActive,
+  glassTabInactive,
+  glassTabContainer
+} from '@/styles/glassModal';
 
 // Sends the platform owner a heads-up WhatsApp ping whenever a new job is
 // submitted, so they know to check the admin approval queue.
@@ -127,250 +144,246 @@ export const SalariedJobsModal: React.FC<SalariedJobsModalProps> = ({ isOpen, on
   };
 
   return createPortal(
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-      <div className="relative w-full max-w-lg rounded-2xl bg-stone-900 border border-stone-800 text-stone-100 shadow-2xl p-6 overflow-hidden max-h-[90vh] overflow-y-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between pb-4 border-b border-stone-800">
-          <div className="flex items-center gap-2">
-            <Briefcase className="w-5 h-5 text-amber-500" />
-            <h3 className="text-lg font-bold">Salaried Jobs Portal</h3>
-          </div>
-          <button
-            onClick={onClose}
-            className="p-1 rounded-lg text-stone-400 hover:text-stone-100 hover:bg-stone-800 transition-colors"
-          >
-            <X className="w-5 h-5" />
-          </button>
-        </div>
+    <div className={glassOverlay}>
+      <div className={`${glassCard} w-full max-w-lg max-h-[90vh] overflow-y-auto`}>
+        <div className={glassGlow} />
 
-        {/* Mode Selector Tabs */}
-        <div className="grid grid-cols-2 gap-2 my-4 p-1 bg-stone-950 rounded-lg border border-stone-800">
-          <button
-            type="button"
-            onClick={() => setActiveTab('seek')}
-            className={`flex items-center justify-center gap-2 py-2 text-xs font-semibold rounded-md transition-all ${
-              activeTab === 'seek'
-                ? 'bg-amber-500 text-stone-950 shadow-md'
-                : 'text-stone-400 hover:text-stone-200'
-            }`}
-          >
-            <Eye className="w-4 h-4" />
-            <span>Browse jobs</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => setActiveTab('post')}
-            className={`flex items-center justify-center gap-2 py-2 text-xs font-semibold rounded-md transition-all ${
-              activeTab === 'post'
-                ? 'bg-amber-500 text-stone-950 shadow-md'
-                : 'text-stone-400 hover:text-stone-200'
-            }`}
-          >
-            <Building2 className="w-4 h-4" />
-            <span>Post a job</span>
-          </button>
-        </div>
-
-        {/* Tab 1: Job Seekers */}
-        {activeTab === 'seek' && (
-          <div className="space-y-3 text-left py-2">
-            <div className="p-3 rounded-xl bg-stone-950 border border-stone-800 text-stone-300 text-xs leading-relaxed">
-              <p className="font-semibold text-stone-100 mb-1">{'\u{1F6E1}\u{FE0F}'} Admin-Verified Listings Only</p>
-              Every job below has been reviewed and approved — none of these are unverified employer submissions.
+        <div className={glassHeader}>
+          <div className="flex items-center gap-2.5 text-white font-bold text-base">
+            <div className={glassIconChip}>
+              <Briefcase className="w-4 h-4 text-amber-400" />
             </div>
-
-            {loadingJobs && (
-              <div className="text-center py-10">
-                <Loader2 className="w-6 h-6 text-amber-500 mx-auto mb-2 animate-spin" />
-                <p className="text-xs text-stone-400">Loading jobs...</p>
-              </div>
-            )}
-
-            {!loadingJobs && browseError && (
-              <div className="flex items-start gap-2 p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-300 text-xs">
-                <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
-                <span>{browseError}</span>
-              </div>
-            )}
-
-            {!loadingJobs && !browseError && jobs.length === 0 && (
-              <div className="text-center py-10 text-stone-500">
-                <PackageOpen className="w-8 h-8 mx-auto mb-2" />
-                <p className="text-xs">No approved job listings yet. Check back soon!</p>
-              </div>
-            )}
-
-            {!loadingJobs && !browseError && jobs.length > 0 && (
-              <div className="space-y-2.5 max-h-80 overflow-y-auto pr-1">
-                {jobs.map((job) => (
-                  <div key={job.id} className="p-3 rounded-xl bg-stone-950 border border-stone-800">
-                    <h4 className="text-sm font-bold text-white">{job.job_title}</h4>
-                    <p className="text-xs text-amber-400 font-medium">{job.company_name}</p>
-                    <div className="flex flex-wrap items-center gap-3 mt-1 text-[11px] text-stone-400">
-                      <span className="flex items-center gap-1">
-                        <MapPin className="w-3 h-3" />
-                        <span>{job.location}</span>
-                      </span>
-                      <span className="px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400 font-medium">{job.job_type}</span>
-                      <span className="flex items-center gap-1">
-                        <Wallet className="w-3 h-3" />
-                        <span>{job.salary}</span>
-                      </span>
-                    </div>
-                    <p className="text-[11px] text-stone-400 mt-2">{job.description}</p>
-                    <a
-                      href={buildWhatsAppLink(
-                        job.contact_phone,
-                        `Hi, I'd like to apply for the "${job.job_title}" role at ${job.company_name} that I saw on 042 Plugs Plaza.`
-                      )}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-1.5 mt-3 w-fit px-3 py-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 text-[11px] font-semibold transition-colors"
-                    >
-                      <MessageCircle className="w-3.5 h-3.5" />
-                      <span>Apply via WhatsApp</span>
-                    </a>
-                  </div>
-                ))}
-              </div>
-            )}
+            <span>Salaried Jobs Portal</span>
           </div>
-        )}
+          <button onClick={onClose} className={glassCloseButton}>
+            <X className="w-4.5 h-4.5" />
+          </button>
+        </div>
 
-        {/* Tab 2: Employers */}
-        {activeTab === 'post' && (
-          <>
-            {postSuccess ? (
-              <div className="text-center py-8">
-                <CheckCircle className="w-12 h-12 text-emerald-400 mx-auto mb-3" />
-                <h4 className="text-sm font-bold text-white mb-1">Submitted for Review!</h4>
-                <p className="text-xs text-stone-400 mb-5">
-                  Your job posting is pending admin approval. Once approved, it'll appear under "Browse jobs" for
-                  everyone to see.
-                </p>
-                <button
-                  onClick={onClose}
-                  className="px-5 py-2 rounded-xl bg-stone-800 hover:bg-stone-700 text-white text-sm font-medium"
-                >
-                  Close Window
-                </button>
+        <div className="relative p-6">
+          {/* Mode Selector Tabs */}
+          <div className={`${glassTabContainer} mb-4`}>
+            <button
+              type="button"
+              onClick={() => setActiveTab('seek')}
+              className={`flex items-center justify-center gap-2 py-2 text-xs font-semibold rounded-md transition-all ${
+                activeTab === 'seek' ? glassTabActive : glassTabInactive
+              }`}
+            >
+              <Eye className="w-4 h-4" />
+              <span>Browse jobs</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab('post')}
+              className={`flex items-center justify-center gap-2 py-2 text-xs font-semibold rounded-md transition-all ${
+                activeTab === 'post' ? glassTabActive : glassTabInactive
+              }`}
+            >
+              <Building2 className="w-4 h-4" />
+              <span>Post a job</span>
+            </button>
+          </div>
+
+          {/* Tab 1: Job Seekers */}
+          {activeTab === 'seek' && (
+            <div className="space-y-3 text-left">
+              <div className="flex items-start gap-2 p-3 rounded-xl bg-white/[0.06] backdrop-blur-sm border border-white/15 text-stone-300 text-xs leading-relaxed">
+                <ShieldCheck className="w-4 h-4 text-amber-400 flex-shrink-0 mt-0.5" />
+                <div>
+                  <p className="font-semibold text-stone-100 mb-0.5">Admin-Verified Listings Only</p>
+                  Every job below has been reviewed and approved — none of these are unverified employer submissions.
+                </div>
               </div>
-            ) : (
-              <form onSubmit={handlePostJob} className="space-y-3 text-left">
-                <p className="text-xs text-stone-400 mb-2">
-                  Fill in the details below. Every submission is reviewed before it goes live.
-                </p>
 
-                {postError && (
-                  <div className="flex items-start gap-2 p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-300 text-xs">
-                    <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
-                    <span>{postError}</span>
-                  </div>
-                )}
-
-                <div>
-                  <label className="block text-xs font-medium text-stone-300 mb-1">Job Title</label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="e.g., Senior Accountant, Retail Store Manager"
-                    value={jobData.jobTitle}
-                    onChange={(e) => setJobData({ ...jobData, jobTitle: e.target.value })}
-                    className="w-full px-3 py-2 rounded-lg bg-stone-950 border border-stone-800 text-stone-100 text-xs focus:outline-none focus:border-amber-500"
-                  />
+              {loadingJobs && (
+                <div className="text-center py-10">
+                  <Loader2 className="w-6 h-6 text-amber-400 mx-auto mb-2 animate-spin" />
+                  <p className="text-xs text-stone-400">Loading jobs...</p>
                 </div>
+              )}
 
-                <div className="grid grid-cols-2 gap-2">
+              {!loadingJobs && browseError && (
+                <div className={glassErrorBox}>
+                  <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
+                  <span>{browseError}</span>
+                </div>
+              )}
+
+              {!loadingJobs && !browseError && jobs.length === 0 && (
+                <div className="text-center py-10 text-stone-500">
+                  <PackageOpen className="w-8 h-8 mx-auto mb-2" />
+                  <p className="text-xs">No approved job listings yet. Check back soon!</p>
+                </div>
+              )}
+
+              {!loadingJobs && !browseError && jobs.length > 0 && (
+                <div className="space-y-2.5 max-h-80 overflow-y-auto pr-1">
+                  {jobs.map((job) => (
+                    <div key={job.id} className="p-3 rounded-xl bg-white/[0.06] backdrop-blur-sm border border-white/15">
+                      <h4 className="text-sm font-bold text-white">{job.job_title}</h4>
+                      <p className="text-xs text-amber-400 font-medium">{job.company_name}</p>
+                      <div className="flex flex-wrap items-center gap-3 mt-1 text-[11px] text-stone-400">
+                        <span className="flex items-center gap-1">
+                          <MapPin className="w-3 h-3" />
+                          <span>{job.location}</span>
+                        </span>
+                        <span className="px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400 font-medium">{job.job_type}</span>
+                        <span className="flex items-center gap-1">
+                          <Wallet className="w-3 h-3" />
+                          <span>{job.salary}</span>
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-stone-400 mt-2">{job.description}</p>
+                      <a
+                        href={buildWhatsAppLink(
+                          job.contact_phone,
+                          `Hi, I'd like to apply for the "${job.job_title}" role at ${job.company_name} that I saw on 042 Plugs Plaza.`
+                        )}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1.5 mt-3 w-fit px-3 py-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 text-[11px] font-semibold transition-colors"
+                      >
+                        <MessageCircle className="w-3.5 h-3.5" />
+                        <span>Apply via WhatsApp</span>
+                      </a>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Tab 2: Employers */}
+          {activeTab === 'post' && (
+            <>
+              {postSuccess ? (
+                <div className="text-center py-8">
+                  <div className={glassIconChipLarge('emerald')}>
+                    <CheckCircle className="w-7 h-7" />
+                  </div>
+                  <h4 className="text-sm font-bold text-white mb-1">Submitted for Review!</h4>
+                  <p className="text-xs text-stone-400 mb-5">
+                    Your job posting is pending admin approval. Once approved, it'll appear under "Browse jobs" for
+                    everyone to see.
+                  </p>
+                  <button onClick={onClose} className={glassButtonSecondary}>
+                    Close Window
+                  </button>
+                </div>
+              ) : (
+                <form onSubmit={handlePostJob} className="space-y-3 text-left">
+                  <p className="text-xs text-stone-400 mb-2">
+                    Fill in the details below. Every submission is reviewed before it goes live.
+                  </p>
+
+                  {postError && (
+                    <div className={glassErrorBox}>
+                      <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
+                      <span>{postError}</span>
+                    </div>
+                  )}
+
                   <div>
-                    <label className="block text-xs font-medium text-stone-300 mb-1">Company / Business</label>
+                    <label className={glassLabel}>Job Title</label>
                     <input
                       type="text"
                       required
-                      placeholder="e.g., CoalCity Ltd"
-                      value={jobData.companyName}
-                      onChange={(e) => setJobData({ ...jobData, companyName: e.target.value })}
-                      className="w-full px-3 py-2 rounded-lg bg-stone-950 border border-stone-800 text-stone-100 text-xs focus:outline-none focus:border-amber-500"
+                      placeholder="e.g., Senior Accountant, Retail Store Manager"
+                      value={jobData.jobTitle}
+                      onChange={(e) => setJobData({ ...jobData, jobTitle: e.target.value })}
+                      className={glassInput}
                     />
                   </div>
+
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      <label className={glassLabel}>Company / Business</label>
+                      <input
+                        type="text"
+                        required
+                        placeholder="e.g., CoalCity Ltd"
+                        value={jobData.companyName}
+                        onChange={(e) => setJobData({ ...jobData, companyName: e.target.value })}
+                        className={glassInput}
+                      />
+                    </div>
+                    <div>
+                      <label className={glassLabel}>Location</label>
+                      <input
+                        type="text"
+                        required
+                        placeholder="e.g., Independence Layout"
+                        value={jobData.location}
+                        onChange={(e) => setJobData({ ...jobData, location: e.target.value })}
+                        className={glassInput}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      <label className={glassLabel}>Job Type</label>
+                      <select
+                        value={jobData.jobType}
+                        onChange={(e) => setJobData({ ...jobData, jobType: e.target.value })}
+                        className={glassInput}
+                      >
+                        {JOB_TYPES.map((type) => (
+                          <option key={type} value={type} className="bg-stone-900">
+                            {type}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className={glassLabel}>Monthly Salary Range</label>
+                      <input
+                        type="text"
+                        required
+                        placeholder="e.g., ₦150,000 - ₦200,000"
+                        value={jobData.salary}
+                        onChange={(e) => setJobData({ ...jobData, salary: e.target.value })}
+                        className={glassInput}
+                      />
+                    </div>
+                  </div>
+
                   <div>
-                    <label className="block text-xs font-medium text-stone-300 mb-1">Location</label>
+                    <label className={glassLabel}>Contact WhatsApp Number</label>
                     <input
-                      type="text"
+                      type="tel"
                       required
-                      placeholder="e.g., Independence Layout"
-                      value={jobData.location}
-                      onChange={(e) => setJobData({ ...jobData, location: e.target.value })}
-                      className="w-full px-3 py-2 rounded-lg bg-stone-950 border border-stone-800 text-stone-100 text-xs focus:outline-none focus:border-amber-500"
+                      placeholder="e.g., 08012345678"
+                      value={jobData.contactPhone}
+                      onChange={(e) => setJobData({ ...jobData, contactPhone: e.target.value })}
+                      className={glassInput}
                     />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-2">
-                  <div>
-                    <label className="block text-xs font-medium text-stone-300 mb-1">Job Type</label>
-                    <select
-                      value={jobData.jobType}
-                      onChange={(e) => setJobData({ ...jobData, jobType: e.target.value })}
-                      className="w-full px-3 py-2 rounded-lg bg-stone-950 border border-stone-800 text-stone-100 text-xs focus:outline-none focus:border-amber-500"
-                    >
-                      {JOB_TYPES.map((type) => (
-                        <option key={type} value={type}>
-                          {type}
-                        </option>
-                      ))}
-                    </select>
+                    <p className="text-[10px] text-stone-500 mt-1">Applicants will message this number directly.</p>
                   </div>
 
                   <div>
-                    <label className="block text-xs font-medium text-stone-300 mb-1">Monthly Salary Range</label>
-                    <input
-                      type="text"
+                    <label className={glassLabel}>Key Responsibilities / Qualifications</label>
+                    <textarea
+                      rows={3}
                       required
-                      placeholder="e.g., ₦150,000 - ₦200,000"
-                      value={jobData.salary}
-                      onChange={(e) => setJobData({ ...jobData, salary: e.target.value })}
-                      className="w-full px-3 py-2 rounded-lg bg-stone-950 border border-stone-800 text-stone-100 text-xs focus:outline-none focus:border-amber-500"
+                      placeholder="Briefly state job requirements..."
+                      value={jobData.description}
+                      onChange={(e) => setJobData({ ...jobData, description: e.target.value })}
+                      className={`${glassInput} resize-none`}
                     />
                   </div>
-                </div>
 
-                <div>
-                  <label className="block text-xs font-medium text-stone-300 mb-1">Contact WhatsApp Number</label>
-                  <input
-                    type="tel"
-                    required
-                    placeholder="e.g., 08012345678"
-                    value={jobData.contactPhone}
-                    onChange={(e) => setJobData({ ...jobData, contactPhone: e.target.value })}
-                    className="w-full px-3 py-2 rounded-lg bg-stone-950 border border-stone-800 text-stone-100 text-xs focus:outline-none focus:border-amber-500"
-                  />
-                  <p className="text-[10px] text-stone-500 mt-1">Applicants will message this number directly.</p>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-medium text-stone-300 mb-1">Key Responsibilities / Qualifications</label>
-                  <textarea
-                    rows={3}
-                    required
-                    placeholder="Briefly state job requirements..."
-                    value={jobData.description}
-                    onChange={(e) => setJobData({ ...jobData, description: e.target.value })}
-                    className="w-full px-3 py-2 rounded-lg bg-stone-950 border border-stone-800 text-stone-100 text-xs focus:outline-none focus:border-amber-500 resize-none"
-                  />
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={submitting}
-                  className="w-full mt-2 py-3 px-4 rounded-xl bg-amber-500 hover:bg-amber-400 disabled:opacity-60 text-stone-950 font-bold text-xs transition-colors flex items-center justify-center gap-2 shadow-lg"
-                >
-                  {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
-                  <span>{submitting ? 'Submitting...' : 'Submit for Approval'}</span>
-                </button>
-              </form>
-            )}
-          </>
-        )}
+                  <button type="submit" disabled={submitting} className={glassButtonPrimary}>
+                    {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+                    <span>{submitting ? 'Submitting...' : 'Submit for Approval'}</span>
+                  </button>
+                </form>
+              )}
+            </>
+          )}
+        </div>
       </div>
     </div>,
     document.body

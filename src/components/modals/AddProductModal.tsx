@@ -4,6 +4,22 @@ import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { X, PackagePlus, CheckCircle, ImagePlus, Film, Loader2, AlertCircle, Trash2 } from 'lucide-react';
 import { supabase } from '@/lib/supabaseClient';
+import {
+  glassOverlay,
+  glassCard,
+  glassGlow,
+  glassHeaderSticky,
+  glassIconChip,
+  glassIconChipLarge,
+  glassCloseButton,
+  glassInput,
+  glassLabel,
+  glassButtonPrimary,
+  glassButtonSecondary,
+  glassErrorBox,
+  glassDashedUpload,
+  glassMediaThumb
+} from '@/styles/glassModal';
 
 interface AddProductModalProps {
   shopId: string;
@@ -120,21 +136,25 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({ shopId, busine
   };
 
   return createPortal(
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
-      <div className="bg-stone-900 border border-stone-800 rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl max-h-[90vh] overflow-y-auto">
-        <div className="flex items-center justify-between p-4 border-b border-stone-800 sticky top-0 bg-stone-900 z-10">
-          <div className="flex items-center gap-2 text-white font-bold text-base">
-            <PackagePlus className="w-5 h-5 text-amber-400" />
+    <div className={glassOverlay}>
+      <div className={`${glassCard} w-full max-w-lg max-h-[90vh] overflow-y-auto`}>
+        <div className={glassGlow} />
+
+        <div className={glassHeaderSticky}>
+          <div className="flex items-center gap-2.5 text-white font-bold text-base">
+            <div className={glassIconChip}>
+              <PackagePlus className="w-4 h-4 text-amber-400" />
+            </div>
             <span>Add Product to {businessName}</span>
           </div>
-          <button onClick={onClose} className="p-1 rounded-lg text-stone-400 hover:text-white hover:bg-stone-800">
-            <X className="w-5 h-5" />
+          <button onClick={onClose} className={glassCloseButton}>
+            <X className="w-4.5 h-4.5" />
           </button>
         </div>
 
-        <div className="p-6">
+        <div className="relative p-6">
           {errorMsg && (
-            <div className="mb-4 flex items-start gap-2 p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-300 text-xs">
+            <div className={`mb-4 ${glassErrorBox}`}>
               <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
               <span>{errorMsg}</span>
             </div>
@@ -143,42 +163,42 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({ shopId, busine
           {!success ? (
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-xs text-stone-400 mb-1">Product / Service Title</label>
+                <label className={glassLabel}>Product / Service Title</label>
                 <input
                   type="text"
                   required
                   placeholder="e.g., iPhone 13 Pro 128GB"
                   value={productName}
                   onChange={(e) => setProductName(e.target.value)}
-                  className="w-full px-3 py-2 bg-stone-950 border border-stone-800 rounded-lg text-white text-sm focus:outline-none focus:border-amber-500"
+                  className={glassInput}
                 />
               </div>
               <div>
-                <label className="block text-xs text-stone-400 mb-1">Description</label>
+                <label className={glassLabel}>Description</label>
                 <textarea
                   rows={3}
                   placeholder="Describe the product or service..."
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  className="w-full px-3 py-2 bg-stone-950 border border-stone-800 rounded-lg text-white text-sm focus:outline-none focus:border-amber-500 resize-none"
+                  className={`${glassInput} resize-none`}
                 />
               </div>
               <div>
-                <label className="block text-xs text-stone-400 mb-1">Price (₦) — leave blank for services on request</label>
+                <label className={glassLabel}>Price (₦) — leave blank for services on request</label>
                 <input
                   type="number"
                   placeholder="e.g., 450000"
                   value={price}
                   onChange={(e) => setPrice(e.target.value)}
-                  className="w-full px-3 py-2 bg-stone-950 border border-stone-800 rounded-lg text-white text-sm focus:outline-none focus:border-amber-500"
+                  className={glassInput}
                 />
               </div>
 
               <div>
-                <label className="block text-xs text-stone-400 mb-1">
+                <label className={glassLabel}>
                   Photos / Videos ({mediaFiles.length}/{MAX_FILES})
                 </label>
-                <label className="flex items-center justify-center gap-2 w-full px-3 py-4 bg-stone-950 border border-dashed border-stone-700 rounded-lg text-stone-400 text-xs cursor-pointer hover:border-amber-500 hover:text-amber-400 transition-colors">
+                <label className={glassDashedUpload}>
                   <ImagePlus className="w-4 h-4" />
                   <span>Click to add images or videos</span>
                   <input type="file" accept="image/*,video/*" multiple onChange={handleFilesSelected} className="hidden" />
@@ -187,18 +207,18 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({ shopId, busine
                 {mediaFiles.length > 0 && (
                   <div className="grid grid-cols-3 gap-2 mt-3">
                     {mediaFiles.map((m, idx) => (
-                      <div key={idx} className="relative group aspect-square rounded-lg overflow-hidden bg-stone-950 border border-stone-800">
+                      <div key={idx} className={glassMediaThumb}>
                         {m.type === 'image' ? (
                           <img src={m.previewUrl} alt="" className="w-full h-full object-cover" />
                         ) : (
                           <div className="w-full h-full flex items-center justify-center">
-                            <Film className="w-6 h-6 text-slate-500" />
+                            <Film className="w-6 h-6 text-stone-500" />
                           </div>
                         )}
                         <button
                           type="button"
                           onClick={() => removeMediaFile(idx)}
-                          className="absolute top-1 right-1 p-1 rounded-md bg-black/70 text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                          className="absolute top-1 right-1 p-1 rounded-md bg-black/70 backdrop-blur-sm text-white opacity-0 group-hover:opacity-100 transition-opacity"
                         >
                           <Trash2 className="w-3 h-3" />
                         </button>
@@ -208,24 +228,19 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({ shopId, busine
                 )}
               </div>
 
-              <button
-                type="submit"
-                disabled={submitting}
-                className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 disabled:opacity-60 disabled:cursor-not-allowed text-stone-950 font-semibold text-sm transition-colors"
-              >
+              <button type="submit" disabled={submitting} className={glassButtonPrimary}>
                 {submitting && <Loader2 className="w-4 h-4 animate-spin" />}
                 <span>{submitting ? 'Saving...' : 'Add Product'}</span>
               </button>
             </form>
           ) : (
             <div className="text-center py-6">
-              <CheckCircle className="w-12 h-12 text-emerald-400 mx-auto mb-3" />
+              <div className={glassIconChipLarge('emerald')}>
+                <CheckCircle className="w-7 h-7" />
+              </div>
               <h3 className="text-lg font-bold text-white mb-1">Product Added!</h3>
               <p className="text-xs text-stone-400 mb-6">It's now live under {businessName}.</p>
-              <button
-                onClick={onClose}
-                className="px-6 py-2 rounded-xl bg-stone-800 hover:bg-stone-700 text-white text-sm font-medium"
-              >
+              <button onClick={onClose} className={glassButtonSecondary}>
                 Close Window
               </button>
             </div>

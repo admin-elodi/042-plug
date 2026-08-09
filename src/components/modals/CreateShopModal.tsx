@@ -38,6 +38,56 @@ const emptyProductFields = {
   price: ''
 };
 
+// Shared glass treatment for text inputs/textareas/selects — frosted,
+// translucent, brightens gently on focus. One class string, reused
+// everywhere so every field in the modal feels identical.
+const glassInput =
+  'w-full px-3 py-2 bg-white/[0.07] backdrop-blur-sm border border-white/15 rounded-xl text-white text-sm ' +
+  'placeholder:text-stone-400 focus:outline-none focus:border-amber-400/60 focus:bg-white/[0.1] transition-colors';
+
+const glassLabel = 'block text-xs text-stone-400 mb-1.5';
+
+// The 3 real steps a fresh registration moves through — used only to
+// orient someone, not decoration. "already-exists" and "checking" aren't
+// part of the sequence, so the indicator simply doesn't render for those.
+const STEP_SEQUENCE: Array<'business' | 'product' | 'payment-pending'> = ['business', 'product', 'payment-pending'];
+
+const StepDots: React.FC<{ current: string }> = ({ current }) => {
+  const index = STEP_SEQUENCE.indexOf(current as (typeof STEP_SEQUENCE)[number]);
+  if (index === -1) return null;
+  return (
+    <div className="flex items-center gap-1.5 px-6 pb-4">
+      <style>{`
+        @keyframes dotGlowPulse {
+          0%, 100% {
+            box-shadow: 0 0 4px 0 rgba(251, 191, 36, 0.5);
+            opacity: 1;
+          }
+          50% {
+            box-shadow: 0 0 10px 2px rgba(251, 191, 36, 0.85);
+            opacity: 0.85;
+          }
+        }
+        .dot-alive {
+          animation: dotGlowPulse 1.8s ease-in-out infinite;
+        }
+      `}</style>
+      {STEP_SEQUENCE.map((_, i) => (
+        <div
+          key={i}
+          className={`h-1.5 rounded-full transition-all duration-300 ${
+            i === index
+              ? 'w-7 bg-amber-400 dot-alive'
+              : i < index
+              ? 'w-1.5 bg-amber-400/60'
+              : 'w-1.5 bg-white/15'
+          }`}
+        />
+      ))}
+    </div>
+  );
+};
+
 export const CreateShopModal: React.FC<CreateShopModalProps> = ({ category, onClose }) => {
   const { user } = useAuth();
   const [showAuthModal, setShowAuthModal] = useState(false);
@@ -251,29 +301,41 @@ export const CreateShopModal: React.FC<CreateShopModalProps> = ({ category, onCl
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
-      <div className="bg-stone-900 border border-stone-800 rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl max-h-[90vh] overflow-y-auto">
-        <div className="flex items-center justify-between p-4 border-b border-stone-800 sticky top-0 bg-stone-900 z-10">
-          <div className="flex items-center gap-2 text-white font-bold text-base">
-            <Store className="w-5 h-5 text-amber-400" />
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 backdrop-blur-md p-4">
+      <div className="relative bg-stone-800/60 backdrop-blur-2xl border border-amber-500/15 rounded-[28px] w-full max-w-lg overflow-hidden shadow-2xl shadow-black/40 max-h-[90vh] overflow-y-auto">
+        {/* subtle ambient glow, purely decorative, sits behind everything */}
+        <div className="pointer-events-none absolute -top-24 -right-24 w-64 h-64 bg-amber-500/15 rounded-full blur-3xl" />
+
+        <div className="relative flex items-center justify-between px-6 pt-5 pb-4 border-b border-white/15 sticky top-0 bg-stone-800/70 backdrop-blur-2xl z-10">
+          <div className="flex items-center gap-2.5 text-white font-bold text-base">
+            <div className="p-1.5 rounded-xl bg-amber-400/10 border border-amber-400/20">
+              <Store className="w-4 h-4 text-amber-400" />
+            </div>
             <span>{existingShop ? existingShop.business_name : `Register Shop: ${category.title}`}</span>
           </div>
-          <button onClick={onClose} className="p-1 rounded-lg text-stone-400 hover:text-white hover:bg-stone-800">
-            <X className="w-5 h-5" />
+          <button
+            onClick={onClose}
+            className="p-1.5 rounded-full text-stone-400 hover:text-white hover:bg-white/10 transition-colors"
+          >
+            <X className="w-4.5 h-4.5" />
           </button>
         </div>
 
-        <div className="p-6">
+        <StepDots current={step} />
+
+        <div className="relative px-6 pb-6">
           {!user && (
             <div className="text-center py-8">
-              <LogIn className="w-10 h-10 text-slate-600 mx-auto mb-3" />
+              <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-white/10 backdrop-blur border border-white/20 flex items-center justify-center">
+                <LogIn className="w-7 h-7 text-stone-400" />
+              </div>
               <h3 className="text-sm font-bold text-white mb-1">Sign in to register your shop</h3>
               <p className="text-xs text-stone-400 mb-5">
                 Create a free account so you can manage and edit your shop later.
               </p>
               <button
                 onClick={() => setShowAuthModal(true)}
-                className="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-stone-950 text-sm font-semibold"
+                className="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-stone-950 text-sm font-semibold transition-colors"
               >
                 Sign In / Sign Up
               </button>
@@ -289,14 +351,14 @@ export const CreateShopModal: React.FC<CreateShopModalProps> = ({ category, onCl
           )}
 
           {user && step !== 'checking' && checkError && (
-            <div className="mb-4 flex items-start gap-2 p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-300 text-xs">
+            <div className="mb-4 flex items-start gap-2 p-3 rounded-xl bg-red-500/10 backdrop-blur-sm border border-red-500/20 text-red-300 text-xs">
               <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
               <span>{checkError}</span>
             </div>
           )}
 
           {user && errorMsg && (
-            <div className="mb-4 flex items-start gap-2 p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-300 text-xs">
+            <div className="mb-4 flex items-start gap-2 p-3 rounded-xl bg-red-500/10 backdrop-blur-sm border border-red-500/20 text-red-300 text-xs">
               <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
               <span>{errorMsg}</span>
             </div>
@@ -304,7 +366,9 @@ export const CreateShopModal: React.FC<CreateShopModalProps> = ({ category, onCl
 
           {user && step === 'already-exists' && existingShop && (
             <div className="text-center py-8">
-              <Store className="w-10 h-10 text-amber-400 mx-auto mb-3" />
+              <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-amber-400/10 border border-amber-400/20 flex items-center justify-center">
+                <Store className="w-7 h-7 text-amber-400" />
+              </div>
               <h3 className="text-sm font-bold text-white mb-1">You already have a shop here</h3>
               <p className="text-xs text-stone-400 mb-6">
                 <span className="text-white font-medium">{existingShop.business_name}</span> is already registered in{' '}
@@ -313,7 +377,7 @@ export const CreateShopModal: React.FC<CreateShopModalProps> = ({ category, onCl
               </p>
               <button
                 onClick={onClose}
-                className="px-5 py-2.5 rounded-xl bg-stone-800 hover:bg-stone-700 text-white text-sm font-medium"
+                className="px-5 py-2.5 rounded-xl bg-white/10 backdrop-blur border border-white/20 hover:bg-white/15 text-white text-sm font-medium transition-colors"
               >
                 Got it
               </button>
@@ -322,79 +386,79 @@ export const CreateShopModal: React.FC<CreateShopModalProps> = ({ category, onCl
 
           {user && step === 'business' && (
             <form onSubmit={goToProductStep} className="space-y-4">
-              <p className="text-xs text-stone-400 mb-1">
+              <p className="text-xs text-stone-400 -mt-1">
                 You'll only need to enter this once — after today, adding products for this shop skips straight past this step.
               </p>
               <div>
-                <label className="block text-xs text-stone-400 mb-1">Business Name</label>
+                <label className={glassLabel}>Business Name</label>
                 <input
                   type="text"
                   required
                   placeholder="e.g., Prime Tech World"
                   value={businessData.businessName}
                   onChange={(e) => setBusinessData({ ...businessData, businessName: e.target.value })}
-                  className="w-full px-3 py-2 bg-stone-950 border border-stone-800 rounded-lg text-white text-sm focus:outline-none focus:border-amber-500"
+                  className={glassInput}
                 />
               </div>
               <div>
-                <label className="block text-xs text-stone-400 mb-1">WhatsApp / Phone Number</label>
+                <label className={glassLabel}>WhatsApp / Phone Number</label>
                 <input
                   type="tel"
                   required
                   placeholder="e.g., 08012345678"
                   value={businessData.phone}
                   onChange={(e) => setBusinessData({ ...businessData, phone: e.target.value })}
-                  className="w-full px-3 py-2 bg-stone-950 border border-stone-800 rounded-lg text-white text-sm focus:outline-none focus:border-amber-500"
+                  className={glassInput}
                 />
               </div>
               <div>
-                <label className="block text-xs text-stone-400 mb-1">Address (optional)</label>
+                <label className={glassLabel}>Address (optional)</label>
                 <input
                   type="text"
                   placeholder="e.g., Ogui Road, Enugu"
                   value={businessData.address}
                   onChange={(e) => setBusinessData({ ...businessData, address: e.target.value })}
-                  className="w-full px-3 py-2 bg-stone-950 border border-stone-800 rounded-lg text-white text-sm focus:outline-none focus:border-amber-500"
+                  className={glassInput}
                 />
               </div>
 
-              <div className="pt-2 border-t border-stone-800">
-                <p className="text-xs text-amber-400 font-semibold mb-3">Payment Details</p>
-                <p className="text-[11px] text-slate-500 mb-3">
+              <div className="pt-4 border-t border-white/10">
+                <p className="text-xs text-amber-400 font-semibold mb-1">Payment Details</p>
+                <p className="text-[11px] text-stone-500 mb-3">
                   This gets included automatically when a buyer messages you on WhatsApp to order, so you don't have to type it out every time.
                 </p>
                 <div className="space-y-3">
                   <div>
-                    <label className="block text-xs text-stone-400 mb-1">Bank Name</label>
+                    <label className={glassLabel}>Bank Name</label>
                     <input
                       type="text"
                       required
                       placeholder="e.g., GTBank"
                       value={businessData.bankName}
                       onChange={(e) => setBusinessData({ ...businessData, bankName: e.target.value })}
-                      className="w-full px-3 py-2 bg-stone-950 border border-stone-800 rounded-lg text-white text-sm focus:outline-none focus:border-amber-500"
+                      className={glassInput}
                     />
                   </div>
                   <div>
-                    <label className="block text-xs text-stone-400 mb-1">Account Number</label>
+                    <label className={glassLabel}>Account Number</label>
                     <input
                       type="text"
                       required
                       placeholder="e.g., 0123456789"
                       value={businessData.accountNumber}
                       onChange={(e) => setBusinessData({ ...businessData, accountNumber: e.target.value })}
-                      className="w-full px-3 py-2 bg-stone-950 border border-stone-800 rounded-lg text-white text-sm focus:outline-none focus:border-amber-500"
+                      className={glassInput}
                     />
                   </div>
                   <div>
-                    <label className="block text-xs text-stone-400 mb-1">Account Name</label>
+                    <label className={glassLabel}>Account Name</label>
                     <input
                       type="text"
                       required
                       placeholder="e.g., Ikenna Kingsley Nwachukwu"
                       value={businessData.accountName}
                       onChange={(e) => setBusinessData({ ...businessData, accountName: e.target.value })}
-                      className="w-full px-3 py-2 bg-stone-950 border border-stone-800 rounded-lg text-white text-sm focus:outline-none focus:border-amber-500"
+                      className={glassInput}
                     />
                   </div>
                 </div>
@@ -402,7 +466,7 @@ export const CreateShopModal: React.FC<CreateShopModalProps> = ({ category, onCl
 
               <button
                 type="submit"
-                className="w-full py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-stone-950 font-semibold text-sm transition-colors"
+                className="w-full py-2.5 rounded-xl bg-gradient-to-b from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-stone-950 font-semibold text-sm transition-colors shadow-lg shadow-amber-500/20"
               >
                 Continue to Add Product
               </button>
@@ -411,47 +475,47 @@ export const CreateShopModal: React.FC<CreateShopModalProps> = ({ category, onCl
 
           {user && step === 'product' && (
             <form onSubmit={handleFinalSubmit} className="space-y-4">
-              <div className="flex items-center gap-2 text-sm text-amber-400 mb-2">
+              <div className="flex items-center gap-2 text-sm text-amber-400 mb-1">
                 <PackagePlus className="w-4 h-4" />
                 <span>{existingShop ? `Add a Product to ${existingShop.business_name}` : 'Add Your First Product or Service'}</span>
               </div>
               <div>
-                <label className="block text-xs text-stone-400 mb-1">Product / Service Title</label>
+                <label className={glassLabel}>Product / Service Title</label>
                 <input
                   type="text"
                   required
                   placeholder="e.g., iPhone 13 Pro 128GB"
                   value={productData.productName}
                   onChange={(e) => setProductData({ ...productData, productName: e.target.value })}
-                  className="w-full px-3 py-2 bg-stone-950 border border-stone-800 rounded-lg text-white text-sm focus:outline-none focus:border-amber-500"
+                  className={glassInput}
                 />
               </div>
               <div>
-                <label className="block text-xs text-stone-400 mb-1">Description</label>
+                <label className={glassLabel}>Description</label>
                 <textarea
                   rows={3}
                   placeholder="Describe the product or service..."
                   value={productData.description}
                   onChange={(e) => setProductData({ ...productData, description: e.target.value })}
-                  className="w-full px-3 py-2 bg-stone-950 border border-stone-800 rounded-lg text-white text-sm focus:outline-none focus:border-amber-500 resize-none"
+                  className={`${glassInput} resize-none`}
                 />
               </div>
               <div>
-                <label className="block text-xs text-stone-400 mb-1">Price (₦) — leave blank for services on request</label>
+                <label className={glassLabel}>Price (₦) — leave blank for services on request</label>
                 <input
                   type="number"
                   placeholder="e.g., 450000"
                   value={productData.price}
                   onChange={(e) => setProductData({ ...productData, price: e.target.value })}
-                  className="w-full px-3 py-2 bg-stone-950 border border-stone-800 rounded-lg text-white text-sm focus:outline-none focus:border-amber-500"
+                  className={glassInput}
                 />
               </div>
 
               <div>
-                <label className="block text-xs text-stone-400 mb-1">
+                <label className={glassLabel}>
                   Photos / Videos ({mediaFiles.length}/{MAX_FILES})
                 </label>
-                <label className="flex items-center justify-center gap-2 w-full px-3 py-4 bg-stone-950 border border-dashed border-stone-700 rounded-lg text-stone-400 text-xs cursor-pointer hover:border-amber-500 hover:text-amber-400 transition-colors">
+                <label className="flex items-center justify-center gap-2 w-full px-3 py-4 bg-white/[0.06] backdrop-blur-sm border border-dashed border-white/20 rounded-xl text-stone-400 text-xs cursor-pointer hover:border-amber-400/40 hover:text-amber-400 transition-colors">
                   <ImagePlus className="w-4 h-4" />
                   <span>Click to add images or videos</span>
                   <input
@@ -466,18 +530,18 @@ export const CreateShopModal: React.FC<CreateShopModalProps> = ({ category, onCl
                 {mediaFiles.length > 0 && (
                   <div className="grid grid-cols-3 gap-2 mt-3">
                     {mediaFiles.map((m, idx) => (
-                      <div key={idx} className="relative group aspect-square rounded-lg overflow-hidden bg-stone-950 border border-stone-800">
+                      <div key={idx} className="relative group aspect-square rounded-xl overflow-hidden bg-white/[0.06] border border-white/15">
                         {m.type === 'image' ? (
                           <img src={m.previewUrl} alt="" className="w-full h-full object-cover" />
                         ) : (
                           <div className="w-full h-full flex items-center justify-center">
-                            <Film className="w-6 h-6 text-slate-500" />
+                            <Film className="w-6 h-6 text-stone-500" />
                           </div>
                         )}
                         <button
                           type="button"
                           onClick={() => removeMediaFile(idx)}
-                          className="absolute top-1 right-1 p-1 rounded-md bg-black/70 text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                          className="absolute top-1 right-1 p-1 rounded-md bg-black/70 backdrop-blur-sm text-white opacity-0 group-hover:opacity-100 transition-opacity"
                         >
                           <Trash2 className="w-3 h-3" />
                         </button>
@@ -490,7 +554,7 @@ export const CreateShopModal: React.FC<CreateShopModalProps> = ({ category, onCl
               <button
                 type="submit"
                 disabled={submitting}
-                className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 disabled:opacity-60 disabled:cursor-not-allowed text-stone-950 font-semibold text-sm transition-colors"
+                className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-gradient-to-b from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 disabled:opacity-60 disabled:cursor-not-allowed text-stone-950 font-semibold text-sm transition-colors shadow-lg shadow-amber-500/20"
               >
                 {submitting && <Loader2 className="w-4 h-4 animate-spin" />}
                 <span>{submitting ? 'Saving...' : existingShop ? 'Add Product' : 'Complete Shop Setup'}</span>
@@ -501,7 +565,9 @@ export const CreateShopModal: React.FC<CreateShopModalProps> = ({ category, onCl
           {user && step === 'payment-pending' && existingShop && (
             <div className="py-2">
               <div className="text-center mb-5">
-                <CheckCircle className="w-10 h-10 text-emerald-400 mx-auto mb-2" />
+                <div className="w-16 h-16 mx-auto mb-3 rounded-2xl bg-emerald-400/10 border border-emerald-400/20 flex items-center justify-center">
+                  <CheckCircle className="w-7 h-7 text-emerald-400" />
+                </div>
                 <h3 className="text-base font-bold text-white mb-1">Shop & Product Saved!</h3>
                 <p className="text-xs text-stone-400 max-w-xs mx-auto">
                   One last step: pay the one-time ₦{REGISTRATION_FEE.toLocaleString()} registration fee to go live.
@@ -519,7 +585,7 @@ export const CreateShopModal: React.FC<CreateShopModalProps> = ({ category, onCl
 
               <button
                 onClick={onClose}
-                className="w-full py-2 mt-3 rounded-xl bg-stone-800 hover:bg-stone-700 text-white text-sm font-medium"
+                className="w-full py-2 mt-3 rounded-xl bg-white/10 backdrop-blur border border-white/20 hover:bg-white/15 text-white text-sm font-medium transition-colors"
               >
                 Pay Later
               </button>
@@ -528,7 +594,9 @@ export const CreateShopModal: React.FC<CreateShopModalProps> = ({ category, onCl
 
           {user && step === 'success' && (
             <div className="text-center py-6">
-              <CheckCircle className="w-12 h-12 text-emerald-400 mx-auto mb-3" />
+              <div className="w-20 h-20 mx-auto mb-4 rounded-3xl bg-emerald-400/10 border border-emerald-400/20 flex items-center justify-center">
+                <CheckCircle className="w-9 h-9 text-emerald-400" />
+              </div>
               <h3 className="text-lg font-bold text-white mb-1">You're Live!</h3>
               <p className="text-xs text-stone-400 mb-6">
                 Payment confirmed — {existingShop?.business_name ?? 'your shop'} is now visible to buyers browsing
@@ -536,7 +604,7 @@ export const CreateShopModal: React.FC<CreateShopModalProps> = ({ category, onCl
               </p>
               <button
                 onClick={onClose}
-                className="px-6 py-2 rounded-xl bg-stone-800 hover:bg-stone-700 text-white text-sm font-medium"
+                className="px-6 py-2 rounded-xl bg-white/10 backdrop-blur border border-white/20 hover:bg-white/15 text-white text-sm font-medium transition-colors"
               >
                 Close Window
               </button>

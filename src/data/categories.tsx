@@ -15,7 +15,7 @@ const CATEGORIES: CategoryItem[] = [
     subtitle: 'Boutiques, Native Wear & Tailors',
     icon: 'Shirt',
     badge: 'Popular',
-    count: '42+ Vendors',
+    count: '42+ Sellers',
     popularItems: ['Senegalese Native', 'Unisex Wears', 'Jackets', 'Custom Tailoring']
   },
   {
@@ -24,7 +24,7 @@ const CATEGORIES: CategoryItem[] = [
     subtitle: 'Sneakers, Slippers, Corporate Shoes & Shoemakers',
     icon: 'Footprints',
     badge: 'High Demand',
-    count: '20+ Vendors',
+    count: '20+ Sellers',
     popularItems: ['Sneakers', 'Slippers', 'Made-to-Order', 'Shoe Repair']
   },
   {
@@ -33,7 +33,7 @@ const CATEGORIES: CategoryItem[] = [
     subtitle: 'Handbags, Jewelry, Belts, Sunglasses & Wristwatches',
     icon: 'Gem',
     badge: 'Trending',
-    count: '18+ Vendors',
+    count: '18+ Sellers',
     popularItems: ['Handbags', 'Jewelry Sets', 'Sunglasses', 'Wristwatches']
   },
   {
@@ -51,7 +51,7 @@ const CATEGORIES: CategoryItem[] = [
     subtitle: 'Makeup, Nails, Skincare & Body Enhancers',
     icon: 'Sparkles',
     badge: 'Trending',
-    count: '35+ Vendors',
+    count: '35+ Sellers',
     popularItems: ['Press-On Nails', 'Skincare Sets', 'Hip & Nyash Padding', 'Hair Oil']
   },
   {
@@ -60,7 +60,7 @@ const CATEGORIES: CategoryItem[] = [
     subtitle: 'Phones, Laptops, Accessories & Repairs',
     icon: 'Smartphone',
     badge: 'High Demand',
-    count: '28+ Vendors',
+    count: '28+ Sellers',
     popularItems: ['iPhone UK Used', 'MacBooks', 'Powerbanks', 'Screen Repair']
   },
   {
@@ -69,7 +69,7 @@ const CATEGORIES: CategoryItem[] = [
     subtitle: 'Restaurants, Raw Foodstuff, Bakeries & Drinks',
     icon: 'UtensilsCrossed',
     badge: 'Daily Need',
-    count: '50+ Vendors',
+    count: '50+ Sellers',
     popularItems: ['Abakpa Market Supplies', 'Pastries', 'Catering', 'Fast Food']
   },
   {
@@ -78,7 +78,7 @@ const CATEGORIES: CategoryItem[] = [
     subtitle: 'Hampers, Surprise Packages, Gift Boxes & Wrapping',
     icon: 'Gift',
     badge: 'Essential',
-    count: '15+ Vendors',
+    count: '15+ Sellers',
     popularItems: ['Surprise Packages', 'Gift Hampers', 'Balloon Décor', 'Custom Wrapping']
   },
   {
