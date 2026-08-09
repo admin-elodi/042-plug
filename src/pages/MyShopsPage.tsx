@@ -39,6 +39,12 @@ interface Shop {
   products: Product[];
 }
 
+// AI Sales Tips is temporarily switched off — its Edge Function calls the
+// Claude API, which needs a funded Anthropic Console billing account
+// behind it. Flip this back to true once that's set up; nothing else
+// needs to change.
+const AI_TIPS_ENABLED = false;
+
 export const MyShopsPage: React.FC = () => {
   const { user } = useAuth();
   const [showAuthModal, setShowAuthModal] = useState(false);
@@ -380,37 +386,39 @@ export const MyShopsPage: React.FC = () => {
                       </div>
                     )}
 
-                    {/* AI Sales Tip */}
-                    <div className="mt-3 pt-3 border-t border-stone-800/70">
-                      {shop.ai_tip ? (
-                        <div className="flex items-start gap-2 p-2.5 rounded-lg bg-amber-500/5 border border-amber-500/20">
-                          <Sparkles className="w-3.5 h-3.5 text-amber-400 flex-shrink-0 mt-0.5" />
-                          <div className="flex-1 min-w-0">
-                            <p className="text-[11px] text-stone-300 leading-relaxed">{shop.ai_tip}</p>
-                            <button
-                              onClick={() => handleGenerateTip(shop.id)}
-                              disabled={generatingTipId === shop.id}
-                              className="mt-1.5 text-[10px] font-semibold text-amber-400 hover:text-amber-300 disabled:opacity-50"
-                            >
-                              {generatingTipId === shop.id ? 'Refreshing...' : 'Refresh Tip'}
-                            </button>
+                    {/* AI Sales Tip — hidden while AI_TIPS_ENABLED is false */}
+                    {AI_TIPS_ENABLED && (
+                      <div className="mt-3 pt-3 border-t border-stone-800/70">
+                        {shop.ai_tip ? (
+                          <div className="flex items-start gap-2 p-2.5 rounded-lg bg-amber-500/5 border border-amber-500/20">
+                            <Sparkles className="w-3.5 h-3.5 text-amber-400 flex-shrink-0 mt-0.5" />
+                            <div className="flex-1 min-w-0">
+                              <p className="text-[11px] text-stone-300 leading-relaxed">{shop.ai_tip}</p>
+                              <button
+                                onClick={() => handleGenerateTip(shop.id)}
+                                disabled={generatingTipId === shop.id}
+                                className="mt-1.5 text-[10px] font-semibold text-amber-400 hover:text-amber-300 disabled:opacity-50"
+                              >
+                                {generatingTipId === shop.id ? 'Refreshing...' : 'Refresh Tip'}
+                              </button>
+                            </div>
                           </div>
-                        </div>
-                      ) : (
-                        <button
-                          onClick={() => handleGenerateTip(shop.id)}
-                          disabled={generatingTipId === shop.id}
-                          className="flex items-center gap-1.5 text-[11px] font-medium text-amber-400 hover:text-amber-300 disabled:opacity-50"
-                        >
-                          {generatingTipId === shop.id ? (
-                            <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                          ) : (
-                            <Sparkles className="w-3.5 h-3.5" />
-                          )}
-                          <span>{generatingTipId === shop.id ? 'Generating tip...' : 'Get AI Sales Tip'}</span>
-                        </button>
-                      )}
-                    </div>
+                        ) : (
+                          <button
+                            onClick={() => handleGenerateTip(shop.id)}
+                            disabled={generatingTipId === shop.id}
+                            className="flex items-center gap-1.5 text-[11px] font-medium text-amber-400 hover:text-amber-300 disabled:opacity-50"
+                          >
+                            {generatingTipId === shop.id ? (
+                              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                            ) : (
+                              <Sparkles className="w-3.5 h-3.5" />
+                            )}
+                            <span>{generatingTipId === shop.id ? 'Generating tip...' : 'Get AI Sales Tip'}</span>
+                          </button>
+                        )}
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>

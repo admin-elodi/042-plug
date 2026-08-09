@@ -115,7 +115,7 @@ export const RequestsPage: React.FC = () => {
           <span>I'm Looking For This</span>
         </div>
         <p className="text-xs text-stone-400 mb-6">
-          Can't find what you want? Post it here — any seller who has it can message you directly.
+          Can't find what you want? Post it here - any seller who has it can message you directly.
         </p>
 
         {/* Tabs */}
@@ -190,14 +190,14 @@ export const RequestsPage: React.FC = () => {
                     <a
                       href={buildWhatsAppLink(
                         req.buyer_phone,
-                        `Hi! I saw your request on 042 Plugs Plaza for "${req.item_wanted}" — I have this available. Let's talk!`
+                        `Hi! I saw your request on 042 Plugs Plaza for "${req.item_wanted}" - I have this available. Let's talk!`
                       )}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center gap-1.5 mt-3 w-fit px-3 py-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 text-[11px] font-semibold transition-colors"
                     >
                       <MessageCircle className="w-3.5 h-3.5" />
-                      <span>I Can Help — Message Buyer</span>
+                      <span>I Can Help - Message Buyer</span>
                     </a>
                   </div>
                 ))}

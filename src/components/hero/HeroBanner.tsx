@@ -11,7 +11,7 @@ interface HeroBannerProps {
 }
 
 // Short, rotating brand lines under the main headline. "Best Plugs in Coal
-// City" is the one exception allowed to run longer — every other slide
+// City" is the one exception allowed to run longer - every other slide
 // stays to 3-4 words, for the sake of punch and consistent branding.
 const HERO_TAGLINES = [
   'Best Plugs in Coal City',

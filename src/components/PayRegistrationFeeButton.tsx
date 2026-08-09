@@ -22,7 +22,7 @@ declare global {
   }
 }
 
-// Launch price — currently ₦1,000. Raise to ₦2,000 later by updating BOTH
+// Launch price - currently ₦1,000. Raise to ₦2,000 later by updating BOTH
 // this value AND EXPECTED_AMOUNT_KOBO in supabase/functions/verify-shop-payment/index.ts.
 const REGISTRATION_FEE = 1000;
 const REGISTRATION_FEE_KOBO = REGISTRATION_FEE * 100;
@@ -52,7 +52,7 @@ export const PayRegistrationFeeButton: React.FC<PayRegistrationFeeButtonProps> =
     setPaying(true);
     setPaymentError(null);
 
-    // Paystack's verify endpoint is safe to call repeatedly — it never
+    // Paystack's verify endpoint is safe to call repeatedly - it never
     // charges anything. If the payment genuinely succeeded but our own
     // network call has a brief hiccup, quietly retry before showing an error.
     const MAX_ATTEMPTS = 3;
@@ -99,7 +99,7 @@ export const PayRegistrationFeeButton: React.FC<PayRegistrationFeeButtonProps> =
       email: userEmail,
       amount: REGISTRATION_FEE_KOBO,
       currency: 'NGN',
-      // Show every real payment method Nigerians actually use — bank transfer
+      // Show every real payment method Nigerians actually use - bank transfer
       // and USSD first, card as an available option rather than the default.
       channels: ['bank_transfer', 'bank', 'ussd', 'mobile_money', 'card'],
       ref: `042plug-${shopId}-${Date.now()}`,
@@ -109,7 +109,7 @@ export const PayRegistrationFeeButton: React.FC<PayRegistrationFeeButtonProps> =
         void verifyPayment(response.reference);
       },
       onClose: () => {
-        // User closed the popup without completing payment — nothing to do.
+        // User closed the popup without completing payment - nothing to do.
       }
     });
 

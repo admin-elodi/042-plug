@@ -230,7 +230,7 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({ shopId, busine
                 </label>
                 {isNegotiable && (
                   <p className="text-[11px] text-stone-500 mt-1.5">
-                    Buyers will see your price with "(Negotiable)" next to it — a real starting point, not a blank invitation.
+                    Buyers will see your price with "(Negotiable)" next to it - a real starting point, not a blank invitation.
                   </p>
                 )}
               </div>

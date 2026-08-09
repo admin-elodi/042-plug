@@ -13,7 +13,7 @@ export const formatWhatsAppNumber = (phone: string) => {
 const DEFAULT_PHONE = '2348136573235';
 
 // Same idea as formatWhatsAppNumber, but falls back to the platform's own
-// number if none was provided — used for admin-notification messages where
+// number if none was provided - used for admin-notification messages where
 // a phone number isn't always guaranteed to be on hand.
 export const cleanPhoneNumber = (phone?: string): string => {
   if (!phone) return DEFAULT_PHONE;
@@ -48,7 +48,7 @@ const buildJobMessage = (params: WhatsAppJobMessageParams): string => {
 
 /**
  * Builds a pre-filled WhatsApp message link. Accepts EITHER:
- *  - a plain message string (used across most of the app — product orders,
+ *  - a plain message string (used across most of the app - product orders,
  *    payment fallback messages, admin notifications), or
  *  - the structured WhatsAppJobMessageParams (used specifically for the
  *    job-application "Apply via WhatsApp" flow).

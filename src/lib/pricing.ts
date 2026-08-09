@@ -1,4 +1,4 @@
-// Formats a product's price using its structured pricing fields — the
+// Formats a product's price using its structured pricing fields - the
 // single place this logic lives, so every page that shows a price (shop
 // pages, category browsing, the WhatsApp order message) stays consistent.
 export type PriceType = 'fixed' | 'starting_from' | 'negotiable';

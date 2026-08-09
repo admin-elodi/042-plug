@@ -6,7 +6,7 @@ import CATEGORIES, { type CategoryItem } from '@/data/categories';
 
 // Auto-discovers any background photo dropped into this folder, matched by
 // filename to a category's `id` (e.g. fashion.jpg matches the "fashion"
-// category). No import statement or code change needed per photo — just
+// category). No import statement or code change needed per photo - just
 // add a file named <category-id>.<jpg|jpeg|png|webp> to this folder.
 const categoryImages = import.meta.glob('/src/assets/images/categories/*.{jpg,jpeg,png,webp}', {
   eager: true,
@@ -26,7 +26,7 @@ interface CategoryGridProps {
   onOpenView: (id: string, title: string) => void;
 }
 
-// One accent color, used consistently — no per-category rainbow.
+// One accent color, used consistently - no per-category rainbow.
 const iconMap: Record<string, React.ReactNode> = {
   Shirt: <Shirt className="w-4 h-4 text-amber-300" />,
   Smartphone: <Smartphone className="w-4 h-4 text-amber-300" />,
@@ -94,7 +94,7 @@ export const CategoryGrid: React.FC<CategoryGridProps> = ({ onOpenCreate, onOpen
                   </h3>
                   <p className="text-[11px] text-stone-300/90 mb-3.5 leading-relaxed">{cat.subtitle}</p>
 
-                  {/* Popular Tag Pills — capped, quiet styling */}
+                  {/* Popular Tag Pills - capped, quiet styling */}
                   <div className="flex flex-wrap gap-1 mb-5">
                     {cat.popularItems.slice(0, MAX_VISIBLE_TAGS).map((item, idx) => (
                       <span
@@ -112,7 +112,7 @@ export const CategoryGrid: React.FC<CategoryGridProps> = ({ onOpenCreate, onOpen
                   </div>
                 </div>
 
-                {/* Action Buttons — fixed height so both match exactly */}
+                {/* Action Buttons - fixed height so both match exactly */}
                 <div className="relative grid grid-cols-2 gap-1.5 xl:gap-2 pt-3 border-t border-stone-800/50">
                   <button
                     type="button"

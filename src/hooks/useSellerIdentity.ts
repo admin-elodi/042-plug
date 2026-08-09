@@ -5,7 +5,7 @@ import { supabase } from '@/lib/supabaseClient';
 import { useAuth } from '@/context/AuthContext';
 
 // If the currently signed-in visitor also owns a shop, returns that shop's
-// name — used to add a friendly "I'm also a 042 Plugs seller" line onto
+// name - used to add a friendly "I'm also a 042 Plugs seller" line onto
 // outgoing WhatsApp order messages. Returns null for logged-out visitors
 // or sellers with no shop of their own.
 export const useSellerIdentity = (): string | null => {

@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
-// React Router doesn't reset scroll position on navigation by itself —
+// React Router doesn't reset scroll position on navigation by itself -
 // unlike a traditional multi-page site, moving to a new route in a
 // single-page app keeps wherever you happened to be scrolled to. This
 // component fixes that globally: it renders nothing, it just watches the

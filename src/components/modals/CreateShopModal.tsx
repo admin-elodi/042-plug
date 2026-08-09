@@ -26,7 +26,7 @@ interface ExistingShop {
 const MAX_FILES = 6;
 const MAX_FILE_SIZE_MB = 25;
 
-// Launch price — currently ₦1,000. Kept here for display text only; the
+// Launch price - currently ₦1,000. Kept here for display text only; the
 // actual charge amount lives in PayRegistrationFeeButton.tsx. Raise to
 // ₦2,000 later by updating BOTH this value, the one in that component, AND
 // EXPECTED_AMOUNT_KOBO in supabase/functions/verify-shop-payment/index.ts.
@@ -40,7 +40,7 @@ const emptyProductFields = {
   isNegotiable: false
 };
 
-// Shared glass treatment for text inputs/textareas/selects — frosted,
+// Shared glass treatment for text inputs/textareas/selects - frosted,
 // translucent, brightens gently on focus. One class string, reused
 // everywhere so every field in the modal feels identical.
 const glassInput =
@@ -49,7 +49,7 @@ const glassInput =
 
 const glassLabel = 'block text-xs text-stone-400 mb-1.5';
 
-// The 3 real steps a fresh registration moves through — used only to
+// The 3 real steps a fresh registration moves through - used only to
 // orient someone, not decoration. "already-exists" and "checking" aren't
 // part of the sequence, so the indicator simply doesn't render for those.
 const STEP_SEQUENCE: Array<'business' | 'product' | 'payment-pending'> = ['business', 'product', 'payment-pending'];
@@ -128,7 +128,7 @@ export const CreateShopModal: React.FC<CreateShopModalProps> = ({ category, onCl
     let cancelled = false;
 
     const checkExistingShop = async () => {
-      // A hard ceiling on how long we'll wait — if the request stalls for
+      // A hard ceiling on how long we'll wait - if the request stalls for
       // any reason (a stuck session-refresh lock, a dropped connection,
       // anything) the person sees a real error and a way forward, instead
       // of a spinner that never resolves.
@@ -253,7 +253,7 @@ export const CreateShopModal: React.FC<CreateShopModalProps> = ({ category, onCl
 
       let shopId = existingShop?.id;
 
-      // Only create the shop the first time — every later visit reuses it.
+      // Only create the shop the first time - every later visit reuses it.
       if (!shopId) {
         const { data: shop, error: shopError } = await supabase
           .from('shops')
@@ -400,7 +400,7 @@ export const CreateShopModal: React.FC<CreateShopModalProps> = ({ category, onCl
           {user && step === 'business' && (
             <form onSubmit={goToProductStep} className="space-y-4">
               <p className="text-xs text-stone-400 -mt-1">
-                You'll only need to enter this once — after today, adding products for this shop skips straight past this step.
+                You'll only need to enter this once - after today, adding products for this shop skips straight past this step.
               </p>
               <div>
                 <label className={glassLabel}>Business Name</label>
@@ -556,7 +556,7 @@ export const CreateShopModal: React.FC<CreateShopModalProps> = ({ category, onCl
                 </label>
                 {productData.isNegotiable && (
                   <p className="text-[11px] text-stone-500 mt-1.5">
-                    Buyers will see your price with "(Negotiable)" next to it — a real starting point, not a blank invitation.
+                    Buyers will see your price with "(Negotiable)" next to it - a real starting point, not a blank invitation.
                   </p>
                 )}
               </div>
@@ -621,7 +621,7 @@ export const CreateShopModal: React.FC<CreateShopModalProps> = ({ category, onCl
                 <h3 className="text-base font-bold text-white mb-1">Shop & Product Saved!</h3>
                 <p className="text-xs text-stone-400 max-w-xs mx-auto">
                   One last step: pay the one-time ₦{REGISTRATION_FEE.toLocaleString()} registration fee to go live.
-                  Your shop won't appear in Browse until payment is confirmed — this happens automatically,
+                  Your shop won't appear in Browse until payment is confirmed - this happens automatically,
                   usually within seconds.
                 </p>
               </div>
@@ -649,7 +649,7 @@ export const CreateShopModal: React.FC<CreateShopModalProps> = ({ category, onCl
               </div>
               <h3 className="text-lg font-bold text-white mb-1">You're Live!</h3>
               <p className="text-xs text-stone-400 mb-6">
-                Payment confirmed — {existingShop?.business_name ?? 'your shop'} is now visible to buyers browsing
+                Payment confirmed - {existingShop?.business_name ?? 'your shop'} is now visible to buyers browsing
                 {' '}{category.title}.
               </p>
               <button

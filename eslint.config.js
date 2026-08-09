@@ -20,7 +20,7 @@ export default defineConfig([
     },
     rules: {
       // Disabled: react-hooks/set-state-in-effect currently flags valid,
-      // correctly-guarded async data-fetching effects as errors — including
+      // correctly-guarded async data-fetching effects as errors - including
       // patterns copied verbatim from React's own docs. This is a confirmed,
       // still-open bug in the rule itself (see facebook/react#34743 and
       // facebook/react#34858), not an issue with this codebase. Every setState

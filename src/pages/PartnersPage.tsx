@@ -26,7 +26,7 @@ export const PartnersPage: React.FC = () => {
           <h1 className="text-xl sm:text-2xl font-black text-white mb-2">Your Customers Are Already Here</h1>
           <p className="text-sm text-stone-400 max-w-md mx-auto leading-relaxed">
             Every day on 042 Plugs Plaza, real Enugu sole traders upload photos, message buyers, and grow their
-            business — all of it running on data and airtime. That's an audience worth reaching, not renting.
+            business - all of it running on data and airtime. That's an audience worth reaching, not renting.
           </p>
         </div>
 
@@ -39,7 +39,7 @@ export const PartnersPage: React.FC = () => {
               <h3 className="text-sm font-bold text-white mb-1">"This Week's Data Champion"</h3>
               <p className="text-xs text-stone-400 leading-relaxed">
                 Sponsor a small data or airtime reward for our most active seller each week. Your brand gets
-                credited directly to sellers who are genuinely growing their business — not a random ad, a real
+                credited directly to sellers who are genuinely growing their business - not a random ad, a real
                 thank-you they'll remember.
               </p>
             </div>
@@ -52,7 +52,7 @@ export const PartnersPage: React.FC = () => {
             <div>
               <h3 className="text-sm font-bold text-white mb-1">Direct Access to Local Sole Traders</h3>
               <p className="text-xs text-stone-400 leading-relaxed">
-                No mass-market guesswork — this is a real, active community of Enugu business owners who already
+                No mass-market guesswork - this is a real, active community of Enugu business owners who already
                 need data plans and airtime to run what they're building. Exactly the customers you're already
                 looking for.
               </p>
@@ -66,7 +66,7 @@ export const PartnersPage: React.FC = () => {
             <div>
               <h3 className="text-sm font-bold text-white mb-1">A Quiet, Honest Footer Credit</h3>
               <p className="text-xs text-stone-400 leading-relaxed">
-                No loud banners here — that's not how we do things. Just a simple, real line on every page: "Data
+                No loud banners here - that's not how we do things. Just a simple, real line on every page: "Data
                 rewards powered by [Your Name]." Trust matters more to us than noise, and we think it does to you
                 too.
               </p>
@@ -77,7 +77,7 @@ export const PartnersPage: React.FC = () => {
         <div className="text-center rounded-2xl border border-amber-500/20 bg-amber-500/[0.04] p-6">
           <h2 className="text-base font-bold text-white mb-1">Let's Talk</h2>
           <p className="text-xs text-stone-400 mb-4 max-w-sm mx-auto">
-            Whether you're a local reseller, a VTU agent, or represent a telecom brand — we'd genuinely love to
+            Whether you're a local reseller, a VTU agent, or represent a telecom brand - we'd genuinely love to
             build something small and real with you.
           </p>
           <a

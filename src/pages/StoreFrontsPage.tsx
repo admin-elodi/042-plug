@@ -105,7 +105,7 @@ export const StorefrontsPage: React.FC = () => {
   }, []);
 
   // Groups shops by category, in the SAME fixed order categories appear
-  // in on the homepage grid — not alphabetical, not chronological — so
+  // in on the homepage grid - not alphabetical, not chronological - so
   // the mental map stays consistent everywhere on the site. Within each
   // category: featured shops first, then newest first (matching Browse).
   const groupedByCategory = useMemo(() => {
@@ -150,7 +150,7 @@ export const StorefrontsPage: React.FC = () => {
           <span>All Storefronts</span>
         </div>
 
-        {/* Search — the real scaling tool once there are hundreds/thousands
+        {/* Search - the real scaling tool once there are hundreds/thousands
             of shops; sort order alone can't keep a page like this usable. */}
         <div className="relative mb-6">
           <Search className="w-4 h-4 text-stone-500 absolute left-3 top-1/2 -translate-y-1/2" />
@@ -185,7 +185,7 @@ export const StorefrontsPage: React.FC = () => {
           </div>
         )}
 
-        {/* Search results — flat list, no category grouping, since the
+        {/* Search results - flat list, no category grouping, since the
             person already knows what they're looking for by name. */}
         {!loading && !errorMsg && searchResults !== null && (
           <div>
@@ -202,7 +202,7 @@ export const StorefrontsPage: React.FC = () => {
           </div>
         )}
 
-        {/* Normal browsing view — grouped by category */}
+        {/* Normal browsing view - grouped by category */}
         {!loading && !errorMsg && searchResults === null && shops.length > 0 && (
           <div className="space-y-8">
             {groupedByCategory.map(({ category, shops: shopsInCategory }) => (

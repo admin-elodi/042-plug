@@ -55,7 +55,7 @@ const buildOrderLink = (shop: Shop, product: Product, buyerShopName?: string | n
       ? `\n\nPayment details:\nAccount Name: ${shop.account_name}\nAccount Number: ${shop.account_number}\nBank: ${shop.bank_name}`
       : '';
   const fellowPlugLine = buyerShopName
-    ? `\n\nP.S. I'm also a registered 042 Plugs seller (my shop: ${buyerShopName}) — always happy to support fellow plugs 🙏`
+    ? `\n\nP.S. I'm also a registered 042 Plugs seller (my shop: ${buyerShopName}) - always happy to support fellow plugs 🙏`
     : '';
   const message =
     `Hi ${shop.business_name}, I'd like to order "${product.title}" (${priceText}) that I saw on 042 Plugs Plaza.` +
@@ -100,7 +100,7 @@ export const ShopPage: React.FC = () => {
         setShop(loadedShop);
         document.title = `${loadedShop.business_name} | 042 Plugs Plaza`;
 
-        // Count this as a view — but never count the owner previewing
+        // Count this as a view - but never count the owner previewing
         // their own shop, so the number stays meaningful.
         if (loadedShop.owner_id !== user?.id) {
           void supabase.rpc('increment_shop_view', { shop_id_input: loadedShop.id });
@@ -122,7 +122,7 @@ export const ShopPage: React.FC = () => {
         await navigator.share({ title: shop.business_name, url });
         return;
       } catch {
-        // user cancelled the native share sheet — fall through to copy
+        // user cancelled the native share sheet - fall through to copy
       }
     }
     await navigator.clipboard.writeText(url);

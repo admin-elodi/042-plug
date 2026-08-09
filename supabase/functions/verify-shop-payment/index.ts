@@ -5,7 +5,7 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-// Starting price — ₦500 for 7 days. Update this (and the matching constant
+// Starting price - ₦500 for 7 days. Update this (and the matching constant
 // in FeatureShopButton.tsx) together whenever the price/duration changes.
 const EXPECTED_AMOUNT_KOBO = 50000; // ₦500
 const FEATURE_DURATION_DAYS = 7;

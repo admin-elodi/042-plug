@@ -9,7 +9,7 @@ interface AuthModalProps {
   onClose: () => void;
 }
 
-// Same shared glass treatment used across the app's modals — frosted,
+// Same shared glass treatment used across the app's modals - frosted,
 // translucent, brightens gently on focus.
 const glassInput =
   'w-full px-3 py-2 pr-10 bg-white/[0.07] backdrop-blur-sm border border-white/15 rounded-xl text-white text-sm ' +

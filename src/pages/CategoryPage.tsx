@@ -56,7 +56,7 @@ const buildOrderLink = (shop: Shop, product: Product, buyerShopName?: string | n
       ? `\n\nPayment details:\nAccount Name: ${shop.account_name}\nAccount Number: ${shop.account_number}\nBank: ${shop.bank_name}`
       : '';
   const fellowPlugLine = buyerShopName
-    ? `\n\nP.S. I'm also a registered 042 Plugs seller (my shop: ${buyerShopName}) — always happy to support fellow plugs 🙏`
+    ? `\n\nP.S. I'm also a registered 042 Plugs seller (my shop: ${buyerShopName}) - always happy to support fellow plugs 🙏`
     : '';
   const message =
     `Hi ${shop.business_name}, I'd like to order "${product.title}" (${priceText}) that I saw on 042 Plugs Plaza.` +

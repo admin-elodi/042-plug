@@ -192,7 +192,7 @@ export const SalariedJobsModal: React.FC<SalariedJobsModalProps> = ({ isOpen, on
                 <ShieldCheck className="w-4 h-4 text-amber-400 flex-shrink-0 mt-0.5" />
                 <div>
                   <p className="font-semibold text-stone-100 mb-0.5">Admin-Verified Listings Only</p>
-                  Every job below has been reviewed and approved — none of these are unverified employer submissions.
+                  Every job below has been reviewed and approved - none of these are unverified employer submissions.
                 </div>
               </div>
 

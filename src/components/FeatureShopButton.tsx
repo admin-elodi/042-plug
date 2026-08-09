@@ -22,7 +22,7 @@ declare global {
   }
 }
 
-// Starting price — ₦500 for 7 days. Update this (and the matching constant
+// Starting price - ₦500 for 7 days. Update this (and the matching constant
 // in supabase/functions/verify-feature-payment/index.ts) together.
 const FEATURE_FEE = 500;
 const FEATURE_FEE_KOBO = FEATURE_FEE * 100;
@@ -97,7 +97,7 @@ export const FeatureShopButton: React.FC<FeatureShopButtonProps> = ({
       email: userEmail,
       amount: FEATURE_FEE_KOBO,
       currency: 'NGN',
-      // Show every real payment method Nigerians actually use — bank transfer
+      // Show every real payment method Nigerians actually use - bank transfer
       // and USSD first, card as an available option rather than the default.
       channels: ['bank_transfer', 'bank', 'ussd', 'mobile_money', 'card'],
       ref: `042plug-feature-${shopId}-${Date.now()}`,
@@ -143,7 +143,7 @@ export const FeatureShopButton: React.FC<FeatureShopButtonProps> = ({
             ? 'Confirming...'
             : isCurrentlyFeatured
             ? `Extend Featured +${FEATURE_DURATION_DAYS} Days (₦${FEATURE_FEE})`
-            : `Get Featured — ₦${FEATURE_FEE} / ${FEATURE_DURATION_DAYS} Days`}
+            : `Get Featured - ₦${FEATURE_FEE} / ${FEATURE_DURATION_DAYS} Days`}
         </span>
       </button>
     </div>

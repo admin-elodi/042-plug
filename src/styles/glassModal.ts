@@ -1,12 +1,12 @@
 // Shared glassmorphic design tokens for every modal in the app. Import
-// these instead of writing new className strings from scratch — this is
+// these instead of writing new className strings from scratch - this is
 // what keeps AuthModal, CreateShopModal, SalariedJobsModal, etc. all
 // looking like one consistent system instead of quietly drifting apart
 // over time.
 
 export const glassOverlay = 'fixed inset-0 z-50 flex items-center justify-center bg-black/45 backdrop-blur-md p-4';
 
-// Base card shell — pair with a max-w-* and w-full on the element itself,
+// Base card shell - pair with a max-w-* and w-full on the element itself,
 // since that's the one thing that legitimately varies per modal.
 export const glassCard =
   'relative bg-stone-800/60 backdrop-blur-2xl border border-amber-500/15 rounded-[28px] overflow-hidden shadow-2xl shadow-black/40';
