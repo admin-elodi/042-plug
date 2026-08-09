@@ -62,10 +62,10 @@ export const Header: React.FC = () => {
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-5 font-medium text-stone-300 text-sm">
             <Link to="/storefronts" className="whitespace-nowrap hover:text-amber-400 transition-colors">Storefronts</Link>
-            <a href="#launch-info" className="whitespace-nowrap hover:text-amber-400 transition-colors flex items-center gap-1.5">
-              <span className="whitespace-nowrap">Oct 2026 Launch</span>
+            <Link to="/launch" className="whitespace-nowrap hover:text-amber-400 transition-colors flex items-center gap-1.5">
+              <span className="whitespace-nowrap">Ember Launch 2026</span>
               <span className="whitespace-nowrap bg-amber-500/20 text-amber-400 text-[10px] font-bold px-2 py-0.5 rounded-full border border-amber-500/30">VIP</span>
-            </a>
+            </Link>
             <Link to="/my-shops" className="whitespace-nowrap hover:text-amber-400 transition-colors">Sell on 042</Link>
             <Link to="/requests" className="whitespace-nowrap hover:text-amber-400 transition-colors">I'm Looking For This</Link>
           </nav>
@@ -101,6 +101,16 @@ export const Header: React.FC = () => {
                       >
                         <ShieldCheck className="w-4 h-4" />
                         <span>Job Approvals</span>
+                      </Link>
+                    )}
+                    {isAdmin && (
+                      <Link
+                        to="/admin/shops"
+                        onClick={() => setShowAccountMenu(false)}
+                        className="flex items-center gap-2 px-4 py-2 text-sm text-amber-400 hover:bg-stone-800 transition-colors"
+                      >
+                        <Store className="w-4 h-4" />
+                        <span>Shop Approvals</span>
                       </Link>
                     )}
                     {isAdmin && (
@@ -182,7 +192,7 @@ export const Header: React.FC = () => {
       {isMobileMenuOpen && (
         <div className="md:hidden bg-stone-900 border-b border-stone-800 px-4 pt-4 pb-6 space-y-4">
           <Link to="/storefronts" onClick={() => setIsMobileMenuOpen(false)} className="block text-stone-300 hover:text-amber-400 font-medium">Browse Storefronts</Link>
-          <a href="#launch-info" onClick={() => setIsMobileMenuOpen(false)} className="block text-stone-300 hover:text-amber-400 font-medium">October 2026 Launch Details</a>
+          <Link to="/launch" onClick={() => setIsMobileMenuOpen(false)} className="block text-stone-300 hover:text-amber-400 font-medium">Ember Launch 2026 Details</Link>
           <Link to="/my-shops" onClick={() => setIsMobileMenuOpen(false)} className="block text-stone-300 hover:text-amber-400 font-medium">Sell on 042</Link>
           <Link to="/requests" onClick={() => setIsMobileMenuOpen(false)} className="block text-stone-300 hover:text-amber-400 font-medium">I'm Looking For This</Link>
           <div className="pt-2 flex flex-col gap-3">
@@ -228,6 +238,15 @@ export const Header: React.FC = () => {
                     className="w-full text-center bg-amber-500/10 text-amber-400 font-semibold py-3 rounded-xl border border-amber-500/30"
                   >
                     Job Approvals
+                  </Link>
+                )}
+                {isAdmin && (
+                  <Link
+                    to="/admin/shops"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="w-full text-center bg-amber-500/10 text-amber-400 font-semibold py-3 rounded-xl border border-amber-500/30"
+                  >
+                    Shop Approvals
                   </Link>
                 )}
                 {isAdmin && (

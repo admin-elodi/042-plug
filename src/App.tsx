@@ -11,6 +11,8 @@ const CategoryPage = lazy(() => import("@/pages/CategoryPage"));
 const MyShopsPage = lazy(() => import("@/pages/MyShopsPage"));
 const ShopPage = lazy(() => import("@/pages/ShopPage"));
 const AdminJobsPage = lazy(() => import("@/pages/AdminJobsPage"));
+const AdminShopsPage = lazy(() => import("@/pages/AdminShopsPage"));
+const LaunchPage = lazy(() => import("@/pages/LaunchPage"));
 const StorefrontsPage = lazy(() => import("@/pages/StorefrontsPage"));
 const RequestsPage = lazy(() => import("@/pages/RequestsPage"));
 const PartnersPage = lazy(() => import("@/pages/PartnersPage"));
@@ -34,6 +36,8 @@ export default function App() {
             <Route path="/my-shops" element={<MyShopsPage />} />
             <Route path="/shops/:slug" element={<ShopPage />} />
             <Route path="/admin/jobs" element={<AdminJobsPage />} />
+            <Route path="/admin/shops" element={<AdminShopsPage />} />
+            <Route path="/launch" element={<LaunchPage />} />
             <Route path="/storefronts" element={<StorefrontsPage />} />
             <Route path="/requests" element={<RequestsPage />} />
             <Route path="/partners" element={<PartnersPage />} />

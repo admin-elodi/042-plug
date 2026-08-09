@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Store, Trash2, Loader2, AlertCircle, PackageOpen, Phone, MapPin, PackagePlus, ExternalLink, LogIn, Sparkles, Eye } from 'lucide-react';
+import { ArrowLeft, Store, Trash2, Loader2, AlertCircle, PackageOpen, Phone, MapPin, PackagePlus, ExternalLink, LogIn, Sparkles, Eye, Copy, MessageCircle } from 'lucide-react';
 import { supabase } from '@/lib/supabaseClient';
 import { formatProductPrice } from '@/lib/pricing';
 import { useAuth } from '@/context/AuthContext';
@@ -45,6 +45,12 @@ interface Shop {
 // needs to change.
 const AI_TIPS_ENABLED = false;
 
+// Featured Listings is temporarily switched off — holding back on charging
+// for extra visibility until the platform has proven its core value to
+// buyers first. Flip this back to true whenever that's ready; nothing
+// else needs to change.
+const FEATURED_LISTINGS_ENABLED = false;
+
 export const MyShopsPage: React.FC = () => {
   const { user } = useAuth();
   const [showAuthModal, setShowAuthModal] = useState(false);
@@ -55,6 +61,12 @@ export const MyShopsPage: React.FC = () => {
   const [addProductTarget, setAddProductTarget] = useState<{ shopId: string; businessName: string } | null>(null);
   const [generatingTipId, setGeneratingTipId] = useState<string | null>(null);
   const [tipError, setTipError] = useState<string | null>(null);
+  const [bankTransferShopId, setBankTransferShopId] = useState<string | null>(null);
+  const [copiedAccount, setCopiedAccount] = useState(false);
+
+  // Kept in sync with the same constant in PayRegistrationFeeButton.tsx —
+  // both must be updated together if the fee ever changes.
+  const REGISTRATION_FEE = 1000;
 
   const fetchMyShops = async () => {
     if (!user) return;
@@ -305,9 +317,70 @@ export const MyShopsPage: React.FC = () => {
                                 )
                               }
                             />
+                            <button
+                              type="button"
+                              onClick={() => setBankTransferShopId(bankTransferShopId === shop.id ? null : shop.id)}
+                              className="mt-2 text-[11px] font-semibold text-amber-400 hover:text-amber-300"
+                            >
+                              {bankTransferShopId === shop.id ? 'Hide bank transfer details' : 'Or pay via bank transfer instead'}
+                            </button>
+
+                            {bankTransferShopId === shop.id && (
+                              <div className="mt-2">
+                                <div className="rounded-xl border border-white/15 bg-white/[0.06] backdrop-blur-sm p-3 mb-2">
+                                  <div className="space-y-1.5 text-[11px]">
+                                    <div className="flex items-center justify-between">
+                                      <span className="text-stone-400">Bank</span>
+                                      <span className="text-white font-medium">Opay</span>
+                                    </div>
+                                    <div className="flex items-center justify-between">
+                                      <span className="text-stone-400">Account Number</span>
+                                      <button
+                                        type="button"
+                                        onClick={() => {
+                                          navigator.clipboard.writeText('8136573235');
+                                          setCopiedAccount(true);
+                                          setTimeout(() => setCopiedAccount(false), 2000);
+                                        }}
+                                        className="flex items-center gap-1 text-white font-medium hover:text-amber-400"
+                                      >
+                                        <span>8136573235</span>
+                                        <Copy className="w-2.5 h-2.5" />
+                                        {copiedAccount && <span className="text-amber-400 text-[9px]">Copied!</span>}
+                                      </button>
+                                    </div>
+                                    <div className="flex items-center justify-between">
+                                      <span className="text-stone-400">Account Name</span>
+                                      <span className="text-white font-medium">Ikenna Kingsley Nwachukwu</span>
+                                    </div>
+                                    <div className="flex items-center justify-between pt-1.5 border-t border-white/10">
+                                      <span className="text-stone-400">Amount</span>
+                                      <span className="text-amber-400 font-bold">₦{REGISTRATION_FEE.toLocaleString()}</span>
+                                    </div>
+                                  </div>
+                                </div>
+                                <a
+                                  href={`https://wa.me/2348136573235?text=${encodeURIComponent(
+                                    `Hi, I just paid the ₦${REGISTRATION_FEE.toLocaleString()} registration fee for "${shop.business_name}" via bank transfer.\n\nPlease confirm and approve my shop. Thank you!`
+                                  )}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  onClick={() => {
+                                    void supabase
+                                      .from('shops')
+                                      .update({ payment_claimed_at: new Date().toISOString() })
+                                      .eq('id', shop.id);
+                                  }}
+                                  className="flex items-center justify-center gap-1.5 w-full py-2 rounded-lg bg-gradient-to-b from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-stone-950 font-semibold text-xs transition-colors"
+                                >
+                                  <MessageCircle className="w-3.5 h-3.5" />
+                                  <span>I've Paid — Notify via WhatsApp</span>
+                                </a>
+                              </div>
+                            )}
                           </div>
                         )}
-                        {shop.payment_status === 'approved' && (
+                        {FEATURED_LISTINGS_ENABLED && shop.payment_status === 'approved' && (
                           <div className="mt-3 max-w-xs">
                             <FeatureShopButton
                               shopId={shop.id}

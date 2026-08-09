@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { X, Store, PackagePlus, CheckCircle, ImagePlus, Film, Loader2, AlertCircle, Trash2, LogIn } from 'lucide-react';
+import { X, Store, PackagePlus, CheckCircle, ImagePlus, Film, Loader2, AlertCircle, Trash2, LogIn, Landmark, Copy, MessageCircle } from 'lucide-react';
 import { supabase } from '@/lib/supabaseClient';
 import { useAuth } from '@/context/AuthContext';
 import AuthModal from '@/components/modals/AuthModal';
@@ -26,7 +26,7 @@ interface ExistingShop {
 const MAX_FILES = 6;
 const MAX_FILE_SIZE_MB = 25;
 
-// Launch price - currently ₦1,000. Kept here for display text only; the
+// Launch price — currently ₦1,000. Kept here for display text only; the
 // actual charge amount lives in PayRegistrationFeeButton.tsx. Raise to
 // ₦2,000 later by updating BOTH this value, the one in that component, AND
 // EXPECTED_AMOUNT_KOBO in supabase/functions/verify-shop-payment/index.ts.
@@ -40,7 +40,7 @@ const emptyProductFields = {
   isNegotiable: false
 };
 
-// Shared glass treatment for text inputs/textareas/selects - frosted,
+// Shared glass treatment for text inputs/textareas/selects — frosted,
 // translucent, brightens gently on focus. One class string, reused
 // everywhere so every field in the modal feels identical.
 const glassInput =
@@ -49,7 +49,7 @@ const glassInput =
 
 const glassLabel = 'block text-xs text-stone-400 mb-1.5';
 
-// The 3 real steps a fresh registration moves through - used only to
+// The 3 real steps a fresh registration moves through — used only to
 // orient someone, not decoration. "already-exists" and "checking" aren't
 // part of the sequence, so the indicator simply doesn't render for those.
 const STEP_SEQUENCE: Array<'business' | 'product' | 'payment-pending'> = ['business', 'product', 'payment-pending'];
@@ -106,6 +106,8 @@ export const CreateShopModal: React.FC<CreateShopModalProps> = ({ category, onCl
   const [checkError, setCheckError] = useState<string | null>(null);
 
   const [submitting, setSubmitting] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState<'bank' | 'paystack'>('bank');
+  const [copiedAccount, setCopiedAccount] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const [businessData, setBusinessData] = useState({
@@ -128,7 +130,7 @@ export const CreateShopModal: React.FC<CreateShopModalProps> = ({ category, onCl
     let cancelled = false;
 
     const checkExistingShop = async () => {
-      // A hard ceiling on how long we'll wait - if the request stalls for
+      // A hard ceiling on how long we'll wait — if the request stalls for
       // any reason (a stuck session-refresh lock, a dropped connection,
       // anything) the person sees a real error and a way forward, instead
       // of a spinner that never resolves.
@@ -253,7 +255,7 @@ export const CreateShopModal: React.FC<CreateShopModalProps> = ({ category, onCl
 
       let shopId = existingShop?.id;
 
-      // Only create the shop the first time - every later visit reuses it.
+      // Only create the shop the first time — every later visit reuses it.
       if (!shopId) {
         const { data: shop, error: shopError } = await supabase
           .from('shops')
@@ -400,7 +402,7 @@ export const CreateShopModal: React.FC<CreateShopModalProps> = ({ category, onCl
           {user && step === 'business' && (
             <form onSubmit={goToProductStep} className="space-y-4">
               <p className="text-xs text-stone-400 -mt-1">
-                You'll only need to enter this once - after today, adding products for this shop skips straight past this step.
+                You'll only need to enter this once — after today, adding products for this shop skips straight past this step.
               </p>
               <div>
                 <label className={glassLabel}>Business Name</label>
@@ -556,7 +558,7 @@ export const CreateShopModal: React.FC<CreateShopModalProps> = ({ category, onCl
                 </label>
                 {productData.isNegotiable && (
                   <p className="text-[11px] text-stone-500 mt-1.5">
-                    Buyers will see your price with "(Negotiable)" next to it - a real starting point, not a blank invitation.
+                    Buyers will see your price with "(Negotiable)" next to it — a real starting point, not a blank invitation.
                   </p>
                 )}
               </div>
@@ -621,17 +623,110 @@ export const CreateShopModal: React.FC<CreateShopModalProps> = ({ category, onCl
                 <h3 className="text-base font-bold text-white mb-1">Shop & Product Saved!</h3>
                 <p className="text-xs text-stone-400 max-w-xs mx-auto">
                   One last step: pay the one-time ₦{REGISTRATION_FEE.toLocaleString()} registration fee to go live.
-                  Your shop won't appear in Browse until payment is confirmed - this happens automatically,
-                  usually within seconds.
                 </p>
               </div>
 
-              <PayRegistrationFeeButton
-                shopId={existingShop.id}
-                businessName={existingShop.business_name}
-                userEmail={user.email ?? ''}
-                onSuccess={() => setStep('success')}
-              />
+              <div className="grid grid-cols-2 gap-2 mb-4 p-1 bg-white/[0.05] backdrop-blur-sm rounded-lg border border-white/10">
+                <button
+                  type="button"
+                  onClick={() => setPaymentMethod('bank')}
+                  className={`py-2 text-xs font-semibold rounded-md transition-all ${
+                    paymentMethod === 'bank'
+                      ? 'bg-gradient-to-b from-amber-400 to-amber-500 text-stone-950 shadow-md'
+                      : 'text-stone-400 hover:text-stone-200'
+                  }`}
+                >
+                  Bank Transfer
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setPaymentMethod('paystack')}
+                  className={`py-2 text-xs font-semibold rounded-md transition-all ${
+                    paymentMethod === 'paystack'
+                      ? 'bg-gradient-to-b from-amber-400 to-amber-500 text-stone-950 shadow-md'
+                      : 'text-stone-400 hover:text-stone-200'
+                  }`}
+                >
+                  Card / Instant
+                </button>
+              </div>
+
+              {paymentMethod === 'paystack' ? (
+                <>
+                  <p className="text-[11px] text-stone-500 text-center mb-3">
+                    Confirmed automatically, usually within seconds.
+                  </p>
+                  <PayRegistrationFeeButton
+                    shopId={existingShop.id}
+                    businessName={existingShop.business_name}
+                    userEmail={user.email ?? ''}
+                    onSuccess={() => setStep('success')}
+                  />
+                </>
+              ) : (
+                <div>
+                  <div className="rounded-xl border border-white/15 bg-white/[0.06] backdrop-blur-sm p-4 mb-3">
+                    <div className="flex items-center gap-2 text-amber-400 text-xs font-semibold mb-3">
+                      <Landmark className="w-4 h-4" />
+                      <span>Pay to this account</span>
+                    </div>
+                    <div className="space-y-2 text-xs">
+                      <div className="flex items-center justify-between">
+                        <span className="text-stone-400">Bank</span>
+                        <span className="text-white font-medium">Opay</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-stone-400">Account Number</span>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            navigator.clipboard.writeText('8136573235');
+                            setCopiedAccount(true);
+                            setTimeout(() => setCopiedAccount(false), 2000);
+                          }}
+                          className="flex items-center gap-1 text-white font-medium hover:text-amber-400"
+                        >
+                          <span>8136573235</span>
+                          <Copy className="w-3 h-3" />
+                          {copiedAccount && <span className="text-amber-400 text-[10px]">Copied!</span>}
+                        </button>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-stone-400">Account Name</span>
+                        <span className="text-white font-medium">Ikenna Kingsley Nwachukwu</span>
+                      </div>
+                      <div className="flex items-center justify-between pt-2 border-t border-white/10">
+                        <span className="text-stone-400">Amount</span>
+                        <span className="text-amber-400 font-bold">₦{REGISTRATION_FEE.toLocaleString()}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <a
+                    href={`https://wa.me/2348136573235?text=${encodeURIComponent(
+                      `Hi, I just paid the ₦${REGISTRATION_FEE.toLocaleString()} registration fee for "${existingShop.business_name}" via bank transfer.\n\nPlease confirm and approve my shop. Thank you!`
+                    )}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => {
+                      // Fire-and-forget — doesn't block the WhatsApp link
+                      // from opening, just quietly marks that this shop
+                      // genuinely claimed payment, for the admin dashboard.
+                      void supabase
+                        .from('shops')
+                        .update({ payment_claimed_at: new Date().toISOString() })
+                        .eq('id', existingShop.id);
+                    }}
+                    className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-gradient-to-b from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-stone-950 font-semibold text-sm transition-colors shadow-lg shadow-amber-500/20"
+                  >
+                    <MessageCircle className="w-4 h-4" />
+                    <span>I've Paid — Notify via WhatsApp</span>
+                  </a>
+                  <p className="text-[11px] text-stone-500 text-center mt-2.5">
+                    Your shop goes live once we confirm your payment — usually the same day.
+                  </p>
+                </div>
+              )}
 
               <button
                 onClick={onClose}
@@ -649,7 +744,7 @@ export const CreateShopModal: React.FC<CreateShopModalProps> = ({ category, onCl
               </div>
               <h3 className="text-lg font-bold text-white mb-1">You're Live!</h3>
               <p className="text-xs text-stone-400 mb-6">
-                Payment confirmed - {existingShop?.business_name ?? 'your shop'} is now visible to buyers browsing
+                Payment confirmed — {existingShop?.business_name ?? 'your shop'} is now visible to buyers browsing
                 {' '}{category.title}.
               </p>
               <button

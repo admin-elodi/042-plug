@@ -6,7 +6,7 @@ const EXPECTED_AMOUNT_KOBO = 100000; // ₦1,000
 
 // Paystack signs every webhook payload with this header, computed as
 // HMAC-SHA512 of the raw request body using your secret key. We must
-// verify it independently — otherwise anyone who found this URL could
+// verify it independently - otherwise anyone who found this URL could
 // fake a "payment succeeded" call and get a free shop approval.
 async function verifyPaystackSignature(rawBody: string, signature: string | null, secret: string): Promise<boolean> {
   if (!signature) return false;
@@ -44,7 +44,7 @@ Deno.serve(async (req) => {
 
     const isValid = await verifyPaystackSignature(rawBody, signature, paystackSecretKey);
     if (!isValid) {
-      console.error('Invalid Paystack webhook signature — possible spoofed request');
+      console.error('Invalid Paystack webhook signature - possible spoofed request');
       return new Response('Invalid signature', { status: 401 });
     }
 
@@ -69,7 +69,7 @@ Deno.serve(async (req) => {
       return new Response('Amount mismatch', { status: 200 });
     }
 
-    // Webhooks have no signed-in user — this uses the service role key,
+    // Webhooks have no signed-in user - this uses the service role key,
     // which bypasses RLS entirely. That's appropriate here specifically
     // because we've already independently verified this request really
     // came from Paystack via the signature check above.
