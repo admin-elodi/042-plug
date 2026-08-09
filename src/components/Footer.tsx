@@ -24,8 +24,8 @@ export const Footer: React.FC = () => {
                   <path d="M16 10a4 4 0 0 1-8 0" />
                 </svg>
               </div>
-              <span className="text-lg font-black tracking-wider text-white">
-                042<span className="text-amber-400">PLUGS</span>
+              <span className="text-lg font-black tracking-tight sm:tracking-wider text-white whitespace-nowrap">
+                042<span className="text-amber-400">PLUGS</span><span className="text-orange-500">PLAZA</span>
               </span>
             </div>
             <p className="text-xs leading-relaxed max-w-xs">

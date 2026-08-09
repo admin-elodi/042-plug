@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronDown, Store, ShieldCheck, LogOut, Briefcase } from 'lucide-react';
+import { ChevronDown, Store, ShieldCheck, LogOut, Briefcase, BarChart3 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import AuthModal from '@/components/modals/AuthModal';
 import SalariedJobsModal from '@/components/modals/SalariedJobsModal';
@@ -52,8 +52,8 @@ export const Header: React.FC = () => {
               </svg>
             </div>
             <div>
-              <span className="text-2xl font-black tracking-wider text-white whitespace-nowrap">
-                042<span className="text-amber-400">PLUGS</span>
+              <span className="text-lg sm:text-2xl font-black tracking-tight sm:tracking-wider text-white whitespace-nowrap">
+                042<span className="text-amber-400">PLUGS</span><span className="text-orange-500">PLAZA</span>
               </span>
               <p className="text-[10px] text-stone-400 tracking-widest uppercase font-semibold whitespace-nowrap">Legit Deals Only</p>
             </div>
@@ -102,6 +102,18 @@ export const Header: React.FC = () => {
                         <ShieldCheck className="w-4 h-4" />
                         <span>Job Approvals</span>
                       </Link>
+                    )}
+                    {isAdmin && (
+                      <a
+                        href="https://dash.cloudflare.com/18f684e4307eede794e31fb2e6a86685/web-analytics/overview?siteTag~in=d7e6e682bd8849318aaa6739d7d2e881&excludeBots=Yes"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={() => setShowAccountMenu(false)}
+                        className="flex items-center gap-2 px-4 py-2 text-sm text-amber-400 hover:bg-stone-800 transition-colors"
+                      >
+                        <BarChart3 className="w-4 h-4" />
+                        <span>View Analytics</span>
+                      </a>
                     )}
                     <button
                       onClick={() => {
@@ -217,6 +229,17 @@ export const Header: React.FC = () => {
                   >
                     Job Approvals
                   </Link>
+                )}
+                {isAdmin && (
+                  <a
+                    href="https://dash.cloudflare.com/18f684e4307eede794e31fb2e6a86685/web-analytics/overview?siteTag~in=d7e6e682bd8849318aaa6739d7d2e881&excludeBots=Yes"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="w-full text-center bg-amber-500/10 text-amber-400 font-semibold py-3 rounded-xl border border-amber-500/30"
+                  >
+                    View Analytics
+                  </a>
                 )}
                 <Link
                   to="/my-shops"

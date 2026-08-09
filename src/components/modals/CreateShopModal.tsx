@@ -307,11 +307,20 @@ export const CreateShopModal: React.FC<CreateShopModalProps> = ({ category, onCl
         <div className="pointer-events-none absolute -top-24 -right-24 w-64 h-64 bg-amber-500/15 rounded-full blur-3xl" />
 
         <div className="relative flex items-center justify-between px-6 pt-5 pb-4 border-b border-white/15 sticky top-0 bg-stone-800/70 backdrop-blur-2xl z-10">
-          <div className="flex items-center gap-2.5 text-white font-bold text-base">
-            <div className="p-1.5 rounded-xl bg-amber-400/10 border border-amber-400/20">
+          <div className="flex items-center gap-2.5">
+            <div className="p-1.5 rounded-xl bg-amber-400/10 border border-amber-400/20 flex-shrink-0">
               <Store className="w-4 h-4 text-amber-400" />
             </div>
-            <span>{existingShop ? existingShop.business_name : `Register Shop: ${category.title}`}</span>
+            {existingShop ? (
+              <span className="text-white font-bold text-base">{existingShop.business_name}</span>
+            ) : (
+              <div className="flex flex-col sm:flex-row sm:items-baseline sm:gap-1.5 leading-tight">
+                <span className="text-[10px] sm:text-xs uppercase tracking-wider text-amber-400/90 font-bold">
+                  Register Shop<span className="hidden sm:inline">:</span>
+                </span>
+                <span className="text-white font-bold text-base">{category.title}</span>
+              </div>
+            )}
           </div>
           <button
             onClick={onClose}
