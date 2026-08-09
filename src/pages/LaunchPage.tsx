@@ -58,7 +58,7 @@ export const LaunchPage: React.FC = () => {
           </div>
           <h1 className="text-2xl sm:text-3xl font-black text-white mb-2">042 Plugs Plaza Launch</h1>
           <p className="text-sm text-stone-400 max-w-lg mx-auto leading-relaxed mb-4">
-            Coal City's marketplace, formally introduced — a gathering for the sellers, sponsors, and press
+            Coal City's marketplace, formally introduced - a gathering for the sellers, sponsors, and press
             shaping what's next.
           </p>
           <div className="flex items-center justify-center gap-4 text-xs">
@@ -80,7 +80,7 @@ export const LaunchPage: React.FC = () => {
             <h2 className="text-sm font-bold text-white">For Our Sellers</h2>
           </div>
           <p className="text-xs text-stone-400 leading-relaxed mb-3">
-            Select active sellers get full attendance covered —{' '}
+            Select active sellers get full attendance covered -{' '}
             <strong className="text-stone-200 font-semibold">2 nights at Hotel Presidential</strong>, plus
             entertainment. The people building our momentum come first.
           </p>
@@ -104,7 +104,7 @@ export const LaunchPage: React.FC = () => {
           </div>
           <p className="text-xs text-stone-400 leading-relaxed">
             Like a book launch, but for a working platform already connecting real Enugu traders to real
-            customers. Real visibility, in front of sellers and press — not a logo lost in a crowd.
+            customers. Real visibility, in front of sellers and press - not a logo lost in a crowd.
           </p>
         </div>
 
@@ -115,7 +115,7 @@ export const LaunchPage: React.FC = () => {
             <h2 className="text-base font-bold text-white">Register Your Interest</h2>
           </div>
           <p className="text-xs text-stone-400 mb-5">
-            The date isn't locked in yet — register now and we'll notify you personally the moment it is.
+            The date isn't locked in yet - register now and we'll notify you personally the moment it is.
           </p>
 
           <div className="grid grid-cols-2 gap-2 mb-5 p-1 bg-white/[0.05] rounded-lg border border-white/10">

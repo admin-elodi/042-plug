@@ -69,7 +69,7 @@ export const RequestsPage: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    document.title = "I'm Looking For This | 042 Plugs Plaza";
+    document.title = "Find Something... | 042 Plugs Plaza";
   }, []);
 
   const handlePostRequest = async (e: React.FormEvent) => {
@@ -112,7 +112,7 @@ export const RequestsPage: React.FC = () => {
 
         <div className="flex items-center gap-2 text-white font-bold text-lg mb-1">
           <Search className="w-5 h-5 text-amber-500" />
-          <span>I'm Looking For This</span>
+          <span>Find Something...</span>
         </div>
         <p className="text-xs text-stone-400 mb-6">
           Can't find what you want? Post it here - any seller who has it can message you directly.

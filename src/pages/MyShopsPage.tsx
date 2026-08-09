@@ -39,13 +39,13 @@ interface Shop {
   products: Product[];
 }
 
-// AI Sales Tips is temporarily switched off — its Edge Function calls the
+// AI Sales Tips is temporarily switched off - its Edge Function calls the
 // Claude API, which needs a funded Anthropic Console billing account
 // behind it. Flip this back to true once that's set up; nothing else
 // needs to change.
 const AI_TIPS_ENABLED = false;
 
-// Featured Listings is temporarily switched off — holding back on charging
+// Featured Listings is temporarily switched off - holding back on charging
 // for extra visibility until the platform has proven its core value to
 // buyers first. Flip this back to true whenever that's ready; nothing
 // else needs to change.
@@ -64,7 +64,7 @@ export const MyShopsPage: React.FC = () => {
   const [bankTransferShopId, setBankTransferShopId] = useState<string | null>(null);
   const [copiedAccount, setCopiedAccount] = useState(false);
 
-  // Kept in sync with the same constant in PayRegistrationFeeButton.tsx —
+  // Kept in sync with the same constant in PayRegistrationFeeButton.tsx -
   // both must be updated together if the fee ever changes.
   const REGISTRATION_FEE = 1000;
 
@@ -374,7 +374,7 @@ export const MyShopsPage: React.FC = () => {
                                   className="flex items-center justify-center gap-1.5 w-full py-2 rounded-lg bg-gradient-to-b from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-stone-950 font-semibold text-xs transition-colors"
                                 >
                                   <MessageCircle className="w-3.5 h-3.5" />
-                                  <span>I've Paid — Notify via WhatsApp</span>
+                                  <span>I've Paid - Notify via WhatsApp</span>
                                 </a>
                               </div>
                             )}
@@ -459,7 +459,7 @@ export const MyShopsPage: React.FC = () => {
                       </div>
                     )}
 
-                    {/* AI Sales Tip — hidden while AI_TIPS_ENABLED is false */}
+                    {/* AI Sales Tip - hidden while AI_TIPS_ENABLED is false */}
                     {AI_TIPS_ENABLED && (
                       <div className="mt-3 pt-3 border-t border-stone-800/70">
                         {shop.ai_tip ? (

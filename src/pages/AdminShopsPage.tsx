@@ -168,7 +168,7 @@ export const AdminShopsPage: React.FC = () => {
                     Pending Payment Approval ({pendingShops.length})
                   </h2>
                   <p className="text-[11px] text-stone-500 mb-3">
-                    Cross-check each against your bank alerts before approving — this list includes both bank
+                    Cross-check each against your bank alerts before approving - this list includes both bank
                     transfer claims and any Paystack payments that somehow didn't auto-confirm.
                   </p>
                   {pendingShops.length === 0 ? (
@@ -213,17 +213,17 @@ export const AdminShopsPage: React.FC = () => {
                           </div>
                           {shop.paystack_reference ? (
                             <p className="text-[11px] text-stone-500 mt-1.5">
-                              Paystack ref: <span className="text-stone-300">{shop.paystack_reference}</span> — a
+                              Paystack ref: <span className="text-stone-300">{shop.paystack_reference}</span> - a
                               paid Paystack reference here likely means the webhook didn't fire; check Paystack's
                               dashboard to confirm before approving.
                             </p>
                           ) : shop.payment_claimed_at ? (
                             <p className="text-[11px] text-stone-500 mt-1.5">
-                              Seller claimed payment via bank transfer — verify against your Opay alerts before approving.
+                              Seller claimed payment via bank transfer - verify against your Opay alerts before approving.
                             </p>
                           ) : (
                             <p className="text-[11px] text-stone-500 mt-1.5">
-                              No payment claim yet — this shop was likely saved but never paid for. No action needed unless they reach out.
+                              No payment claim yet - this shop was likely saved but never paid for. No action needed unless they reach out.
                             </p>
                           )}
 

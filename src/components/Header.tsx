@@ -67,7 +67,7 @@ export const Header: React.FC = () => {
               <span className="whitespace-nowrap bg-amber-500/20 text-amber-400 text-[10px] font-bold px-2 py-0.5 rounded-full border border-amber-500/30">VIP</span>
             </Link>
             <Link to="/my-shops" className="whitespace-nowrap hover:text-amber-400 transition-colors">Sell on 042</Link>
-            <Link to="/requests" className="whitespace-nowrap hover:text-amber-400 transition-colors">I'm Looking For This</Link>
+            <Link to="/requests" className="whitespace-nowrap hover:text-amber-400 transition-colors">Find Something...</Link>
           </nav>
 
           {/* Action Buttons */}
@@ -194,7 +194,7 @@ export const Header: React.FC = () => {
           <Link to="/storefronts" onClick={() => setIsMobileMenuOpen(false)} className="block text-stone-300 hover:text-amber-400 font-medium">Browse Storefronts</Link>
           <Link to="/launch" onClick={() => setIsMobileMenuOpen(false)} className="block text-stone-300 hover:text-amber-400 font-medium">Ember Launch 2026 Details</Link>
           <Link to="/my-shops" onClick={() => setIsMobileMenuOpen(false)} className="block text-stone-300 hover:text-amber-400 font-medium">Sell on 042</Link>
-          <Link to="/requests" onClick={() => setIsMobileMenuOpen(false)} className="block text-stone-300 hover:text-amber-400 font-medium">I'm Looking For This</Link>
+          <Link to="/requests" onClick={() => setIsMobileMenuOpen(false)} className="block text-stone-300 hover:text-amber-400 font-medium">Find Something...</Link>
           <div className="pt-2 flex flex-col gap-3">
             <a 
               href="#storefronts" 
