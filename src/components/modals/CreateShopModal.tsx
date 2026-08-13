@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { X, Store, PackagePlus, CheckCircle, ImagePlus, Film, Loader2, AlertCircle, Trash2, LogIn, Landmark, Copy, MessageCircle, Sparkles } from 'lucide-react';
+import { X, Store, PackagePlus, CheckCircle, ImagePlus, Film, Loader2, AlertCircle, Trash2, LogIn, Landmark, Copy, MessageCircle } from 'lucide-react';
 import { supabase } from '@/lib/supabaseClient';
 import { useAuth } from '@/context/AuthContext';
 import AuthModal from '@/components/modals/AuthModal';
