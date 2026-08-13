@@ -228,6 +228,7 @@ export const CategoryPage: React.FC = () => {
                             <MessageCircle className="w-3.5 h-3.5" />
                             <span>Order via WhatsApp</span>
                           </a>
+                          <span className="text-[10px] font-bold text-stone-500 uppercase">or</span>
                           <button
                             onClick={() =>
                               addItem({

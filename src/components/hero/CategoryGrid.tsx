@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Shirt, Smartphone, Sparkles, UtensilsCrossed, Home, Car, PartyPopper, Footprints, Gem, Scissors, Gift, Wifi, Plus, Eye, Phone, Search, MessageCircle, Clock } from 'lucide-react';
+import { Shirt, Smartphone, Sparkles, UtensilsCrossed, Home, Car, PartyPopper, Footprints, Gem, Scissors, Gift, Wifi, Plus, Eye, Phone, MessageCircle, Megaphone, Calculator } from 'lucide-react';
 import CATEGORIES, { type CategoryItem } from '@/data/categories';
 
 // Auto-discovers any background photo dropped into this folder, matched by
@@ -48,20 +48,20 @@ export const CategoryGrid: React.FC<CategoryGridProps> = ({ onOpenCreate, onOpen
   return (
     <div className="bg-stone-50">
       <div className="px-4 max-w-7xl mx-auto py-10">
-        <div className="mb-8 pb-4 border-b border-stone-200 flex flex-col sm:flex-row sm:items-end justify-between">
-          <div>
-            <h2 className="text-2xl font-extrabold text-stone-900 tracking-tight">042-Plugs Plaza</h2>
-            <p className="text-xs text-stone-500 mt-1">Find trusted plugs or register your own shop</p>
-          </div>
+        <div className="mb-6">
+          <h2 className="text-2xl font-extrabold text-stone-900 tracking-tight">042-Plugs Plaza</h2>
+          <p className="text-xs text-stone-500 mt-1">
+            Find trusted plugs, or register your own shop and enjoy:
+          </p>
         </div>
 
-        {/* Why Register — kept short, kept visible right where the action happens */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-8">
+        {/* Benefits — kept short, kept visible right where the action happens */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-8 pb-6 border-b border-stone-200">
           {[
-            { icon: <Phone className="w-3.5 h-3.5 text-amber-500" />, text: 'More Business Calls' },
-            { icon: <Search className="w-3.5 h-3.5 text-amber-500" />, text: 'Found by Real Buyers' },
-            { icon: <MessageCircle className="w-3.5 h-3.5 text-amber-500" />, text: 'Instant WhatsApp Orders' },
-            { icon: <Clock className="w-3.5 h-3.5 text-amber-500" />, text: 'Never Disappears' }
+            { icon: <MessageCircle className="w-3.5 h-3.5 text-amber-500" />, text: 'Instant WhatsApp Checkout' },
+            { icon: <Megaphone className="w-3.5 h-3.5 text-amber-500" />, text: 'Digital Marketing Assistance' },
+            { icon: <Calculator className="w-3.5 h-3.5 text-amber-500" />, text: 'Automatic Order Totals' },
+            { icon: <Phone className="w-3.5 h-3.5 text-amber-500" />, text: 'More Business Calls' }
           ].map((benefit, i) => (
             <div
               key={i}
@@ -130,23 +130,23 @@ export const CategoryGrid: React.FC<CategoryGridProps> = ({ onOpenCreate, onOpen
                   </div>
                 </div>
 
-                {/* Action Buttons - fixed height so both match exactly */}
-                <div className="relative grid grid-cols-2 gap-1.5 xl:gap-2 pt-3 border-t border-stone-800/50">
+                {/* Action Buttons — blocky, brick-sturdy, built to be pressed */}
+                <div className="relative grid grid-cols-2 gap-2 pt-4 border-t border-stone-800/50">
                   <button
                     type="button"
                     onClick={() => onOpenCreate(cat.id, cat.title)}
-                    className="h-9 flex items-center justify-center gap-1 sm:gap-1.5 px-1.5 sm:px-2 rounded-lg bg-amber-400 hover:bg-amber-300 text-stone-950 text-[10px] sm:text-xs font-bold transition-all active:scale-[0.98] whitespace-nowrap"
+                    className="h-10 flex items-center justify-center gap-1 px-2 rounded-md bg-amber-400 border-2 border-amber-700 text-stone-950 text-[10px] sm:text-[11px] font-black whitespace-nowrap shadow-[3px_3px_0_0_rgba(0,0,0,0.9)] hover:shadow-[1px_1px_0_0_rgba(0,0,0,0.9)] hover:translate-x-[2px] hover:translate-y-[2px] active:shadow-none active:translate-x-[3px] active:translate-y-[3px] transition-all duration-150"
                   >
-                    <Plus className="w-3.5 h-3.5 shrink-0 stroke-[2.5]" />
+                    <Plus className="w-3.5 h-3.5 shrink-0 stroke-[3]" />
                     <span>Register Shop</span>
                   </button>
 
                   <button
                     type="button"
                     onClick={() => onOpenView(cat.id, cat.title)}
-                    className="h-9 flex items-center justify-center gap-1 sm:gap-1.5 px-1.5 sm:px-2 rounded-lg bg-stone-950/70 hover:bg-stone-800 border border-stone-800 text-stone-300 hover:text-white text-[10px] sm:text-xs font-semibold transition-all active:scale-[0.98] whitespace-nowrap"
+                    className="h-10 flex items-center justify-center gap-1 px-2 rounded-md bg-stone-800 border-2 border-stone-600 text-stone-100 text-[10px] sm:text-[11px] font-black whitespace-nowrap shadow-[3px_3px_0_0_rgba(0,0,0,0.9)] hover:shadow-[1px_1px_0_0_rgba(0,0,0,0.9)] hover:translate-x-[2px] hover:translate-y-[2px] hover:bg-stone-700 active:shadow-none active:translate-x-[3px] active:translate-y-[3px] transition-all duration-150"
                   >
-                    <Eye className="w-3.5 h-3.5 shrink-0" />
+                    <Eye className="w-3.5 h-3.5 shrink-0 stroke-[2.5]" />
                     <span>Browse Plugs</span>
                   </button>
                 </div>

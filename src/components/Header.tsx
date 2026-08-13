@@ -64,10 +64,6 @@ export const Header: React.FC = () => {
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-5 font-medium text-stone-300 text-sm">
             <Link to="/storefronts" className="whitespace-nowrap hover:text-amber-400 transition-colors">Storefronts</Link>
-            <Link to="/launch" className="whitespace-nowrap hover:text-amber-400 transition-colors flex items-center gap-1.5">
-              <span className="whitespace-nowrap">Ember Launch 2026</span>
-              <span className="whitespace-nowrap bg-amber-500/20 text-amber-400 text-[10px] font-bold px-2 py-0.5 rounded-full border border-amber-500/30">VIP</span>
-            </Link>
             <Link to="/my-shops" className="whitespace-nowrap hover:text-amber-400 transition-colors">Sell on 042</Link>
             <Link to="/requests" className="whitespace-nowrap hover:text-amber-400 transition-colors">Find Something...</Link>
           </nav>
@@ -205,7 +201,6 @@ export const Header: React.FC = () => {
       {isMobileMenuOpen && (
         <div className="md:hidden bg-stone-900 border-b border-stone-800 px-4 pt-4 pb-6 space-y-4">
           <Link to="/storefronts" onClick={() => setIsMobileMenuOpen(false)} className="block text-stone-300 hover:text-amber-400 font-medium">Browse Storefronts</Link>
-          <Link to="/launch" onClick={() => setIsMobileMenuOpen(false)} className="block text-stone-300 hover:text-amber-400 font-medium">Ember Launch 2026 Details</Link>
           <Link to="/my-shops" onClick={() => setIsMobileMenuOpen(false)} className="block text-stone-300 hover:text-amber-400 font-medium">Sell on 042</Link>
           <Link to="/requests" onClick={() => setIsMobileMenuOpen(false)} className="block text-stone-300 hover:text-amber-400 font-medium">Find Something...</Link>
           <div className="pt-2 flex flex-col gap-3">

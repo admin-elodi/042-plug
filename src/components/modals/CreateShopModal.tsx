@@ -401,17 +401,6 @@ export const CreateShopModal: React.FC<CreateShopModalProps> = ({ category, onCl
 
           {user && step === 'business' && (
             <form onSubmit={goToProductStep} className="space-y-4">
-              <div className="flex flex-wrap gap-2 pb-1">
-                {['More Business Calls', 'Found by Real Buyers', 'Never Disappears'].map((benefit, i) => (
-                  <span
-                    key={i}
-                    className="flex items-center gap-1 px-2 py-1 rounded-full text-[10px] font-semibold bg-amber-400/10 border border-amber-400/20 text-amber-300"
-                  >
-                    <Sparkles className="w-2.5 h-2.5" />
-                    {benefit}
-                  </span>
-                ))}
-              </div>
               <p className="text-xs text-stone-400 -mt-1">
                 You'll only need to enter this once - after today, adding products for this shop skips straight past this step.
               </p>
