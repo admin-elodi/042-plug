@@ -2,8 +2,9 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronDown, Store, ShieldCheck, LogOut, Briefcase, BarChart3 } from 'lucide-react';
+import { ChevronDown, Store, ShieldCheck, LogOut, Briefcase, BarChart3, ShoppingCart } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
+import { useCart } from '@/context/CartContext';
 import AuthModal from '@/components/modals/AuthModal';
 import SalariedJobsModal from '@/components/modals/SalariedJobsModal';
 
@@ -16,6 +17,7 @@ export const Header: React.FC = () => {
   const [showJobsModal, setShowJobsModal] = useState(false);
   const accountMenuRef = useRef<HTMLDivElement>(null);
   const { user, signOut } = useAuth();
+  const { totalItemCount } = useCart();
   const isAdmin = user?.email === ADMIN_EMAIL;
 
   useEffect(() => {
@@ -72,6 +74,17 @@ export const Header: React.FC = () => {
 
           {/* Action Buttons */}
           <div className="hidden md:flex items-center space-x-3">
+            <Link
+              to="/cart"
+              className="relative h-10 w-10 flex items-center justify-center bg-stone-800 hover:bg-stone-700 rounded-xl border border-stone-700 transition-all"
+            >
+              <ShoppingCart className="w-4 h-4 text-stone-300" />
+              {totalItemCount > 0 && (
+                <span className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 flex items-center justify-center rounded-full bg-amber-500 text-stone-950 text-[10px] font-bold">
+                  {totalItemCount}
+                </span>
+              )}
+            </Link>
             {user ? (
               <div className="relative" ref={accountMenuRef}>
                 <button
@@ -201,7 +214,7 @@ export const Header: React.FC = () => {
               onClick={() => setIsMobileMenuOpen(false)}
               className="w-full text-center bg-amber-500 text-stone-950 font-bold py-3 rounded-xl shadow-md"
             >
-              Create Your Shop
+              Register Your Shop
             </a>
             <button
               onClick={() => {
@@ -219,6 +232,14 @@ export const Header: React.FC = () => {
               className="w-full text-center bg-stone-800 text-white font-semibold py-3 rounded-xl border border-stone-700"
             >
               Browse All Storefronts
+            </Link>
+            <Link
+              to="/cart"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="w-full flex items-center justify-center gap-1.5 text-center bg-stone-800 text-white font-semibold py-3 rounded-xl border border-stone-700"
+            >
+              <ShoppingCart className="w-4 h-4" />
+              <span>Your Cart{totalItemCount > 0 ? ` (${totalItemCount})` : ''}</span>
             </Link>
             <a
               href="https://chat.whatsapp.com/KbLAiBmxl1uGs32u24IXCu"

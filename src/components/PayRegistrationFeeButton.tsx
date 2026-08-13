@@ -150,7 +150,7 @@ export const PayRegistrationFeeButton: React.FC<PayRegistrationFeeButtonProps> =
       {paymentError && lastPaymentReference && (
         <a
           href={`https://wa.me/2348136573235?text=${encodeURIComponent(
-            `Hi, I paid the ₦${REGISTRATION_FEE.toLocaleString()} registration fee for "${businessName}" but it hasn't confirmed automatically.\n\nMy payment reference: ${lastPaymentReference}\n\nPlease check and approve my shop.`
+            `Hi, I paid the ₦${REGISTRATION_FEE.toLocaleString()} shop space fee for "${businessName}" but it hasn't confirmed automatically.\n\nMy payment reference: ${lastPaymentReference}\n\nPlease check and approve my shop.`
           )}`}
           target="_blank"
           rel="noopener noreferrer"

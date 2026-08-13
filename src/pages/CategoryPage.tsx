@@ -2,10 +2,11 @@
 
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, Store, Phone, MapPin, Loader2, AlertCircle, PackageOpen, MessageCircle, ExternalLink } from 'lucide-react';
+import { ArrowLeft, Store, Phone, MapPin, Loader2, AlertCircle, PackageOpen, MessageCircle, ExternalLink, ShoppingCart } from 'lucide-react';
 import { supabase } from '@/lib/supabaseClient';
 import { formatProductPrice } from '@/lib/pricing';
 import { useSellerIdentity } from '@/hooks/useSellerIdentity';
+import { useCart } from '@/context/CartContext';
 import CATEGORIES from '@/data/categories';
 
 interface ProductMedia {
@@ -68,6 +69,7 @@ export const CategoryPage: React.FC = () => {
   const { categoryId } = useParams<{ categoryId: string }>();
   const category = CATEGORIES.find((c) => c.id === categoryId);
   const myShopName = useSellerIdentity();
+  const { addItem } = useCart();
 
   const [shops, setShops] = useState<Shop[]>([]);
   const [loading, setLoading] = useState(true);
@@ -216,15 +218,35 @@ export const CategoryPage: React.FC = () => {
                         </div>
                         {product.description && <p className="text-[11px] text-stone-400 mt-1">{product.description}</p>}
 
-                        <a
-                          href={buildOrderLink(shop, product, myShopName)}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-1.5 mt-2 w-fit px-3 py-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 text-[11px] font-semibold transition-colors"
-                        >
-                          <MessageCircle className="w-3.5 h-3.5" />
-                          <span>Order via WhatsApp</span>
-                        </a>
+                        <div className="flex items-center gap-2 mt-2">
+                          <a
+                            href={buildOrderLink(shop, product, myShopName)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-1.5 w-fit px-3 py-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 text-[11px] font-semibold transition-colors"
+                          >
+                            <MessageCircle className="w-3.5 h-3.5" />
+                            <span>Order via WhatsApp</span>
+                          </a>
+                          <button
+                            onClick={() =>
+                              addItem({
+                                productId: product.id,
+                                shopId: shop.id,
+                                shopName: shop.business_name,
+                                shopPhone: shop.phone,
+                                title: product.title,
+                                price: product.price,
+                                priceType: product.price_type,
+                                isNegotiable: product.is_negotiable
+                              })
+                            }
+                            className="flex items-center gap-1.5 w-fit px-3 py-1.5 rounded-lg bg-stone-800 hover:bg-stone-700 border border-stone-700 text-stone-300 text-[11px] font-semibold transition-colors"
+                          >
+                            <ShoppingCart className="w-3.5 h-3.5" />
+                            <span>Add to Cart</span>
+                          </button>
+                        </div>
 
                         {product.product_media.length > 0 && (
                           <div className="grid grid-cols-4 gap-1.5 mt-2">

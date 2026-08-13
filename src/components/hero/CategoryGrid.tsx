@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Shirt, Smartphone, Sparkles, UtensilsCrossed, Home, Car, PartyPopper, Footprints, Gem, Scissors, Gift, Wifi, Plus, Eye } from 'lucide-react';
+import { Shirt, Smartphone, Sparkles, UtensilsCrossed, Home, Car, PartyPopper, Footprints, Gem, Scissors, Gift, Wifi, Plus, Eye, Phone, Search, MessageCircle, Clock } from 'lucide-react';
 import CATEGORIES, { type CategoryItem } from '@/data/categories';
 
 // Auto-discovers any background photo dropped into this folder, matched by
@@ -53,6 +53,24 @@ export const CategoryGrid: React.FC<CategoryGridProps> = ({ onOpenCreate, onOpen
             <h2 className="text-2xl font-extrabold text-stone-900 tracking-tight">042-Plugs Plaza</h2>
             <p className="text-xs text-stone-500 mt-1">Find trusted plugs or register your own shop</p>
           </div>
+        </div>
+
+        {/* Why Register — kept short, kept visible right where the action happens */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-8">
+          {[
+            { icon: <Phone className="w-3.5 h-3.5 text-amber-500" />, text: 'More Business Calls' },
+            { icon: <Search className="w-3.5 h-3.5 text-amber-500" />, text: 'Found by Real Buyers' },
+            { icon: <MessageCircle className="w-3.5 h-3.5 text-amber-500" />, text: 'Instant WhatsApp Orders' },
+            { icon: <Clock className="w-3.5 h-3.5 text-amber-500" />, text: 'Never Disappears' }
+          ].map((benefit, i) => (
+            <div
+              key={i}
+              className="flex items-center gap-2 px-3 py-2.5 rounded-xl bg-white border border-stone-200 shadow-sm"
+            >
+              {benefit.icon}
+              <span className="text-[11px] font-semibold text-stone-700 leading-tight">{benefit.text}</span>
+            </div>
+          ))}
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 xl:gap-5">
@@ -120,7 +138,7 @@ export const CategoryGrid: React.FC<CategoryGridProps> = ({ onOpenCreate, onOpen
                     className="h-9 flex items-center justify-center gap-1 sm:gap-1.5 px-1.5 sm:px-2 rounded-lg bg-amber-400 hover:bg-amber-300 text-stone-950 text-[10px] sm:text-xs font-bold transition-all active:scale-[0.98] whitespace-nowrap"
                   >
                     <Plus className="w-3.5 h-3.5 shrink-0 stroke-[2.5]" />
-                    <span>Create Shop</span>
+                    <span>Register Shop</span>
                   </button>
 
                   <button

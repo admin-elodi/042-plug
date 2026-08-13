@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { X, Store, PackagePlus, CheckCircle, ImagePlus, Film, Loader2, AlertCircle, Trash2, LogIn, Landmark, Copy, MessageCircle } from 'lucide-react';
+import { X, Store, PackagePlus, CheckCircle, ImagePlus, Film, Loader2, AlertCircle, Trash2, LogIn, Landmark, Copy, MessageCircle, Sparkles } from 'lucide-react';
 import { supabase } from '@/lib/supabaseClient';
 import { useAuth } from '@/context/AuthContext';
 import AuthModal from '@/components/modals/AuthModal';
@@ -401,6 +401,17 @@ export const CreateShopModal: React.FC<CreateShopModalProps> = ({ category, onCl
 
           {user && step === 'business' && (
             <form onSubmit={goToProductStep} className="space-y-4">
+              <div className="flex flex-wrap gap-2 pb-1">
+                {['More Business Calls', 'Found by Real Buyers', 'Never Disappears'].map((benefit, i) => (
+                  <span
+                    key={i}
+                    className="flex items-center gap-1 px-2 py-1 rounded-full text-[10px] font-semibold bg-amber-400/10 border border-amber-400/20 text-amber-300"
+                  >
+                    <Sparkles className="w-2.5 h-2.5" />
+                    {benefit}
+                  </span>
+                ))}
+              </div>
               <p className="text-xs text-stone-400 -mt-1">
                 You'll only need to enter this once - after today, adding products for this shop skips straight past this step.
               </p>
@@ -622,7 +633,7 @@ export const CreateShopModal: React.FC<CreateShopModalProps> = ({ category, onCl
                 </div>
                 <h3 className="text-base font-bold text-white mb-1">Shop & Product Saved!</h3>
                 <p className="text-xs text-stone-400 max-w-xs mx-auto">
-                  One last step: pay the one-time ₦{REGISTRATION_FEE.toLocaleString()} registration fee to go live.
+                  One last step: pay the one-time ₦{REGISTRATION_FEE.toLocaleString()} shop space fee to go live.
                 </p>
               </div>
 
@@ -704,7 +715,7 @@ export const CreateShopModal: React.FC<CreateShopModalProps> = ({ category, onCl
 
                   <a
                     href={`https://wa.me/2348136573235?text=${encodeURIComponent(
-                      `Hi, I just paid the ₦${REGISTRATION_FEE.toLocaleString()} registration fee for "${existingShop.business_name}" via bank transfer.\n\nPlease confirm and approve my shop. Thank you!`
+                      `Hi, I just paid the ₦${REGISTRATION_FEE.toLocaleString()} shop space fee for "${existingShop.business_name}" via bank transfer.\n\nPlease confirm and approve my shop. Thank you!`
                     )}`}
                     target="_blank"
                     rel="noopener noreferrer"

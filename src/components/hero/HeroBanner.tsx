@@ -15,11 +15,13 @@ interface HeroBannerProps {
 // stays to 3-4 words, for the sake of punch and consistent branding.
 const HERO_TAGLINES = [
   'Best Plugs in Coal City',
-  "Enugu's Digital Marketplace",
-  'Verified Sellers, Real Deals',
-  'Shop Enugu, Shop Smart',
-  'Trusted. Local. Legit.',
-  'The Coal City Marketplace'
+  'Register Your Digital Shop',
+  'Register Now, Rent Later',
+  'Your Digital Shop Space',
+  'Verified Shops, Real Deals',
+  "Enugu's Own Digital Plaza",
+  'List Your Goods Online',
+  'Always Open, Always Digital'
 ];
 
 export const HeroBanner: React.FC<HeroBannerProps> = ({ onOpenCreateShop, onOpenJobs }) => {
@@ -145,7 +147,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onOpenCreateShop, onOpen
           </div>
 
           <p className="text-sm md:text-3xl mb-6 tracking-widest text-stone-200 drop-shadow-[0_4px_12px_rgba(0,0,0,0.95)]">
-            Buy & Sell or Search for Jobs
+            Rent a Shop, List Your Goods
           </p>
 
           {/* Action Cards Container */}
@@ -202,7 +204,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onOpenCreateShop, onOpen
                 className="shrink-0 inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-stone-800 hover:bg-stone-700 border border-stone-600 text-stone-200 font-semibold text-xs transition-colors shadow-md"
               >
                 <PlusCircle className="w-3.5 h-3.5 text-amber-400" />
-                <span>Create Shop</span>
+                <span>Register Shop</span>
               </button>
             </div>
           </div>

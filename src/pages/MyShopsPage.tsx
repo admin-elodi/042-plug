@@ -361,7 +361,7 @@ export const MyShopsPage: React.FC = () => {
                                 </div>
                                 <a
                                   href={`https://wa.me/2348136573235?text=${encodeURIComponent(
-                                    `Hi, I just paid the ₦${REGISTRATION_FEE.toLocaleString()} registration fee for "${shop.business_name}" via bank transfer.\n\nPlease confirm and approve my shop. Thank you!`
+                                    `Hi, I just paid the ₦${REGISTRATION_FEE.toLocaleString()} shop space fee for "${shop.business_name}" via bank transfer.\n\nPlease confirm and approve my shop. Thank you!`
                                   )}`}
                                   target="_blank"
                                   rel="noopener noreferrer"
