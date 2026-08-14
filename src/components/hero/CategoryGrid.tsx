@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Shirt, Smartphone, Sparkles, UtensilsCrossed, Home, Car, PartyPopper, Footprints, Gem, Scissors, Gift, Wifi, Plus, Eye, Phone, MessageCircle, Megaphone, Calculator } from 'lucide-react';
+import { Shirt, Smartphone, Sparkles, UtensilsCrossed, Home, Car, PartyPopper, Footprints, Gem, Scissors, Gift, Wifi, Plus, Eye, Phone, MessageCircle, Megaphone, Flame } from 'lucide-react';
 import CATEGORIES, { type CategoryItem } from '@/data/categories';
 import { useActiveBoomDay } from '@/hooks/useActiveBoomDay';
 
@@ -62,7 +62,7 @@ export const CategoryGrid: React.FC<CategoryGridProps> = ({ onOpenCreate, onOpen
           {[
             { icon: <MessageCircle className="w-3.5 h-3.5 text-amber-500" />, text: 'Instant WhatsApp Checkout' },
             { icon: <Megaphone className="w-3.5 h-3.5 text-amber-500" />, text: 'Digital Marketing Assistance' },
-            { icon: <Calculator className="w-3.5 h-3.5 text-amber-500" />, text: 'Automatic Order Totals' },
+            { icon: <Flame className="w-3.5 h-3.5 text-amber-500" />, text: 'Boom Day Access' },
             { icon: <Phone className="w-3.5 h-3.5 text-amber-500" />, text: 'More Business Calls' }
           ].map((benefit, i) => (
             <div
