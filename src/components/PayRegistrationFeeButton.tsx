@@ -1,26 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { CreditCard, Loader2, AlertCircle, CheckCircle } from 'lucide-react';
 import { supabase } from '@/lib/supabaseClient';
-
-declare global {
-  interface Window {
-    PaystackPop: {
-      setup: (config: {
-        key: string;
-        email: string;
-        amount: number;
-        currency?: string;
-        channels?: string[];
-        ref?: string;
-        metadata?: Record<string, unknown>;
-        callback: (response: { reference: string }) => void;
-        onClose: () => void;
-      }) => { openIframe: () => void };
-    };
-  }
-}
 
 // Launch price - currently ₦1,000. Raise to ₦2,000 later by updating BOTH
 // this value AND EXPECTED_AMOUNT_KOBO in supabase/functions/verify-shop-payment/index.ts.
@@ -45,6 +27,40 @@ export const PayRegistrationFeeButton: React.FC<PayRegistrationFeeButtonProps> =
   const [paying, setPaying] = useState(false);
   const [paymentError, setPaymentError] = useState<string | null>(null);
   const [lastPaymentReference, setLastPaymentReference] = useState<string | null>(null);
+  const [subaccountCode, setSubaccountCode] = useState<string | null>(null);
+
+  // If this shop was referred by a partner WhatsApp group, look up their
+  // Paystack subaccount once, so the payment can be split automatically -
+  // the seller never sees or knows this is happening.
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadSubaccount = async () => {
+      const { data: shop } = await supabase
+        .from('shops')
+        .select('referred_by_group_id')
+        .eq('id', shopId)
+        .maybeSingle();
+
+      if (cancelled || !shop?.referred_by_group_id) return;
+
+      const { data: group } = await supabase
+        .from('partner_groups')
+        .select('subaccount_code')
+        .eq('id', shop.referred_by_group_id)
+        .eq('active', true)
+        .maybeSingle();
+
+      if (!cancelled && group?.subaccount_code) {
+        setSubaccountCode(group.subaccount_code);
+      }
+    };
+
+    void loadSubaccount();
+    return () => {
+      cancelled = true;
+    };
+  }, [shopId]);
 
   const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -102,6 +118,10 @@ export const PayRegistrationFeeButton: React.FC<PayRegistrationFeeButtonProps> =
       // Show every real payment method Nigerians actually use - bank transfer
       // and USSD first, card as an available option rather than the default.
       channels: ['bank_transfer', 'bank', 'ussd', 'mobile_money', 'card'],
+      // Only set when this shop was referred by a partner WhatsApp group -
+      // Paystack then automatically splits this payment with that group's
+      // subaccount, using the split ratio configured on Paystack's own side.
+      ...(subaccountCode ? { subaccount: subaccountCode } : {}),
       ref: `042plug-${shopId}-${Date.now()}`,
       metadata: { shop_id: shopId, business_name: businessName },
       callback: (response) => {

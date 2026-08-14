@@ -1,9 +1,10 @@
-import { Suspense, lazy } from "react";
+import { Suspense, lazy, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
 import { CartProvider } from "@/context/CartContext";
+import { captureReferralFromUrl } from "@/lib/referral";
 
 // Each page's code now loads only when a visitor actually navigates to
 // it, instead of all pages being bundled into one large file upfront.
@@ -13,6 +14,8 @@ const MyShopsPage = lazy(() => import("@/pages/MyShopsPage"));
 const ShopPage = lazy(() => import("@/pages/ShopPage"));
 const AdminJobsPage = lazy(() => import("@/pages/AdminJobsPage"));
 const AdminShopsPage = lazy(() => import("@/pages/AdminShopsPage"));
+const AdminPartnerGroupsPage = lazy(() => import("@/pages/AdminPartnerGroupsPage"));
+const AdminBoomDaysPage = lazy(() => import("@/pages/AdminBoomDaysPage"));
 const LaunchPage = lazy(() => import("@/pages/LaunchPage"));
 const StorefrontsPage = lazy(() => import("@/pages/StorefrontsPage"));
 const RequestsPage = lazy(() => import("@/pages/RequestsPage"));
@@ -26,6 +29,10 @@ const PageLoader = () => (
 );
 
 export default function App() {
+  useEffect(() => {
+    captureReferralFromUrl();
+  }, []);
+
   return (
     <CartProvider>
       <div className="min-h-screen bg-black text-white flex flex-col">
@@ -40,6 +47,8 @@ export default function App() {
               <Route path="/shops/:slug" element={<ShopPage />} />
               <Route path="/admin/jobs" element={<AdminJobsPage />} />
               <Route path="/admin/shops" element={<AdminShopsPage />} />
+              <Route path="/admin/partners" element={<AdminPartnerGroupsPage />} />
+              <Route path="/admin/boom-days" element={<AdminBoomDaysPage />} />
               <Route path="/launch" element={<LaunchPage />} />
               <Route path="/storefronts" element={<StorefrontsPage />} />
               <Route path="/requests" element={<RequestsPage />} />

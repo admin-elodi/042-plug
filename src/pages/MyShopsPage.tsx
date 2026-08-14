@@ -9,6 +9,7 @@ import { useAuth } from '@/context/AuthContext';
 import AddProductModal from '@/components/modals/AddProductModal';
 import PayRegistrationFeeButton from '@/components/PayRegistrationFeeButton';
 import FeatureShopButton from '@/components/FeatureShopButton';
+import BoomDaySellerNotice from '@/components/BoomDaySellerNotice';
 import AuthModal from '@/components/modals/AuthModal';
 
 interface ProductMedia {
@@ -31,6 +32,7 @@ interface Shop {
   business_name: string;
   phone: string;
   address: string | null;
+  category_id: string;
   category_title: string;
   payment_status: 'pending' | 'approved';
   featured_until: string | null;
@@ -75,7 +77,7 @@ export const MyShopsPage: React.FC = () => {
       .from('shops')
       .select(
         `
-        id, slug, business_name, phone, address, category_title, payment_status, ai_tip, featured_until, view_count,
+        id, slug, business_name, phone, address, category_id, category_title, payment_status, ai_tip, featured_until, view_count,
         products (
           id, title, price, price_type, is_negotiable,
           product_media ( id, file_url )
@@ -108,7 +110,7 @@ export const MyShopsPage: React.FC = () => {
         .from('shops')
         .select(
           `
-          id, slug, business_name, phone, address, category_title, payment_status, ai_tip, featured_until, view_count,
+          id, slug, business_name, phone, address, category_id, category_title, payment_status, ai_tip, featured_until, view_count,
           products (
             id, title, price, price_type, is_negotiable,
             product_media ( id, file_url )
@@ -305,6 +307,16 @@ export const MyShopsPage: React.FC = () => {
                             <span>{shop.view_count} view{shop.view_count === 1 ? '' : 's'}</span>
                           </span>
                         </div>
+
+                        <BoomDaySellerNotice
+                          shopId={shop.id}
+                          categoryId={shop.category_id}
+                          categoryTitle={shop.category_title}
+                          isPaid={shop.payment_status === 'approved'}
+                          hasProducts={shop.products.length > 0}
+                          hasPhotos={shop.products.some((p) => p.product_media.length > 0)}
+                        />
+
                         {shop.payment_status === 'pending' && (
                           <div className="mt-3 max-w-xs">
                             <PayRegistrationFeeButton

@@ -4,24 +4,6 @@ import React, { useState } from 'react';
 import { Sparkles, Loader2, AlertCircle, CheckCircle } from 'lucide-react';
 import { supabase } from '@/lib/supabaseClient';
 
-declare global {
-  interface Window {
-    PaystackPop: {
-      setup: (config: {
-        key: string;
-        email: string;
-        amount: number;
-        currency?: string;
-        channels?: string[];
-        ref?: string;
-        metadata?: Record<string, unknown>;
-        callback: (response: { reference: string }) => void;
-        onClose: () => void;
-      }) => { openIframe: () => void };
-    };
-  }
-}
-
 // Starting price - ₦500 for 7 days. Update this (and the matching constant
 // in supabase/functions/verify-feature-payment/index.ts) together.
 const FEATURE_FEE = 500;

@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { X, Store, PackagePlus, CheckCircle, ImagePlus, Film, Loader2, AlertCircle, Trash2, LogIn, Landmark, Copy, MessageCircle } from 'lucide-react';
 import { supabase } from '@/lib/supabaseClient';
+import { getStoredReferralCode } from '@/lib/referral';
 import { useAuth } from '@/context/AuthContext';
 import AuthModal from '@/components/modals/AuthModal';
 import PayRegistrationFeeButton from '@/components/PayRegistrationFeeButton';
@@ -257,6 +258,20 @@ export const CreateShopModal: React.FC<CreateShopModalProps> = ({ category, onCl
 
       // Only create the shop the first time - every later visit reuses it.
       if (!shopId) {
+        // If this seller arrived via a partner group's referral link, look
+        // up which group that was, so payment can later be split with them.
+        let referredByGroupId: string | null = null;
+        const referralCode = getStoredReferralCode();
+        if (referralCode) {
+          const { data: group } = await supabase
+            .from('partner_groups')
+            .select('id')
+            .eq('referral_code', referralCode)
+            .eq('active', true)
+            .maybeSingle();
+          referredByGroupId = group?.id ?? null;
+        }
+
         const { data: shop, error: shopError } = await supabase
           .from('shops')
           .insert({
@@ -268,7 +283,8 @@ export const CreateShopModal: React.FC<CreateShopModalProps> = ({ category, onCl
             account_name: businessData.accountName,
             category_id: category.id,
             category_title: category.title,
-            owner_id: user.id
+            owner_id: user.id,
+            referred_by_group_id: referredByGroupId
           })
           .select()
           .single();

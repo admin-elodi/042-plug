@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronDown, Store, ShieldCheck, LogOut, Briefcase, BarChart3, ShoppingCart } from 'lucide-react';
+import { ChevronDown, Store, ShieldCheck, LogOut, Briefcase, BarChart3, ShoppingCart, Users, Flame } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { useCart } from '@/context/CartContext';
 import AuthModal from '@/components/modals/AuthModal';
@@ -120,6 +120,26 @@ export const Header: React.FC = () => {
                       >
                         <Store className="w-4 h-4" />
                         <span>Shop Approvals</span>
+                      </Link>
+                    )}
+                    {isAdmin && (
+                      <Link
+                        to="/admin/partners"
+                        onClick={() => setShowAccountMenu(false)}
+                        className="flex items-center gap-2 px-4 py-2 text-sm text-amber-400 hover:bg-stone-800 transition-colors"
+                      >
+                        <Users className="w-4 h-4" />
+                        <span>Partner Groups</span>
+                      </Link>
+                    )}
+                    {isAdmin && (
+                      <Link
+                        to="/admin/boom-days"
+                        onClick={() => setShowAccountMenu(false)}
+                        className="flex items-center gap-2 px-4 py-2 text-sm text-amber-400 hover:bg-stone-800 transition-colors"
+                      >
+                        <Flame className="w-4 h-4" />
+                        <span>Boom Days</span>
                       </Link>
                     )}
                     {isAdmin && (
@@ -263,6 +283,24 @@ export const Header: React.FC = () => {
                     className="w-full text-center bg-amber-500/10 text-amber-400 font-semibold py-3 rounded-xl border border-amber-500/30"
                   >
                     Shop Approvals
+                  </Link>
+                )}
+                {isAdmin && (
+                  <Link
+                    to="/admin/partners"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="w-full text-center bg-amber-500/10 text-amber-400 font-semibold py-3 rounded-xl border border-amber-500/30"
+                  >
+                    Partner Groups
+                  </Link>
+                )}
+                {isAdmin && (
+                  <Link
+                    to="/admin/boom-days"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="w-full text-center bg-amber-500/10 text-amber-400 font-semibold py-3 rounded-xl border border-amber-500/30"
+                  >
+                    Boom Days
                   </Link>
                 )}
                 {isAdmin && (

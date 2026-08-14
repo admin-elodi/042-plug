@@ -3,6 +3,7 @@
 import React from 'react';
 import { Shirt, Smartphone, Sparkles, UtensilsCrossed, Home, Car, PartyPopper, Footprints, Gem, Scissors, Gift, Wifi, Plus, Eye, Phone, MessageCircle, Megaphone, Calculator } from 'lucide-react';
 import CATEGORIES, { type CategoryItem } from '@/data/categories';
+import { useActiveBoomDay } from '@/hooks/useActiveBoomDay';
 
 // Auto-discovers any background photo dropped into this folder, matched by
 // filename to a category's `id` (e.g. fashion.jpg matches the "fashion"
@@ -45,6 +46,7 @@ const iconMap: Record<string, React.ReactNode> = {
 const MAX_VISIBLE_TAGS = 3;
 
 export const CategoryGrid: React.FC<CategoryGridProps> = ({ onOpenCreate, onOpenView }) => {
+  const { boomDay: activeBoomDay, status: boomDayStatus } = useActiveBoomDay();
   return (
     <div className="bg-stone-50">
       <div className="px-4 max-w-7xl mx-auto py-10">
@@ -77,11 +79,29 @@ export const CategoryGrid: React.FC<CategoryGridProps> = ({ onOpenCreate, onOpen
           {CATEGORIES.map((cat: CategoryItem) => {
             const bgImage = getCategoryImage(cat.id);
             const extraTagCount = cat.popularItems.length - MAX_VISIBLE_TAGS;
+            const isBoomingNow = activeBoomDay?.category_id === cat.id && boomDayStatus === 'live';
+            const isBoomingSoon = activeBoomDay?.category_id === cat.id && boomDayStatus === 'upcoming';
             return (
               <div
                 key={cat.id}
-                className="group relative overflow-hidden rounded-2xl border border-stone-800/80 hover:border-amber-500/50 p-4 xl:p-5 flex flex-col justify-between transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-stone-900/20"
+                className={`group relative overflow-hidden rounded-2xl p-4 xl:p-5 flex flex-col justify-between transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-stone-900/20 ${
+                  isBoomingNow
+                    ? 'border-2 border-amber-400 shadow-lg shadow-amber-500/20'
+                    : isBoomingSoon
+                    ? 'border-2 border-amber-400/40'
+                    : 'border border-stone-800/80 hover:border-amber-500/50'
+                }`}
               >
+                {isBoomingNow && (
+                  <span className="absolute top-2 right-2 z-20 flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-black bg-amber-400 text-stone-950 uppercase">
+                    🔥 Booming
+                  </span>
+                )}
+                {isBoomingSoon && (
+                  <span className="absolute top-2 right-2 z-20 flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-black bg-stone-800 text-amber-400 border border-amber-400/40 uppercase">
+                    Boom Coming
+                  </span>
+                )}
                 {/* Background photo (if one exists for this category) */}
                 {bgImage && (
                   <>

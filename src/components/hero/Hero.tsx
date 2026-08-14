@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import HeroBanner from '@/components/hero/HeroBanner';
 import CategoryGrid from '@/components/hero/CategoryGrid';
 import CreateShopModal from '@/components/modals/CreateShopModal';
+import BoomDayBanner from '@/components/BoomDayBanner';
 
 export const Hero: React.FC = () => {
   const navigate = useNavigate();
@@ -16,6 +17,9 @@ export const Hero: React.FC = () => {
       <div>
         {/* Banner Section */}
         <HeroBanner onOpenCreateShop={() => document.getElementById('storefronts')?.scrollIntoView({ behavior: 'smooth' })} />
+
+        {/* Boom Day — only renders when one is actually active */}
+        <BoomDayBanner />
 
         {/* Categories Section */}
         <div id="storefronts">
