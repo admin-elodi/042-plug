@@ -2,10 +2,9 @@
 
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Store, Phone, MapPin, Loader2, AlertCircle, PackageOpen, MessageCircle, Share2, ArrowLeft, Check, ShoppingCart } from 'lucide-react';
+import { Store, Phone, MapPin, Loader2, AlertCircle, PackageOpen, Share2, ArrowLeft, Check, ShoppingCart } from 'lucide-react';
 import { supabase } from '@/lib/supabaseClient';
 import { formatProductPrice } from '@/lib/pricing';
-import { useSellerIdentity } from '@/hooks/useSellerIdentity';
 import { useCart } from '@/context/CartContext';
 import { useAuth } from '@/context/AuthContext';
 
@@ -39,38 +38,12 @@ interface Shop {
   products: Product[];
 }
 
-const formatWhatsAppNumber = (phone: string) => {
-  let digits = phone.replace(/\D/g, '');
-  if (digits.startsWith('0')) {
-    digits = '234' + digits.slice(1);
-  } else if (!digits.startsWith('234')) {
-    digits = '234' + digits;
-  }
-  return digits;
-};
-
-const buildOrderLink = (shop: Shop, product: Product, buyerShopName?: string | null) => {
-  const priceText = formatProductPrice(product.price, product.price_type, product.is_negotiable);
-  const paymentLine =
-    shop.account_number && shop.account_name && shop.bank_name
-      ? `\n\nPayment details:\nAccount Name: ${shop.account_name}\nAccount Number: ${shop.account_number}\nBank: ${shop.bank_name}`
-      : '';
-  const fellowPlugLine = buyerShopName
-    ? `\n\nP.S. I'm also a registered 042 Plugs seller (my shop: ${buyerShopName}) - always happy to support fellow plugs 🙏`
-    : '';
-  const message =
-    `Hi ${shop.business_name}, I'd like to order "${product.title}" (${priceText}) that I saw on 042 Plugs Plaza.` +
-    `\n\nPlease confirm it's available.${paymentLine}${fellowPlugLine}`;
-  return `https://wa.me/${formatWhatsAppNumber(shop.phone)}?text=${encodeURIComponent(message)}`;
-};
-
 export const ShopPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
   const [shop, setShop] = useState<Shop | null>(null);
   const [loading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
-  const myShopName = useSellerIdentity();
   const { addItem } = useCart();
   const { user } = useAuth();
 
@@ -207,16 +180,6 @@ export const ShopPage: React.FC = () => {
                     {product.description && <p className="text-xs text-stone-400 mt-1">{product.description}</p>}
 
                     <div className="flex items-center gap-2 mt-3">
-                      <a
-                        href={buildOrderLink(shop, product, myShopName)}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-1.5 w-fit px-3 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 text-xs font-semibold transition-colors"
-                      >
-                        <MessageCircle className="w-4 h-4" />
-                        <span>Order via WhatsApp</span>
-                      </a>
-                      <span className="text-[10px] font-bold text-stone-500 uppercase">or</span>
                       <button
                         onClick={() =>
                           addItem({
@@ -230,9 +193,9 @@ export const ShopPage: React.FC = () => {
                             isNegotiable: product.is_negotiable
                           })
                         }
-                        className="flex items-center gap-1.5 w-fit px-3 py-1.5 rounded-lg bg-stone-800 hover:bg-stone-700 border border-stone-700 text-stone-300 text-xs font-semibold transition-colors"
+                        className="flex items-center gap-1.5 w-fit px-3 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 text-xs font-semibold transition-colors"
                       >
-                        <ShoppingCart className="w-3.5 h-3.5" />
+                        <ShoppingCart className="w-4 h-4" />
                         <span>Add to Cart</span>
                       </button>
                     </div>

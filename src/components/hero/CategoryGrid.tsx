@@ -58,7 +58,7 @@ export const CategoryGrid: React.FC<CategoryGridProps> = ({ onOpenCreate, onOpen
         </div>
 
         {/* Benefits — kept short, kept visible right where the action happens */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-8 pb-6 border-b border-stone-200">
+        <div className="grid grid-cols-1 sm:grid-cols-4 gap-2 mb-8 pb-6 border-b border-stone-200">
           {[
             { icon: <MessageCircle className="w-3.5 h-3.5 text-amber-500" />, text: 'Instant WhatsApp Checkout' },
             { icon: <Megaphone className="w-3.5 h-3.5 text-amber-500" />, text: 'Digital Marketing Assistance' },
@@ -70,7 +70,7 @@ export const CategoryGrid: React.FC<CategoryGridProps> = ({ onOpenCreate, onOpen
               className="flex items-center gap-2 px-3 py-2.5 rounded-xl bg-white border border-stone-200 shadow-sm"
             >
               {benefit.icon}
-              <span className="text-[11px] font-semibold text-stone-700 leading-tight">{benefit.text}</span>
+              <span className="text-[11px] font-semibold text-stone-700 leading-tight whitespace-nowrap">{benefit.text}</span>
             </div>
           ))}
         </div>

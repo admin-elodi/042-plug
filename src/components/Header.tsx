@@ -192,28 +192,44 @@ export const Header: React.FC = () => {
             </button>
           </div>
 
-          {/* Mobile Menu Toggle Button */}
-          <button 
-            type="button"
-            aria-label="Toggle navigation menu"
-            className="md:hidden text-stone-300 hover:text-white focus:outline-none"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          >
-            {isMobileMenuOpen ? (
-              /* Close (X) Icon SVG */
-              <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M18 6 6 18" />
-                <path d="m6 6 12 12" />
-              </svg>
-            ) : (
-              /* Menu (Hamburger) Icon SVG */
-              <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="4" x2="20" y1="12" y2="12" />
-                <line x1="4" x2="20" y1="6" y2="6" />
-                <line x1="4" x2="20" y1="18" y2="18" />
-              </svg>
-            )}
-          </button>
+          {/* Mobile Storefronts + Cart Icons - always visible, right next to the menu toggle */}
+          <div className="flex items-center gap-3 md:hidden">
+            <Link to="/storefronts" className="text-stone-300 hover:text-white">
+              <Store className="w-6 h-6" />
+            </Link>
+
+            <Link to="/cart" className="relative text-stone-300 hover:text-white">
+              <ShoppingCart className="w-6 h-6" />
+              {totalItemCount > 0 && (
+                <span className="absolute -top-1.5 -right-1.5 min-w-[16px] h-[16px] px-1 flex items-center justify-center rounded-full bg-amber-500 text-stone-950 text-[9px] font-bold">
+                  {totalItemCount}
+                </span>
+              )}
+            </Link>
+
+            {/* Mobile Menu Toggle Button */}
+            <button 
+              type="button"
+              aria-label="Toggle navigation menu"
+              className="text-stone-300 hover:text-white focus:outline-none"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            >
+              {isMobileMenuOpen ? (
+                /* Close (X) Icon SVG */
+                <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M18 6 6 18" />
+                  <path d="m6 6 12 12" />
+                </svg>
+              ) : (
+                /* Menu (Hamburger) Icon SVG */
+                <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="4" x2="20" y1="12" y2="12" />
+                  <line x1="4" x2="20" y1="6" y2="6" />
+                  <line x1="4" x2="20" y1="18" y2="18" />
+                </svg>
+              )}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -247,14 +263,6 @@ export const Header: React.FC = () => {
               className="w-full text-center bg-stone-800 text-white font-semibold py-3 rounded-xl border border-stone-700"
             >
               Browse All Storefronts
-            </Link>
-            <Link
-              to="/cart"
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="w-full flex items-center justify-center gap-1.5 text-center bg-stone-800 text-white font-semibold py-3 rounded-xl border border-stone-700"
-            >
-              <ShoppingCart className="w-4 h-4" />
-              <span>Your Cart{totalItemCount > 0 ? ` (${totalItemCount})` : ''}</span>
             </Link>
             <a
               href="https://chat.whatsapp.com/KbLAiBmxl1uGs32u24IXCu"

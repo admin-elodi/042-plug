@@ -2,10 +2,9 @@
 
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, Store, Phone, MapPin, Loader2, AlertCircle, PackageOpen, MessageCircle, ExternalLink, ShoppingCart } from 'lucide-react';
+import { ArrowLeft, Store, Phone, MapPin, Loader2, AlertCircle, PackageOpen, ExternalLink, ShoppingCart } from 'lucide-react';
 import { supabase } from '@/lib/supabaseClient';
 import { formatProductPrice } from '@/lib/pricing';
-import { useSellerIdentity } from '@/hooks/useSellerIdentity';
 import { useCart } from '@/context/CartContext';
 import CATEGORIES from '@/data/categories';
 
@@ -40,35 +39,9 @@ interface Shop {
   products: Product[];
 }
 
-const formatWhatsAppNumber = (phone: string) => {
-  let digits = phone.replace(/\D/g, '');
-  if (digits.startsWith('0')) {
-    digits = '234' + digits.slice(1);
-  } else if (!digits.startsWith('234')) {
-    digits = '234' + digits;
-  }
-  return digits;
-};
-
-const buildOrderLink = (shop: Shop, product: Product, buyerShopName?: string | null) => {
-  const priceText = formatProductPrice(product.price, product.price_type, product.is_negotiable);
-  const paymentLine =
-    shop.account_number && shop.account_name && shop.bank_name
-      ? `\n\nPayment details:\nAccount Name: ${shop.account_name}\nAccount Number: ${shop.account_number}\nBank: ${shop.bank_name}`
-      : '';
-  const fellowPlugLine = buyerShopName
-    ? `\n\nP.S. I'm also a registered 042 Plugs seller (my shop: ${buyerShopName}) - always happy to support fellow plugs 🙏`
-    : '';
-  const message =
-    `Hi ${shop.business_name}, I'd like to order "${product.title}" (${priceText}) that I saw on 042 Plugs Plaza.` +
-    `\n\nPlease confirm it's available.${paymentLine}${fellowPlugLine}`;
-  return `https://wa.me/${formatWhatsAppNumber(shop.phone)}?text=${encodeURIComponent(message)}`;
-};
-
 export const CategoryPage: React.FC = () => {
   const { categoryId } = useParams<{ categoryId: string }>();
   const category = CATEGORIES.find((c) => c.id === categoryId);
-  const myShopName = useSellerIdentity();
   const { addItem } = useCart();
 
   const [shops, setShops] = useState<Shop[]>([]);
@@ -219,16 +192,6 @@ export const CategoryPage: React.FC = () => {
                         {product.description && <p className="text-[11px] text-stone-400 mt-1">{product.description}</p>}
 
                         <div className="flex items-center gap-2 mt-2">
-                          <a
-                            href={buildOrderLink(shop, product, myShopName)}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center gap-1.5 w-fit px-3 py-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 text-[11px] font-semibold transition-colors"
-                          >
-                            <MessageCircle className="w-3.5 h-3.5" />
-                            <span>Order via WhatsApp</span>
-                          </a>
-                          <span className="text-[10px] font-bold text-stone-500 uppercase">or</span>
                           <button
                             onClick={() =>
                               addItem({
@@ -242,7 +205,7 @@ export const CategoryPage: React.FC = () => {
                                 isNegotiable: product.is_negotiable
                               })
                             }
-                            className="flex items-center gap-1.5 w-fit px-3 py-1.5 rounded-lg bg-stone-800 hover:bg-stone-700 border border-stone-700 text-stone-300 text-[11px] font-semibold transition-colors"
+                            className="flex items-center gap-1.5 w-fit px-3 py-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 text-[11px] font-semibold transition-colors"
                           >
                             <ShoppingCart className="w-3.5 h-3.5" />
                             <span>Add to Cart</span>
