@@ -2,11 +2,12 @@
 
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Store, Trash2, Loader2, AlertCircle, PackageOpen, Phone, MapPin, PackagePlus, ExternalLink, LogIn, Sparkles, Eye, Copy, MessageCircle } from 'lucide-react';
+import { ArrowLeft, Store, Trash2, Loader2, AlertCircle, PackageOpen, Phone, MapPin, PackagePlus, ExternalLink, LogIn, Sparkles, Eye, Copy, MessageCircle, Pencil } from 'lucide-react';
 import { supabase } from '@/lib/supabaseClient';
 import { formatProductPrice } from '@/lib/pricing';
 import { useAuth } from '@/context/AuthContext';
 import AddProductModal from '@/components/modals/AddProductModal';
+import EditShopModal from '@/components/modals/EditShopModal';
 import PayRegistrationFeeButton from '@/components/PayRegistrationFeeButton';
 import FeatureShopButton from '@/components/FeatureShopButton';
 import BoomDaySellerNotice from '@/components/BoomDaySellerNotice';
@@ -32,6 +33,9 @@ interface Shop {
   business_name: string;
   phone: string;
   address: string | null;
+  bank_name: string | null;
+  account_number: string | null;
+  account_name: string | null;
   category_id: string;
   category_title: string;
   payment_status: 'pending' | 'approved';
@@ -64,6 +68,7 @@ export const MyShopsPage: React.FC = () => {
   const [generatingTipId, setGeneratingTipId] = useState<string | null>(null);
   const [tipError, setTipError] = useState<string | null>(null);
   const [bankTransferShopId, setBankTransferShopId] = useState<string | null>(null);
+  const [editingShop, setEditingShop] = useState<Shop | null>(null);
   const [copiedAccount, setCopiedAccount] = useState(false);
 
   // Kept in sync with the same constant in PayRegistrationFeeButton.tsx -
@@ -77,7 +82,7 @@ export const MyShopsPage: React.FC = () => {
       .from('shops')
       .select(
         `
-        id, slug, business_name, phone, address, category_id, category_title, payment_status, ai_tip, featured_until, view_count,
+        id, slug, business_name, phone, address, bank_name, account_number, account_name, category_id, category_title, payment_status, ai_tip, featured_until, view_count,
         products (
           id, title, price, price_type, is_negotiable,
           product_media ( id, file_url )
@@ -110,7 +115,7 @@ export const MyShopsPage: React.FC = () => {
         .from('shops')
         .select(
           `
-          id, slug, business_name, phone, address, category_id, category_title, payment_status, ai_tip, featured_until, view_count,
+          id, slug, business_name, phone, address, bank_name, account_number, account_name, category_id, category_title, payment_status, ai_tip, featured_until, view_count,
           products (
             id, title, price, price_type, is_negotiable,
             product_media ( id, file_url )
@@ -424,6 +429,13 @@ export const MyShopsPage: React.FC = () => {
                           <span>Add Product</span>
                         </button>
                         <button
+                          onClick={() => setEditingShop(shop)}
+                          className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-stone-800 hover:bg-stone-700 text-stone-300 text-[11px] font-medium whitespace-nowrap"
+                        >
+                          <Pencil className="w-3.5 h-3.5" />
+                          <span>Edit Details</span>
+                        </button>
+                        <button
                           onClick={() => handleDeleteShop(shop)}
                           disabled={busyId === shop.id}
                           className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-300 text-[11px] font-medium disabled:opacity-50 whitespace-nowrap"
@@ -518,6 +530,16 @@ export const MyShopsPage: React.FC = () => {
           businessName={addProductTarget.businessName}
           onClose={() => setAddProductTarget(null)}
           onProductAdded={fetchMyShops}
+        />
+      )}
+
+      {editingShop && (
+        <EditShopModal
+          shop={editingShop}
+          onClose={() => setEditingShop(null)}
+          onSaved={(updated) => {
+            setShops((prev) => prev.map((s) => (s.id === editingShop.id ? { ...s, ...updated } : s)));
+          }}
         />
       )}
     </div>

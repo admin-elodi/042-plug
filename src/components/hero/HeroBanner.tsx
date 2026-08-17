@@ -163,7 +163,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onOpenCreateShop, onOpen
                 </div>
                 <div>
                   <div className="font-semibold text-stone-100 text-sm">
-                    Salaried Jobs
+                     Applicants & Employers
                   </div>
                   <div className="text-xs text-stone-400 mt-0.5">
                     Browse vacancy posts or recruit talent
