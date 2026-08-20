@@ -11,13 +11,14 @@ const ADMIN_EMAIL = 'ikezion@gmail.com';
 
 interface JobPosting {
   id: string;
-  job_title: string;
-  company_name: string;
-  location: string;
-  job_type: string;
-  salary: string;
-  description: string;
+  job_title: string | null;
+  company_name: string | null;
+  location: string | null;
+  job_type: string | null;
+  salary: string | null;
+  description: string | null;
   contact_phone: string;
+  flyer_url: string | null;
   status: 'pending' | 'approved';
 }
 
@@ -42,7 +43,7 @@ export const AdminJobsPage: React.FC = () => {
     const loadJobs = async () => {
       const { data, error } = await supabase
         .from('jobs')
-        .select('id, job_title, company_name, location, job_type, salary, description, contact_phone, status')
+        .select('id, job_title, company_name, location, job_type, salary, description, contact_phone, flyer_url, status')
         .order('created_at', { ascending: false });
 
       if (cancelled) return;
@@ -83,7 +84,7 @@ export const AdminJobsPage: React.FC = () => {
   };
 
   const handleDelete = async (job: JobPosting) => {
-    if (!confirm(`Delete "${job.job_title}" at ${job.company_name}? This cannot be undone.`)) return;
+    if (!confirm(`Delete "${job.job_title ?? 'this flyer posting'}"${job.company_name ? ` at ${job.company_name}` : ''}? This cannot be undone.`)) return;
     setBusyId(job.id);
     setErrorMsg(null);
     try {
@@ -165,24 +166,37 @@ export const AdminJobsPage: React.FC = () => {
                     <div className="space-y-3">
                       {pendingJobs.map((job) => (
                         <div key={job.id} className="rounded-xl border border-stone-800 bg-stone-900/60 p-4">
-                          <h3 className="text-sm font-bold text-white">{job.job_title}</h3>
-                          <p className="text-xs text-amber-400 font-medium">{job.company_name}</p>
+                          {job.flyer_url && (
+                            <img
+                              src={job.flyer_url}
+                              alt={job.job_title ?? 'Job flyer'}
+                              className="w-full max-w-xs rounded-lg mb-3 border border-stone-700"
+                            />
+                          )}
+                          {job.job_title && <h3 className="text-sm font-bold text-white">{job.job_title}</h3>}
+                          {job.company_name && <p className="text-xs text-amber-400 font-medium">{job.company_name}</p>}
                           <div className="flex flex-wrap items-center gap-3 mt-1 text-[11px] text-stone-400">
-                            <span className="flex items-center gap-1">
-                              <MapPin className="w-3 h-3" />
-                              <span>{job.location}</span>
-                            </span>
-                            <span className="px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400 font-medium">{job.job_type}</span>
-                            <span className="flex items-center gap-1">
-                              <Wallet className="w-3 h-3" />
-                              <span>{job.salary}</span>
-                            </span>
+                            {job.location && (
+                              <span className="flex items-center gap-1">
+                                <MapPin className="w-3 h-3" />
+                                <span>{job.location}</span>
+                              </span>
+                            )}
+                            {job.job_type && (
+                              <span className="px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400 font-medium">{job.job_type}</span>
+                            )}
+                            {job.salary && (
+                              <span className="flex items-center gap-1">
+                                <Wallet className="w-3 h-3" />
+                                <span>{job.salary}</span>
+                              </span>
+                            )}
                             <span className="flex items-center gap-1">
                               <Phone className="w-3 h-3" />
                               <span>{job.contact_phone}</span>
                             </span>
                           </div>
-                          <p className="text-[11px] text-stone-400 mt-2">{job.description}</p>
+                          {job.description && <p className="text-[11px] text-stone-400 mt-2">{job.description}</p>}
 
                           <div className="flex items-center gap-2 mt-3">
                             <button
@@ -220,8 +234,10 @@ export const AdminJobsPage: React.FC = () => {
                       {approvedJobs.map((job) => (
                         <div key={job.id} className="flex items-center justify-between gap-2 rounded-lg border border-stone-800 bg-stone-900/40 p-3">
                           <div className="min-w-0">
-                            <p className="text-xs font-semibold text-white truncate">{job.job_title}</p>
-                            <p className="text-[11px] text-stone-400 truncate">{job.company_name} · {job.location}</p>
+                            <p className="text-xs font-semibold text-white truncate">{job.job_title ?? '(Flyer posting - no title given)'}</p>
+                            <p className="text-[11px] text-stone-400 truncate">
+                              {[job.company_name, job.location].filter(Boolean).join(' · ') || 'See flyer for details'}
+                            </p>
                           </div>
                           <button
                             onClick={() => handleDelete(job)}

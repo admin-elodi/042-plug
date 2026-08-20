@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { Briefcase, X, Send, Eye, Building2, Loader2, AlertCircle, CheckCircle, MapPin, Wallet, MessageCircle, PackageOpen, ShieldCheck } from 'lucide-react';
+import { Briefcase, X, Send, Eye, Building2, Loader2, AlertCircle, CheckCircle, MapPin, Wallet, MessageCircle, PackageOpen, ShieldCheck, ImagePlus } from 'lucide-react';
 import { supabase } from '@/lib/supabaseClient';
 import { buildWhatsAppLink } from '@/lib/whatsapp';
 import {
@@ -20,7 +20,8 @@ import {
   glassErrorBox,
   glassTabActive,
   glassTabInactive,
-  glassTabContainer
+  glassTabContainer,
+  glassDashedUpload
 } from '@/styles/glassModal';
 
 // Sends the platform owner a heads-up WhatsApp ping whenever a new job is
@@ -34,13 +35,14 @@ interface SalariedJobsModalProps {
 
 interface JobPosting {
   id: string;
-  job_title: string;
-  company_name: string;
-  location: string;
-  job_type: string;
-  salary: string;
-  description: string;
+  job_title: string | null;
+  company_name: string | null;
+  location: string | null;
+  job_type: string | null;
+  salary: string | null;
+  description: string | null;
   contact_phone: string;
+  flyer_url: string | null;
 }
 
 const JOB_TYPES = ['Full-time', 'Part-time', 'Contract', 'Internship', 'Temporary'];
@@ -55,11 +57,16 @@ const emptyJobFields = {
   contactPhone: ''
 };
 
+const MAX_FLYER_SIZE_MB = 10;
+
 export const SalariedJobsModal: React.FC<SalariedJobsModalProps> = ({ isOpen, onClose }) => {
   const [activeTab, setActiveTab] = useState<'seek' | 'post'>('seek');
 
   // --- Posting a job ---
   const [jobData, setJobData] = useState(emptyJobFields);
+  const [flyerFile, setFlyerFile] = useState<File | null>(null);
+  const [flyerPreview, setFlyerPreview] = useState<string | null>(null);
+  const [flyerError, setFlyerError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [postError, setPostError] = useState<string | null>(null);
   const [postSuccess, setPostSuccess] = useState(false);
@@ -76,7 +83,7 @@ export const SalariedJobsModal: React.FC<SalariedJobsModalProps> = ({ isOpen, on
     const loadJobs = async () => {
       const { data, error } = await supabase
         .from('jobs')
-        .select('id, job_title, company_name, location, job_type, salary, description, contact_phone')
+        .select('id, job_title, company_name, location, job_type, salary, description, contact_phone, flyer_url')
         .eq('status', 'approved')
         .order('created_at', { ascending: false });
 
@@ -98,42 +105,100 @@ export const SalariedJobsModal: React.FC<SalariedJobsModalProps> = ({ isOpen, on
 
   if (!isOpen) return null;
 
+  const handleFlyerSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    setFlyerError(null);
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      setFlyerError('Please upload an image file (JPG, PNG, etc.).');
+      return;
+    }
+    if (file.size > MAX_FLYER_SIZE_MB * 1024 * 1024) {
+      setFlyerError(`File is over ${MAX_FLYER_SIZE_MB}MB. Please choose a smaller image.`);
+      return;
+    }
+
+    setFlyerFile(file);
+    setFlyerPreview(URL.createObjectURL(file));
+  };
+
+  const removeFlyer = () => {
+    if (flyerPreview) URL.revokeObjectURL(flyerPreview);
+    setFlyerFile(null);
+    setFlyerPreview(null);
+  };
+
   const handlePostJob = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitting(true);
     setPostError(null);
 
+    // The only real requirement: give a seeker *something* to go on -
+    // either a flyer, or at minimum a job title. Every other field is
+    // genuinely optional, since a flyer might already cover it.
+    if (!flyerFile && !jobData.jobTitle.trim()) {
+      setPostError('Please either upload a flyer or fill in at least the Job Title.');
+      return;
+    }
+
+    // A loose check, not a rigid format rule - just enough digits to be a
+    // real phone number, regardless of spacing, dashes, or +234 prefix.
+    const digitCount = jobData.contactPhone.replace(/\D/g, '').length;
+    if (digitCount < 10 || digitCount > 14) {
+      setPostError('Please enter a valid WhatsApp number.');
+      return;
+    }
+
+    setSubmitting(true);
+
     try {
+      let flyerUrl: string | null = null;
+
+      if (flyerFile) {
+        const fileExt = flyerFile.name.split('.').pop();
+        const filePath = `${crypto.randomUUID()}.${fileExt}`;
+
+        const { error: uploadError } = await supabase.storage.from('job-flyers').upload(filePath, flyerFile);
+        if (uploadError) throw uploadError;
+
+        const { data: publicUrlData } = supabase.storage.from('job-flyers').getPublicUrl(filePath);
+        flyerUrl = publicUrlData.publicUrl;
+      }
+
+      // Blank fields become null rather than empty strings, so the
+      // display logic elsewhere ("if job.salary") behaves correctly.
       const { error } = await supabase.from('jobs').insert({
-        job_title: jobData.jobTitle,
-        company_name: jobData.companyName,
-        location: jobData.location,
-        job_type: jobData.jobType,
-        salary: jobData.salary,
-        description: jobData.description,
+        job_title: jobData.jobTitle.trim() || null,
+        company_name: jobData.companyName.trim() || null,
+        location: jobData.location.trim() || null,
+        job_type: jobData.jobType || null,
+        salary: jobData.salary.trim() || null,
+        description: jobData.description.trim() || null,
         contact_phone: jobData.contactPhone,
+        flyer_url: flyerUrl,
         status: 'pending'
       });
 
       if (error) throw error;
 
-      // Detailed heads-up ping to the admin, mirroring every field from the
-      // form so nothing has to be looked up separately in the dashboard.
-      const notifyMessage =
-        `Hello 042 Plugs Plaza! \u{1F44B}\n\n` +
-        `I would like to submit a new job vacancy for review and listing:\n\n` +
-        `\u{1F4CC} *Job Title:* ${jobData.jobTitle}\n` +
-        `\u{1F3E2} *Company / Business:* ${jobData.companyName}\n` +
-        `\u{1F4CD} *Location:* ${jobData.location}\n` +
-        `\u{1F4BC} *Job Type:* ${jobData.jobType}\n` +
-        `\u{1F4B0} *Salary / Compensation:* ${jobData.salary}\n` +
-        `\u{1F4DE} *Contact Phone:* ${jobData.contactPhone}\n\n` +
-        `\u{1F4DD} *Job Details & Requirements:*\n${jobData.description}\n\n` +
-        `---\n` +
-        `Please let me know once this has been reviewed and published on the platform!`;
-      window.open(buildWhatsAppLink(ADMIN_NOTIFY_WHATSAPP_NUMBER, notifyMessage), '_blank');
+      // One unified heads-up message - includes whatever was actually
+      // provided, flyer note first if there is one, so the admin sees
+      // the real shape of this specific submission at a glance.
+      const lines = [`Hello 042 Plugs Plaza! \u{1F44B}`, '', `I would like to submit a new job vacancy for review:`, ''];
+      if (flyerUrl) lines.push(`\u{1F4CE} A flyer was uploaded - check the Job Approvals dashboard to view it.`);
+      if (jobData.jobTitle.trim()) lines.push(`\u{1F4CC} *Job Title:* ${jobData.jobTitle}`);
+      if (jobData.companyName.trim()) lines.push(`\u{1F3E2} *Company / Business:* ${jobData.companyName}`);
+      if (jobData.location.trim()) lines.push(`\u{1F4CD} *Location:* ${jobData.location}`);
+      if (jobData.jobType) lines.push(`\u{1F4BC} *Job Type:* ${jobData.jobType}`);
+      if (jobData.salary.trim()) lines.push(`\u{1F4B0} *Salary / Compensation:* ${jobData.salary}`);
+      lines.push(`\u{1F4DE} *Contact Phone:* ${jobData.contactPhone}`);
+      if (jobData.description.trim()) lines.push('', `\u{1F4DD} *Job Details & Requirements:*\n${jobData.description}`);
+      lines.push('', '---', `Please let me know once this has been reviewed and published on the platform!`);
+
+      window.open(buildWhatsAppLink(ADMIN_NOTIFY_WHATSAPP_NUMBER, lines.join('\n')), '_blank');
 
       setJobData(emptyJobFields);
+      removeFlyer();
       setPostSuccess(true);
     } catch (err) {
       console.error(err);
@@ -221,24 +286,41 @@ export const SalariedJobsModal: React.FC<SalariedJobsModalProps> = ({ isOpen, on
                 <div className="space-y-2.5 max-h-80 overflow-y-auto pr-1">
                   {jobs.map((job) => (
                     <div key={job.id} className="p-3 rounded-xl bg-white/[0.06] backdrop-blur-sm border border-white/15">
-                      <h4 className="text-sm font-bold text-white">{job.job_title}</h4>
-                      <p className="text-xs text-amber-400 font-medium">{job.company_name}</p>
-                      <div className="flex flex-wrap items-center gap-3 mt-1 text-[11px] text-stone-400">
-                        <span className="flex items-center gap-1">
-                          <MapPin className="w-3 h-3" />
-                          <span>{job.location}</span>
-                        </span>
-                        <span className="px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400 font-medium">{job.job_type}</span>
-                        <span className="flex items-center gap-1">
-                          <Wallet className="w-3 h-3" />
-                          <span>{job.salary}</span>
-                        </span>
-                      </div>
-                      <p className="text-[11px] text-stone-400 mt-2">{job.description}</p>
+                      {job.flyer_url && (
+                        <img
+                          src={job.flyer_url}
+                          alt={job.job_title ?? 'Job flyer'}
+                          className="w-full rounded-lg mb-2.5 border border-white/10"
+                        />
+                      )}
+                      {job.job_title && <h4 className="text-sm font-bold text-white">{job.job_title}</h4>}
+                      {job.company_name && <p className="text-xs text-amber-400 font-medium">{job.company_name}</p>}
+                      {(job.location || job.job_type || job.salary) && (
+                        <div className="flex flex-wrap items-center gap-3 mt-1 text-[11px] text-stone-400">
+                          {job.location && (
+                            <span className="flex items-center gap-1">
+                              <MapPin className="w-3 h-3" />
+                              <span>{job.location}</span>
+                            </span>
+                          )}
+                          {job.job_type && (
+                            <span className="px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400 font-medium">{job.job_type}</span>
+                          )}
+                          {job.salary && (
+                            <span className="flex items-center gap-1">
+                              <Wallet className="w-3 h-3" />
+                              <span>{job.salary}</span>
+                            </span>
+                          )}
+                        </div>
+                      )}
+                      {job.description && <p className="text-[11px] text-stone-400 mt-2">{job.description}</p>}
                       <a
                         href={buildWhatsAppLink(
                           job.contact_phone,
-                          `Hi, I'd like to apply for the "${job.job_title}" role at ${job.company_name} that I saw on 042 Plugs Plaza.`
+                          `Hi, I'd like to apply for the "${job.job_title ?? 'position advertised on your flyer'}"${
+                            job.company_name ? ` at ${job.company_name}` : ''
+                          } that I saw on 042 Plugs Plaza.`
                         )}
                         target="_blank"
                         rel="noopener noreferrer"
@@ -273,8 +355,9 @@ export const SalariedJobsModal: React.FC<SalariedJobsModalProps> = ({ isOpen, on
                 </div>
               ) : (
                 <form onSubmit={handlePostJob} className="space-y-3 text-left">
-                  <p className="text-xs text-stone-400 mb-2">
-                    Fill in the details below. Every submission is reviewed before it goes live.
+                  <p className="text-xs text-stone-400">
+                    Fill in what you can, or upload a flyer to cover the rest - every submission is reviewed before it
+                    goes live.
                   </p>
 
                   {postError && (
@@ -285,10 +368,32 @@ export const SalariedJobsModal: React.FC<SalariedJobsModalProps> = ({ isOpen, on
                   )}
 
                   <div>
+                    <label className={glassLabel}>Job Flyer (optional)</label>
+                    {!flyerPreview ? (
+                      <label className={glassDashedUpload}>
+                        <ImagePlus className="w-4 h-4" />
+                        <span>Click to upload a flyer, if you have one</span>
+                        <input type="file" accept="image/*" onChange={handleFlyerSelected} className="hidden" />
+                      </label>
+                    ) : (
+                      <div className="relative">
+                        <img src={flyerPreview} alt="Flyer preview" className="w-full rounded-xl border border-white/15" />
+                        <button
+                          type="button"
+                          onClick={removeFlyer}
+                          className="absolute top-2 right-2 px-2 py-1 rounded-lg bg-black/70 backdrop-blur-sm text-white text-[10px] font-semibold"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    )}
+                    {flyerError && <p className="text-[11px] text-red-400 mt-1.5">{flyerError}</p>}
+                  </div>
+
+                  <div>
                     <label className={glassLabel}>Job Title</label>
                     <input
                       type="text"
-                      required
                       placeholder="e.g., Senior Accountant, Retail Store Manager"
                       value={jobData.jobTitle}
                       onChange={(e) => setJobData({ ...jobData, jobTitle: e.target.value })}
@@ -301,7 +406,6 @@ export const SalariedJobsModal: React.FC<SalariedJobsModalProps> = ({ isOpen, on
                       <label className={glassLabel}>Company / Business</label>
                       <input
                         type="text"
-                        required
                         placeholder="e.g., CoalCity Ltd"
                         value={jobData.companyName}
                         onChange={(e) => setJobData({ ...jobData, companyName: e.target.value })}
@@ -312,7 +416,6 @@ export const SalariedJobsModal: React.FC<SalariedJobsModalProps> = ({ isOpen, on
                       <label className={glassLabel}>Location</label>
                       <input
                         type="text"
-                        required
                         placeholder="e.g., Independence Layout"
                         value={jobData.location}
                         onChange={(e) => setJobData({ ...jobData, location: e.target.value })}
@@ -329,6 +432,9 @@ export const SalariedJobsModal: React.FC<SalariedJobsModalProps> = ({ isOpen, on
                         onChange={(e) => setJobData({ ...jobData, jobType: e.target.value })}
                         className={glassInput}
                       >
+                        <option value="" className="bg-stone-900">
+                          Not specified
+                        </option>
                         {JOB_TYPES.map((type) => (
                           <option key={type} value={type} className="bg-stone-900">
                             {type}
@@ -341,13 +447,23 @@ export const SalariedJobsModal: React.FC<SalariedJobsModalProps> = ({ isOpen, on
                       <label className={glassLabel}>Monthly Salary Range</label>
                       <input
                         type="text"
-                        required
                         placeholder="e.g., ₦150,000 - ₦200,000"
                         value={jobData.salary}
                         onChange={(e) => setJobData({ ...jobData, salary: e.target.value })}
                         className={glassInput}
                       />
                     </div>
+                  </div>
+
+                  <div>
+                    <label className={glassLabel}>Key Responsibilities / Qualifications</label>
+                    <textarea
+                      rows={3}
+                      placeholder="Briefly state job requirements (optional if your flyer already covers this)..."
+                      value={jobData.description}
+                      onChange={(e) => setJobData({ ...jobData, description: e.target.value })}
+                      className={`${glassInput} resize-none`}
+                    />
                   </div>
 
                   <div>
@@ -360,19 +476,9 @@ export const SalariedJobsModal: React.FC<SalariedJobsModalProps> = ({ isOpen, on
                       onChange={(e) => setJobData({ ...jobData, contactPhone: e.target.value })}
                       className={glassInput}
                     />
-                    <p className="text-[10px] text-stone-500 mt-1">Applicants will message this number directly.</p>
-                  </div>
-
-                  <div>
-                    <label className={glassLabel}>Key Responsibilities / Qualifications</label>
-                    <textarea
-                      rows={3}
-                      required
-                      placeholder="Briefly state job requirements..."
-                      value={jobData.description}
-                      onChange={(e) => setJobData({ ...jobData, description: e.target.value })}
-                      className={`${glassInput} resize-none`}
-                    />
+                    <p className="text-[10px] text-stone-500 mt-1">
+                      Applicants will message this number directly - this is the one field we always need.
+                    </p>
                   </div>
 
                   <button type="submit" disabled={submitting} className={glassButtonPrimary}>
