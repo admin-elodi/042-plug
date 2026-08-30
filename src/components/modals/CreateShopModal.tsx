@@ -1,13 +1,12 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { X, Store, PackagePlus, CheckCircle, ImagePlus, Film, Loader2, AlertCircle, Trash2, LogIn, Landmark, Copy, MessageCircle, FileCheck2 } from 'lucide-react';
+import { X, Store, PackagePlus, CheckCircle, ImagePlus, Film, Loader2, AlertCircle, Trash2, LogIn, Landmark, Copy, MessageCircle } from 'lucide-react';
 import { supabase } from '@/lib/supabaseClient';
 import { getStoredReferralCode } from '@/lib/referral';
 import { useAuth } from '@/context/AuthContext';
 import AuthModal from '@/components/modals/AuthModal';
 import PayRegistrationFeeButton from '@/components/PayRegistrationFeeButton';
-import TINRequestModal from '@/components/modals/TINRequestModal';
 
 interface CreateShopModalProps {
   category: { id: string; title: string };
@@ -110,7 +109,6 @@ export const CreateShopModal: React.FC<CreateShopModalProps> = ({ category, onCl
   const [submitting, setSubmitting] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<'bank' | 'paystack'>('bank');
   const [copiedAccount, setCopiedAccount] = useState(false);
-  const [showTINModal, setShowTINModal] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const [businessData, setBusinessData] = useState({
@@ -766,31 +764,6 @@ export const CreateShopModal: React.FC<CreateShopModalProps> = ({ category, onCl
                 {' '}{category.title}.
               </p>
 
-              <div className="rounded-2xl border border-amber-500/20 bg-amber-500/[0.04] p-4 mb-5 text-left">
-                <div className="flex items-center gap-2 mb-1.5">
-                  <FileCheck2 className="w-4 h-4 text-amber-400 flex-shrink-0" />
-                  <p className="text-xs font-bold text-amber-300">One more thing, totally optional</p>
-                </div>
-                <p className="text-[11px] text-stone-400 mb-3 leading-relaxed">
-                  Want to get your business a Tax Identification Number too? Takes about 5 minutes, and makes your
-                  shop look even more established.
-                </p>
-                <div className="grid grid-cols-2 gap-2">
-                  <button
-                    onClick={onClose}
-                    className="py-2 rounded-lg bg-white/10 backdrop-blur border border-white/20 hover:bg-white/15 text-white text-xs font-semibold transition-colors"
-                  >
-                    Maybe Later
-                  </button>
-                  <button
-                    onClick={() => setShowTINModal(true)}
-                    className="py-2 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/30 text-amber-300 text-xs font-semibold transition-colors"
-                  >
-                    Get TIN Now
-                  </button>
-                </div>
-              </div>
-
               <button
                 onClick={onClose}
                 className="px-6 py-2 rounded-xl bg-white/10 backdrop-blur border border-white/20 hover:bg-white/15 text-white text-sm font-medium transition-colors"
@@ -801,10 +774,6 @@ export const CreateShopModal: React.FC<CreateShopModalProps> = ({ category, onCl
           )}
         </div>
       </div>
-
-      {showTINModal && existingShop && (
-        <TINRequestModal businessName={existingShop.business_name} onClose={() => setShowTINModal(false)} />
-      )}
     </div>
   );
 };
