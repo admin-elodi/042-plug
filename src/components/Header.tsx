@@ -58,7 +58,7 @@ export const Header: React.FC = () => {
                 042<span className="text-amber-400">PLUGS</span><span className="text-orange-500">PLAZA</span>
               </span>
               <p className="text-[10px] text-stone-400 tracking-widest uppercase font-semibold whitespace-nowrap">Legit Deals Only</p>
-              <p className="text-[9px] text-amber-400/70 italic tracking-wide whitespace-nowrap">Ahia Di Mma Na-Ere Onwe Ya</p>
+              <p className="text-[9px] text-amber-400/70 italic tracking-wide whitespace-nowrap">Ihe Di Mma Na-Ere Onwe Ya</p>
             </div>
           </Link>
 
@@ -145,7 +145,7 @@ export const Header: React.FC = () => {
                     )}
                     {isAdmin && (
                       <a
-                        href="https://dash.cloudflare.com/18f684e4307eede794e31fb2e6a86685/web-analytics/overview?siteTag~in=d7e6e682bd8849318aaa6739d7d2e881&excludeBots=Yes"
+                        href="https://clarity.microsoft.com/projects"
                         target="_blank"
                         rel="noopener noreferrer"
                         onClick={() => setShowAccountMenu(false)}
@@ -314,7 +314,7 @@ export const Header: React.FC = () => {
                 )}
                 {isAdmin && (
                   <a
-                    href="https://dash.cloudflare.com/18f684e4307eede794e31fb2e6a86685/web-analytics/overview?siteTag~in=d7e6e682bd8849318aaa6739d7d2e881&excludeBots=Yes"
+                    href="https://clarity.microsoft.com/projects"
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={() => setIsMobileMenuOpen(false)}
