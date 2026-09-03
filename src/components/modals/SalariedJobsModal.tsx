@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { Briefcase, X, Send, Eye, Building2, Loader2, AlertCircle, CheckCircle, MapPin, Wallet, MessageCircle, PackageOpen, ShieldCheck, ImagePlus } from 'lucide-react';
+import { Briefcase, X, Send, Eye, Building2, Loader2, AlertCircle, CheckCircle, MapPin, Wallet, MessageCircle, PackageOpen, ShieldCheck, ImagePlus, ExternalLink } from 'lucide-react';
 import { supabase } from '@/lib/supabaseClient';
 import { buildWhatsAppLink } from '@/lib/whatsapp';
 import {
@@ -43,6 +43,7 @@ interface JobPosting {
   description: string | null;
   key_responsibilities: string | null;
   requirements_qualifications: string | null;
+  application_url: string | null;
   contact_phone: string;
   flyer_url: string | null;
 }
@@ -58,6 +59,7 @@ const emptyJobFields = {
   description: '',
   keyResponsibilities: '',
   requirementsQualifications: '',
+  applicationUrl: '',
   contactPhone: ''
 };
 
@@ -97,6 +99,8 @@ export const SalariedJobsModal: React.FC<SalariedJobsModalProps> = ({ isOpen, on
   const [submitting, setSubmitting] = useState(false);
   const [postError, setPostError] = useState<string | null>(null);
   const [postSuccess, setPostSuccess] = useState(false);
+  const [manageLink, setManageLink] = useState<string | null>(null);
+  const [linkCopied, setLinkCopied] = useState(false);
 
   // --- Browsing approved jobs ---
   const [jobs, setJobs] = useState<JobPosting[]>([]);
@@ -111,7 +115,7 @@ export const SalariedJobsModal: React.FC<SalariedJobsModalProps> = ({ isOpen, on
       const { data, error } = await supabase
         .from('jobs')
         .select(
-          'id, job_title, company_name, location, job_type, salary, description, key_responsibilities, requirements_qualifications, contact_phone, flyer_url'
+          'id, job_title, company_name, location, job_type, salary, description, key_responsibilities, requirements_qualifications, application_url, contact_phone, flyer_url'
         )
         .eq('status', 'approved')
         .order('created_at', { ascending: false });
@@ -196,21 +200,33 @@ export const SalariedJobsModal: React.FC<SalariedJobsModalProps> = ({ isOpen, on
 
       // Blank fields become null rather than empty strings, so the
       // display logic elsewhere ("if job.salary") behaves correctly.
-      const { error } = await supabase.from('jobs').insert({
-        job_title: jobData.jobTitle.trim() || null,
-        company_name: jobData.companyName.trim() || null,
-        location: jobData.location.trim() || null,
-        job_type: jobData.jobType || null,
-        salary: jobData.salary.trim() || null,
-        description: jobData.description.trim() || null,
-        key_responsibilities: jobData.keyResponsibilities.trim() || null,
-        requirements_qualifications: jobData.requirementsQualifications.trim() || null,
-        contact_phone: jobData.contactPhone,
-        flyer_url: flyerUrl,
-        status: 'pending'
-      });
+      const { data: inserted, error } = await supabase
+        .from('jobs')
+        .insert({
+          job_title: jobData.jobTitle.trim() || null,
+          company_name: jobData.companyName.trim() || null,
+          location: jobData.location.trim() || null,
+          job_type: jobData.jobType || null,
+          salary: jobData.salary.trim() || null,
+          description: jobData.description.trim() || null,
+          key_responsibilities: jobData.keyResponsibilities.trim() || null,
+          requirements_qualifications: jobData.requirementsQualifications.trim() || null,
+          application_url: jobData.applicationUrl.trim() || null,
+          contact_phone: jobData.contactPhone,
+          flyer_url: flyerUrl,
+          status: 'pending'
+        })
+        .select('edit_token')
+        .single();
 
       if (error) throw error;
+
+      // This link is the *only* way back in to edit or remove this
+      // posting later - there's no login to fall back on, so it has to
+      // be shown clearly now, since it can't be recovered afterward.
+      if (inserted?.edit_token) {
+        setManageLink(`${window.location.origin}/jobs/manage/${inserted.edit_token}`);
+      }
 
       // One unified heads-up message - includes whatever was actually
       // provided, flyer note first if there is one, so the admin sees
@@ -228,6 +244,7 @@ export const SalariedJobsModal: React.FC<SalariedJobsModalProps> = ({ isOpen, on
         lines.push('', `\u2705 *Key Responsibilities:*\n${jobData.keyResponsibilities}`);
       if (jobData.requirementsQualifications.trim())
         lines.push('', `\u{1F393} *Requirements & Qualifications:*\n${jobData.requirementsQualifications}`);
+      if (jobData.applicationUrl.trim()) lines.push('', `\u{1F517} *More Info / Application Link:* ${jobData.applicationUrl}`);
       lines.push('', '---', `Please let me know once this has been reviewed and published on the platform!`);
 
       window.open(buildWhatsAppLink(ADMIN_NOTIFY_WHATSAPP_NUMBER, lines.join('\n')), '_blank');
@@ -370,20 +387,33 @@ export const SalariedJobsModal: React.FC<SalariedJobsModalProps> = ({ isOpen, on
                         </div>
                       )}
 
-                      <a
-                        href={buildWhatsAppLink(
-                          job.contact_phone,
-                          `Hi, I'd like to apply for the "${job.job_title ?? 'position advertised on your flyer'}"${
-                            job.company_name ? ` at ${job.company_name}` : ''
-                          } that I saw on 042 Plugs Plaza.`
+                      <div className="flex items-center gap-2 mt-3 flex-wrap">
+                        <a
+                          href={buildWhatsAppLink(
+                            job.contact_phone,
+                            `Hi, I'd like to apply for the "${job.job_title ?? 'position advertised on your flyer'}"${
+                              job.company_name ? ` at ${job.company_name}` : ''
+                            } that I saw on 042 Plugs Plaza.`
+                          )}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-1.5 w-fit px-3 py-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 text-[11px] font-semibold transition-colors"
+                        >
+                          <MessageCircle className="w-3.5 h-3.5" />
+                          <span>Apply via WhatsApp</span>
+                        </a>
+                        {job.application_url && (
+                          <a
+                            href={job.application_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-1.5 w-fit px-3 py-1.5 rounded-lg bg-stone-800 hover:bg-stone-700 text-stone-300 text-[11px] font-semibold transition-colors"
+                          >
+                            <ExternalLink className="w-3.5 h-3.5" />
+                            <span>More Info</span>
+                          </a>
                         )}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-1.5 mt-3 w-fit px-3 py-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 text-[11px] font-semibold transition-colors"
-                      >
-                        <MessageCircle className="w-3.5 h-3.5" />
-                        <span>Apply via WhatsApp</span>
-                      </a>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -400,11 +430,48 @@ export const SalariedJobsModal: React.FC<SalariedJobsModalProps> = ({ isOpen, on
                     <CheckCircle className="w-7 h-7" />
                   </div>
                   <h4 className="text-sm font-bold text-white mb-1">Submitted for Review!</h4>
-                  <p className="text-xs text-stone-400 mb-5">
+                  <p className="text-xs text-stone-400 mb-4">
                     Your job posting is pending admin approval. Once approved, it'll appear under "Browse jobs" for
                     everyone to see.
                   </p>
-                  <button onClick={onClose} className={glassButtonSecondary}>
+
+                  {manageLink && (
+                    <div className="text-left rounded-xl border border-amber-500/30 bg-amber-500/[0.06] p-4 mb-5">
+                      <p className="text-xs font-bold text-amber-300 mb-1">Save this link!</p>
+                      <p className="text-[11px] text-stone-400 mb-3 leading-relaxed">
+                        This is the only way to edit or take down this posting later - there's no login, so if you
+                        lose this link, we can't recover it for you.
+                      </p>
+                      <div className="flex items-center gap-2">
+                        <input
+                          readOnly
+                          value={manageLink}
+                          onFocus={(e) => e.target.select()}
+                          className="flex-1 min-w-0 px-2.5 py-2 bg-black/30 border border-white/15 rounded-lg text-[11px] text-stone-300 truncate"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => {
+                            navigator.clipboard.writeText(manageLink);
+                            setLinkCopied(true);
+                            setTimeout(() => setLinkCopied(false), 2000);
+                          }}
+                          className="flex-shrink-0 px-3 py-2 rounded-lg bg-amber-500 hover:bg-amber-400 text-stone-950 text-[11px] font-bold"
+                        >
+                          {linkCopied ? 'Copied!' : 'Copy'}
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  <button
+                    onClick={() => {
+                      setPostSuccess(false);
+                      setManageLink(null);
+                      onClose();
+                    }}
+                    className={glassButtonSecondary}
+                  >
                     Close Window
                   </button>
                 </div>
@@ -543,6 +610,18 @@ export const SalariedJobsModal: React.FC<SalariedJobsModalProps> = ({ isOpen, on
                       className={`${glassInput} resize-none`}
                     />
                     <p className="text-[10px] text-stone-500 mt-1">Each line becomes its own bullet point automatically.</p>
+                  </div>
+
+                  <div>
+                    <label className={glassLabel}>Application / More Info Link (optional)</label>
+                    <input
+                      type="url"
+                      placeholder="e.g., https://forms.gle/... or your company website"
+                      value={jobData.applicationUrl}
+                      onChange={(e) => setJobData({ ...jobData, applicationUrl: e.target.value })}
+                      className={glassInput}
+                    />
+                    <p className="text-[10px] text-stone-500 mt-1">A link to your own site, an application form, or anywhere with more details.</p>
                   </div>
 
                   <div>

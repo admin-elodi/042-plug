@@ -19,6 +19,7 @@ interface JobPosting {
   description: string | null;
   key_responsibilities: string | null;
   requirements_qualifications: string | null;
+  application_url: string | null;
   contact_phone: string;
   flyer_url: string | null;
   status: 'pending' | 'approved';
@@ -67,7 +68,7 @@ export const AdminJobsPage: React.FC = () => {
       const { data, error } = await supabase
         .from('jobs')
         .select(
-          'id, job_title, company_name, location, job_type, salary, description, key_responsibilities, requirements_qualifications, contact_phone, flyer_url, status'
+          'id, job_title, company_name, location, job_type, salary, description, key_responsibilities, requirements_qualifications, application_url, contact_phone, flyer_url, status'
         )
         .order('created_at', { ascending: false });
 
@@ -238,6 +239,22 @@ export const AdminJobsPage: React.FC = () => {
                                 Requirements &amp; Qualifications
                               </p>
                               <BulletList text={job.requirements_qualifications} />
+                            </div>
+                          )}
+
+                          {job.application_url && (
+                            <div className="mt-2.5 p-2 rounded-lg bg-amber-500/[0.06] border border-amber-500/20">
+                              <p className="text-[10px] font-bold uppercase tracking-wide text-amber-400 mb-0.5">
+                                Link Included - Check Before Approving
+                              </p>
+                              <a
+                                href={job.application_url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-[11px] text-stone-300 hover:text-amber-300 break-all"
+                              >
+                                {job.application_url}
+                              </a>
                             </div>
                           )}
 
