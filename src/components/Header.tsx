@@ -58,7 +58,7 @@ export const Header: React.FC = () => {
                 042<span className="text-amber-400">PLUGS</span><span className="text-orange-500">PLAZA</span>
               </span>
               <p className="text-[10px] text-stone-400 tracking-widest uppercase font-semibold whitespace-nowrap">Legit Deals Only</p>
-              <p className="text-[9px] text-amber-400/70 italic tracking-wide whitespace-nowrap">Ihe Di Mma Na-Ere Onwe Ya</p>
+              <p className="text-[9px] text-amber-400/70 italic tracking-wide whitespace-nowrap">Afia di mma na ere onwe ya</p>
             </div>
           </Link>
 

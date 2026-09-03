@@ -41,6 +41,8 @@ interface JobPosting {
   job_type: string | null;
   salary: string | null;
   description: string | null;
+  key_responsibilities: string | null;
+  requirements_qualifications: string | null;
   contact_phone: string;
   flyer_url: string | null;
 }
@@ -54,10 +56,35 @@ const emptyJobFields = {
   jobType: 'Full-time',
   salary: '',
   description: '',
+  keyResponsibilities: '',
+  requirementsQualifications: '',
   contactPhone: ''
 };
 
 const MAX_FLYER_SIZE_MB = 10;
+
+// Turns a "one item per line" textarea into a clean bulleted list -
+// used for both Key Responsibilities and Requirements & Qualifications,
+// so employers just type naturally and the public view renders it neatly.
+const BulletList: React.FC<{ text: string; className?: string }> = ({ text, className }) => {
+  const items = text
+    .split('\n')
+    .map((line) => line.trim())
+    .filter(Boolean);
+
+  if (items.length === 0) return null;
+
+  return (
+    <ul className={`space-y-1 ${className ?? ''}`}>
+      {items.map((item, i) => (
+        <li key={i} className="flex items-start gap-1.5 text-[11px] text-stone-400 leading-relaxed">
+          <span className="text-amber-400 mt-0.5">&bull;</span>
+          <span>{item}</span>
+        </li>
+      ))}
+    </ul>
+  );
+};
 
 export const SalariedJobsModal: React.FC<SalariedJobsModalProps> = ({ isOpen, onClose }) => {
   const [activeTab, setActiveTab] = useState<'seek' | 'post'>('seek');
@@ -83,7 +110,9 @@ export const SalariedJobsModal: React.FC<SalariedJobsModalProps> = ({ isOpen, on
     const loadJobs = async () => {
       const { data, error } = await supabase
         .from('jobs')
-        .select('id, job_title, company_name, location, job_type, salary, description, contact_phone, flyer_url')
+        .select(
+          'id, job_title, company_name, location, job_type, salary, description, key_responsibilities, requirements_qualifications, contact_phone, flyer_url'
+        )
         .eq('status', 'approved')
         .order('created_at', { ascending: false });
 
@@ -174,6 +203,8 @@ export const SalariedJobsModal: React.FC<SalariedJobsModalProps> = ({ isOpen, on
         job_type: jobData.jobType || null,
         salary: jobData.salary.trim() || null,
         description: jobData.description.trim() || null,
+        key_responsibilities: jobData.keyResponsibilities.trim() || null,
+        requirements_qualifications: jobData.requirementsQualifications.trim() || null,
         contact_phone: jobData.contactPhone,
         flyer_url: flyerUrl,
         status: 'pending'
@@ -192,7 +223,11 @@ export const SalariedJobsModal: React.FC<SalariedJobsModalProps> = ({ isOpen, on
       if (jobData.jobType) lines.push(`\u{1F4BC} *Job Type:* ${jobData.jobType}`);
       if (jobData.salary.trim()) lines.push(`\u{1F4B0} *Salary / Compensation:* ${jobData.salary}`);
       lines.push(`\u{1F4DE} *Contact Phone:* ${jobData.contactPhone}`);
-      if (jobData.description.trim()) lines.push('', `\u{1F4DD} *Job Details & Requirements:*\n${jobData.description}`);
+      if (jobData.description.trim()) lines.push('', `\u{1F4DD} *Description:*\n${jobData.description}`);
+      if (jobData.keyResponsibilities.trim())
+        lines.push('', `\u2705 *Key Responsibilities:*\n${jobData.keyResponsibilities}`);
+      if (jobData.requirementsQualifications.trim())
+        lines.push('', `\u{1F393} *Requirements & Qualifications:*\n${jobData.requirementsQualifications}`);
       lines.push('', '---', `Please let me know once this has been reviewed and published on the platform!`);
 
       window.open(buildWhatsAppLink(ADMIN_NOTIFY_WHATSAPP_NUMBER, lines.join('\n')), '_blank');
@@ -314,7 +349,27 @@ export const SalariedJobsModal: React.FC<SalariedJobsModalProps> = ({ isOpen, on
                           )}
                         </div>
                       )}
-                      {job.description && <p className="text-[11px] text-stone-400 mt-2">{job.description}</p>}
+
+                      {job.description && <p className="text-[11px] text-stone-300 mt-3 leading-relaxed">{job.description}</p>}
+
+                      {job.key_responsibilities && (
+                        <div className="mt-3">
+                          <p className="text-[10px] font-bold uppercase tracking-wide text-stone-200 mb-1.5">
+                            Key Responsibilities
+                          </p>
+                          <BulletList text={job.key_responsibilities} />
+                        </div>
+                      )}
+
+                      {job.requirements_qualifications && (
+                        <div className="mt-3">
+                          <p className="text-[10px] font-bold uppercase tracking-wide text-stone-200 mb-1.5">
+                            Requirements &amp; Qualifications
+                          </p>
+                          <BulletList text={job.requirements_qualifications} />
+                        </div>
+                      )}
+
                       <a
                         href={buildWhatsAppLink(
                           job.contact_phone,
@@ -456,14 +511,38 @@ export const SalariedJobsModal: React.FC<SalariedJobsModalProps> = ({ isOpen, on
                   </div>
 
                   <div>
-                    <label className={glassLabel}>Key Responsibilities / Qualifications</label>
+                    <label className={glassLabel}>Job Description</label>
                     <textarea
-                      rows={3}
-                      placeholder="Briefly state job requirements (optional if your flyer already covers this)..."
+                      rows={2}
+                      placeholder="A short summary naming the position - e.g., what the role is and who it's for..."
                       value={jobData.description}
                       onChange={(e) => setJobData({ ...jobData, description: e.target.value })}
                       className={`${glassInput} resize-none`}
                     />
+                  </div>
+
+                  <div>
+                    <label className={glassLabel}>Key Responsibilities</label>
+                    <textarea
+                      rows={4}
+                      placeholder={'One responsibility per line, e.g.:\nUpdate clients on project progress\nMaintain records using Word and Excel'}
+                      value={jobData.keyResponsibilities}
+                      onChange={(e) => setJobData({ ...jobData, keyResponsibilities: e.target.value })}
+                      className={`${glassInput} resize-none`}
+                    />
+                    <p className="text-[10px] text-stone-500 mt-1">Each line becomes its own bullet point automatically.</p>
+                  </div>
+
+                  <div>
+                    <label className={glassLabel}>Requirements &amp; Qualifications</label>
+                    <textarea
+                      rows={4}
+                      placeholder={'One requirement per line, e.g.:\nMinimum of WAEC (SSCE)\nComputer literate (Word, Excel)'}
+                      value={jobData.requirementsQualifications}
+                      onChange={(e) => setJobData({ ...jobData, requirementsQualifications: e.target.value })}
+                      className={`${glassInput} resize-none`}
+                    />
+                    <p className="text-[10px] text-stone-500 mt-1">Each line becomes its own bullet point automatically.</p>
                   </div>
 
                   <div>

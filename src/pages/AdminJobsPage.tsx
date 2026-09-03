@@ -17,10 +17,33 @@ interface JobPosting {
   job_type: string | null;
   salary: string | null;
   description: string | null;
+  key_responsibilities: string | null;
+  requirements_qualifications: string | null;
   contact_phone: string;
   flyer_url: string | null;
   status: 'pending' | 'approved';
 }
+
+// Turns a "one item per line" field into a clean bulleted list.
+const BulletList: React.FC<{ text: string }> = ({ text }) => {
+  const items = text
+    .split('\n')
+    .map((line) => line.trim())
+    .filter(Boolean);
+
+  if (items.length === 0) return null;
+
+  return (
+    <ul className="space-y-1">
+      {items.map((item, i) => (
+        <li key={i} className="flex items-start gap-1.5 text-[11px] text-stone-400 leading-relaxed">
+          <span className="text-amber-400 mt-0.5">&bull;</span>
+          <span>{item}</span>
+        </li>
+      ))}
+    </ul>
+  );
+};
 
 export const AdminJobsPage: React.FC = () => {
   const { user } = useAuth();
@@ -43,7 +66,9 @@ export const AdminJobsPage: React.FC = () => {
     const loadJobs = async () => {
       const { data, error } = await supabase
         .from('jobs')
-        .select('id, job_title, company_name, location, job_type, salary, description, contact_phone, flyer_url, status')
+        .select(
+          'id, job_title, company_name, location, job_type, salary, description, key_responsibilities, requirements_qualifications, contact_phone, flyer_url, status'
+        )
         .order('created_at', { ascending: false });
 
       if (cancelled) return;
@@ -196,7 +221,25 @@ export const AdminJobsPage: React.FC = () => {
                               <span>{job.contact_phone}</span>
                             </span>
                           </div>
-                          {job.description && <p className="text-[11px] text-stone-400 mt-2">{job.description}</p>}
+                          {job.description && <p className="text-[11px] text-stone-300 mt-2 leading-relaxed">{job.description}</p>}
+
+                          {job.key_responsibilities && (
+                            <div className="mt-2.5">
+                              <p className="text-[10px] font-bold uppercase tracking-wide text-stone-200 mb-1.5">
+                                Key Responsibilities
+                              </p>
+                              <BulletList text={job.key_responsibilities} />
+                            </div>
+                          )}
+
+                          {job.requirements_qualifications && (
+                            <div className="mt-2.5">
+                              <p className="text-[10px] font-bold uppercase tracking-wide text-stone-200 mb-1.5">
+                                Requirements &amp; Qualifications
+                              </p>
+                              <BulletList text={job.requirements_qualifications} />
+                            </div>
+                          )}
 
                           <div className="flex items-center gap-2 mt-3">
                             <button

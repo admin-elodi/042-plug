@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { MessageCircle, Phone } from 'lucide-react';
+import { MessageCircle, Phone, Truck } from 'lucide-react';
 
 const WHATSAPP_NUMBER = '2348136573235';
 const DISPLAY_PHONE = '0813 657 3235, 0810 090 0926';
@@ -13,6 +13,30 @@ export const Footer: React.FC = () => {
   return (
     <footer className="bg-stone-950 border-t border-stone-800 text-stone-400">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* Delivery Partnership - early discussion, not a live feature yet */}
+        <a
+          href="https://www.octoserve.ng/#download"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group flex items-center gap-3 mb-10 p-4 rounded-2xl bg-white/[0.03] border border-amber-500/20 hover:border-amber-500/40 transition-colors"
+        >
+          <div className="flex-shrink-0 p-2 rounded-xl bg-amber-500/10">
+            <Truck className="w-5 h-5 text-amber-400" />
+          </div>
+          <div className="min-w-0">
+            <div className="flex items-center gap-2 flex-wrap">
+              <p className="text-sm font-bold text-white">Delivery Support - Coming Soon</p>
+              <span className="px-2 py-0.5 rounded-full text-[9px] font-bold uppercase bg-amber-500/20 text-amber-400 border border-amber-500/30">
+                In Discussion
+              </span>
+            </div>
+            <p className="text-xs text-stone-400 mt-0.5">
+              We're in early talks with <span className="text-stone-200 font-medium">OctoServe</span> about bringing
+              delivery logistics to shops on the Plaza. Nothing live yet - check them out in the meantime.
+            </p>
+          </div>
+        </a>
+
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-10">
           {/* Brand */}
           <div>
